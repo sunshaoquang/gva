@@ -29,7 +29,6 @@ Nprogress.start()
 
 const app = createApp(App)
 app.config.productionTip = false
-
 app
   .use(run)
   .use(store)
