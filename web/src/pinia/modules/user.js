@@ -14,12 +14,20 @@ export const useUserStore = defineStore("user", () => {
     nickName: "",
     headerImg: "",
     authority: {},
+<<<<<<< HEAD
     sideMode: "dark",
     activeColor: "#4D70FF",
     baseColor: "#fff",
     appUser: {},
   });
   const token = ref(window.localStorage.getItem("token") || "");
+=======
+    sideMode: 'dark',
+    activeColor: 'var(--el-color-primary)',
+    baseColor: '#fff'
+  })
+  const token = ref(window.localStorage.getItem('token') || '')
+>>>>>>> origin
   const setUserInfo = (val) => {
     userInfo.value = val;
   };
@@ -58,6 +66,7 @@ export const useUserStore = defineStore("user", () => {
     try {
       const res = await login(loginInfo);
       if (res.code === 0) {
+<<<<<<< HEAD
         setUserInfo(res.data.user);
         setToken(res.data.token);
         const routerStore = useRouterStore();
@@ -69,6 +78,19 @@ export const useUserStore = defineStore("user", () => {
         await router.push({ name: userInfo.value.authority.defaultRouter });
         loadingInstance.value.close();
         return true;
+=======
+        setUserInfo(res.data.user)
+        setToken(res.data.token)
+        const routerStore = useRouterStore()
+        await routerStore.SetAsyncRouter()
+        const asyncRouters = routerStore.asyncRouters
+        asyncRouters.forEach(asyncRouter => {
+          router.addRoute(asyncRouter)
+        })
+        await router.replace({ name: userInfo.value.authority.defaultRouter })
+        loadingInstance.value.close()
+        return true
+>>>>>>> origin
       }
     } catch (e) {
       loadingInstance.value.close();
@@ -124,6 +146,7 @@ export const useUserStore = defineStore("user", () => {
     }
   });
   const activeColor = computed(() => {
+<<<<<<< HEAD
     if (
       userInfo.value.sideMode === "dark" ||
       userInfo.value.sideMode === "light"
@@ -132,6 +155,10 @@ export const useUserStore = defineStore("user", () => {
     }
     return userInfo.activeColor;
   });
+=======
+    return 'var(--el-color-primary)'
+  })
+>>>>>>> origin
 
   watch(
     () => token.value,
