@@ -17,7 +17,7 @@ import (
 func Routers() *gin.Engine {
 	Router := gin.Default()
 	AppRouter := router.RouterGroupApp.App
-	InstallPlugin(Router) // 安装插件s
+	InstallPlugin(Router) // 安装插件
 	systemRouter := router.RouterGroupApp.System
 	exampleRouter := router.RouterGroupApp.Example
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
