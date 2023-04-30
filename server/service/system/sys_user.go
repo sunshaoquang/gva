@@ -3,6 +3,8 @@ package system
 import (
 	"errors"
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/App"
+	"gorm.io/gorm/clause"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
@@ -46,12 +48,37 @@ func (userService *UserService) Login(u *system.SysUser) (userInter *system.SysU
 	}
 
 	var user system.SysUser
-	err = global.GVA_DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Authority").Preload("AppUser").First(&user).Error
-	if err == nil {
-		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
-			return nil, errors.New("密码错误")
+	var appUser App.AppUser
+	println(u.AppUser.Openid)
+	if u.AppUser.Openid != "" {
+		if err = global.GVA_DB.Where("openid = ?", u.AppUser.Openid).First(&appUser).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				// 如果数据不存在，创建数据并再次查询
+				if err := global.GVA_DB.Clauses(clause.OnConflict{
+					DoNothing: true,
+				}).Create(&u.AppUser).Error; err != nil {
+					return nil, fmt.Errorf("failed to create user")
+				}
+				if err := global.GVA_DB.Where("openid = ?", u.AppUser.Openid).First(&appUser).Error; err != nil {
+					return nil, fmt.Errorf("failed to find user")
+				}
+			} else {
+				return nil, fmt.Errorf("failed to find user")
+			}
 		}
-		MenuServiceApp.UserAuthorityDefaultRouter(&user)
+		if appUser.SysUserID != nil {
+			err = global.GVA_DB.Where("id = ?", appUser.SysUserID).Preload("AppUser").First(&user).Error
+		} else {
+			user.AppUser = appUser
+		}
+	} else {
+		err = global.GVA_DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Authority").Preload("AppUser").First(&user).Error
+		if err == nil {
+			if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
+				return nil, errors.New("密码错误")
+			}
+			MenuServiceApp.UserAuthorityDefaultRouter(&user)
+		}
 	}
 	return &user, err
 }
