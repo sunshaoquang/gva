@@ -1,0 +1,1 @@
+[uranus/server]2023/10/20 - 15:45:16.288	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection

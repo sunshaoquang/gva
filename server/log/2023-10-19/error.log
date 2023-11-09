@@ -1,0 +1,9 @@
+[uranus/server]2023/10/19 - 14:22:51.393	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/10/19 - 14:29:53.193	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/10/19 - 14:33:31.659	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/10/19 - 15:52:03.619	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/api/v1/example/exa_excel.go:133	文件不存在!	{"error": "stat ./resource/excel/Uranus__ExcelTemplate.xlsx: no such file or directory"}
+[uranus/server]2023/10/19 - 15:52:12.145	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/api/v1/example/exa_excel.go:133	文件不存在!	{"error": "stat ./resource/excel/Uranus__ExcelTemplate.xlsx: no such file or directory"}
+[uranus/server]2023/10/19 - 16:16:23.490	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/api/v1/example/exa_excel.go:133	文件不存在!	{"error": "stat ./resource/excel/Uranus__ExcelTemplate.xlsx: no such file or directory"}
+[uranus/server]2023/10/19 - 17:31:29.686	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/10/19 - 17:33:16.038	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/10/19 - 17:43:05.081	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
