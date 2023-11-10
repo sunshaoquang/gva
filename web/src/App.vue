@@ -10,18 +10,18 @@
 import zhCn from "element-plus/dist/locale/zh-cn.mjs";
 // element 2.3.8之前使用下面的语句
 // import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-// import { onMounted } from "vue";
-// onMounted(() => {
-//   window.addEventListener("message", (event) => {
-//     if (event.origin === "http://10.1.73.33:3100") {
-//       // 替换为父页面的域
-//       // 在这里处理从父页面传来的消息
-//       const [parentTitle, username] = event.data;
-//       document.title = parentTitle;
-//       window.name = username;
-//     }
-//   });
-// });
+import { onMounted } from "vue";
+onMounted(() => {
+  window.addEventListener("message", (event) => {
+    if (event.origin === import.meta.env.VITE_ORIGIN_PATH) {
+      // 替换为父页面的域
+      // 在这里处理从父页面传来的消息
+      const [parentTitle, username] = event.data;
+      document.title = parentTitle;
+      window.name = username;
+    }
+  });
+});
 defineOptions({
   name: "App",
 });
