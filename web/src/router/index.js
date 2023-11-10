@@ -61,9 +61,6 @@ const routes = [
     path: "/template",
     name: "template",
     component: () => import("@/view/routerHolder.vue"),
-    meta: {
-      title: "底层promotion",
-    },
     children: promotionChildren,
   },
   {
