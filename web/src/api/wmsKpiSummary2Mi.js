@@ -32,6 +32,21 @@ export const deleteWmsKpiSummary2Mi = (data) => {
   })
 }
 
+// @Tags WmsKpiSummary2MiAll
+// @Summary 删除wmsKpiSummary2MiAll表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.WmsKpiSummary2MiAll true "删除wmsKpiSummary2MiAll表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsKpiSummary2Mi/deleteWmsKpiSummary2MiAll [delete]
+export const deleteWmsKpiSummary2MiAll = () => {
+  return service({
+    url: '/wmsKpiSummary2Mi/deleteWmsKpiSummary2MiAll',
+    method: 'delete'
+  })
+}
+
 // @Tags WmsKpiSummary2Mi
 // @Summary 批量删除wmsKpiSummary2Mi表
 // @Security ApiKeyAuth

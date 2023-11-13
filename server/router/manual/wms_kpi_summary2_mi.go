@@ -17,6 +17,7 @@ func (s *WmsKpiSummary2MiRouter) InitWmsKpiSummary2MiRouter(Router *gin.RouterGr
 	{
 		wmsKpiSummary2MiRouter.POST("createWmsKpiSummary2Mi", wmsKpiSummary2MiApi.CreateWmsKpiSummary2Mi)   // 新建wmsKpiSummary2Mi表
 		wmsKpiSummary2MiRouter.DELETE("deleteWmsKpiSummary2Mi", wmsKpiSummary2MiApi.DeleteWmsKpiSummary2Mi) // 删除wmsKpiSummary2Mi表
+		wmsKpiSummary2MiRouter.DELETE("deleteWmsKpiSummary2MiAll", wmsKpiSummary2MiApi.DeleteWmsKpiSummary2MiAll) // 全部删除wmsKpiSummary2MiAll表
 		wmsKpiSummary2MiRouter.DELETE("deleteWmsKpiSummary2MiByIds", wmsKpiSummary2MiApi.DeleteWmsKpiSummary2MiByIds) // 批量删除wmsKpiSummary2Mi表
 		wmsKpiSummary2MiRouter.PUT("updateWmsKpiSummary2Mi", wmsKpiSummary2MiApi.UpdateWmsKpiSummary2Mi)    // 更新wmsKpiSummary2Mi表
 	}

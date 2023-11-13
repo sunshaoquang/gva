@@ -19,6 +19,13 @@ import (
 type {{.StructName}}Api struct {
 }
 
+{{- $db := "" }}
+{{- if eq .BusinessDB "" }}
+ {{- $db = "global.GVA_DB" }}
+{{- else}}
+ {{- $db =  printf "global.MustGetGlobalDBByDBName(\"%s\")" .BusinessDB   }}
+{{- end}}
+
 var {{.Abbreviation}}Service = service.ServiceGroupApp.{{.PackageT}}ServiceGroup.{{.StructName}}Service
 
 
@@ -87,6 +94,26 @@ func ({{.Abbreviation}}Api *{{.StructName}}Api) Delete{{.StructName}}(c *gin.Con
     {{.Abbreviation}}.DeletedBy = utils.GetUserID(c)
         {{- end }}
 	if err := {{.Abbreviation}}Service.Delete{{.StructName}}({{.Abbreviation}}); err != nil {
+        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
+// Delete{{.StructName}}All 删除所有{{.Description}}
+// @Tags {{.StructName}}All
+// @Summary 删除所有{{.Description}}
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body {{.Package}}.{{.StructName}} true "删除所有{{.Description}}"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /{{.Abbreviation}}/delete{{.StructName}}All [delete]
+func ({{.Abbreviation}}Api *{{.StructName}}Api) Delete{{.StructName}}All(c *gin.Context) {
+	var {{.Abbreviation}} {{.Package}}.{{.StructName}}
+	
+	if err := {{$db}}.Unscoped().Where("1 = 1").Delete(&{{.Abbreviation}}).Error; err != nil {
         global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)
 	} else {

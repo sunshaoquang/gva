@@ -32,6 +32,21 @@ export const delete{{.StructName}} = (data) => {
   })
 }
 
+// @Tags {{.StructName}}All
+// @Summary 删除所有{{.Description}}
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.{{.StructName}}All true "删除所有{{.Description}}"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /{{.Abbreviation}}/delete{{.StructName}}All [delete]
+export const delete{{.StructName}}All = () => {
+  return service({
+    url: '/{{.Abbreviation}}/delete{{.StructName}}All',
+    method: 'delete'
+  })
+}
+
 // @Tags {{.StructName}}
 // @Summary 批量删除{{.Description}}
 // @Security ApiKeyAuth

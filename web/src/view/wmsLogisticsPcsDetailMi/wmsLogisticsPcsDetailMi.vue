@@ -100,10 +100,33 @@
               style="margin-left: 10px"
               :disabled="!multipleSelection.length"
               @click="deleteVisible = true"
-              >删除</el-button
+              >选择删除</el-button
             >
           </template>
         </el-popover>
+        <!--  ================== 增加 ===================== -->
+        <el-popover
+          v-model:visible="deleteAllVisible"
+          placement="top"
+          width="160"
+        >
+          <p>确定要删除吗？</p>
+          <div style="text-align: right; margin-top: 8px">
+            <el-button type="primary" link @click="deleteAllVisible = false"
+              >取消</el-button
+            >
+            <el-button type="primary" @click="onAllDelete">确定</el-button>
+          </div>
+          <template #reference>
+            <el-button
+              icon="delete"
+              style="margin-left: 10px"
+              @click="deleteAllVisible = true"
+              >全部删除</el-button
+            >
+          </template>
+        </el-popover>
+        <!--  ================== 增加 ===================== -->
       </div>
       <el-table
         ref="multipleTable"
@@ -304,7 +327,7 @@
           layout="total, sizes, prev, pager, next, jumper"
           :current-page="page"
           :page-size="pageSize"
-          :page-sizes="[10, 30, 50, 100]"
+          :page-sizes="[10, 30, 50, 100, 1000, 10000]"
           :total="total"
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
@@ -555,6 +578,7 @@
 import {
   createWmsLogisticsPcsDetailMi,
   deleteWmsLogisticsPcsDetailMi,
+  deleteWmsLogisticsPcsDetailMiAll,
   deleteWmsLogisticsPcsDetailMiByIds,
   updateWmsLogisticsPcsDetailMi,
   findWmsLogisticsPcsDetailMi,
@@ -752,6 +776,23 @@ const onDelete = async () => {
     getTableData();
   }
 };
+
+// ================== 增加 =====================
+// 全部删除控制标记
+const deleteAllVisible = ref(false);
+
+const onAllDelete = async () => {
+  const res = await deleteWmsLogisticsPcsDetailMiAll();
+  if (res.code === 0) {
+    ElMessage({
+      type: "success",
+      message: "删除成功",
+    });
+    deleteAllVisible.value = false;
+    getTableData();
+  }
+};
+// ================== 增加 =====================
 
 // 行为控制标记（弹窗内部需要增还是改）
 const type = ref("");

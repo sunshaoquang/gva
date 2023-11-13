@@ -73,6 +73,25 @@ func (wmsKpi2023SummaryMiApi *WmsKpi2023SummaryMiApi) DeleteWmsKpi2023SummaryMi(
 	}
 }
 
+// DeleteWmsKpi2023SummaryMiAll 删除wmsKpi2023SummaryMi表
+// @Tags WmsKpi2023SummaryMiAll
+// @Summary 删除wmsKpi2023SummaryMiAll表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body manual.WmsKpi2023SummaryMi true "删除wmsKpi2023SummaryMiAll表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsKpi2023SummaryMi/deleteWmsKpi2023SummaryMiAll [delete]
+func (wmsKpi2023SummaryMiApi *WmsKpi2023SummaryMiApi) DeleteWmsKpi2023SummaryMiAll(c *gin.Context) {
+	var wmsKpi2023SummaryMi manual.WmsKpi2023SummaryMi
+	if err := global.MustGetGlobalDBByDBName("ht_smartdata").Unscoped().Where("1 = 1").Delete(&wmsKpi2023SummaryMi).Error; err != nil {
+        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
 // DeleteWmsKpi2023SummaryMiByIds 批量删除wmsKpi2023SummaryMi表
 // @Tags WmsKpi2023SummaryMi
 // @Summary 批量删除wmsKpi2023SummaryMi表

@@ -32,6 +32,21 @@ export const deleteWmsKpi2023SummaryMi = (data) => {
   })
 }
 
+// @Tags WmsKpi2023SummaryMiAll
+// @Summary 删除wmsKpi2023SummaryMiAll表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.WmsKpi2023SummaryMiAll true "删除wmsKpi2023SummaryMiAll表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsKpi2023SummaryMi/deleteWmsKpi2023SummaryMiAll [delete]
+export const deleteWmsKpi2023SummaryMiAll = () => {
+  return service({
+    url: '/wmsKpi2023SummaryMi/deleteWmsKpi2023SummaryMiAll',
+    method: 'delete'
+  })
+}
+
 // @Tags WmsKpi2023SummaryMi
 // @Summary 批量删除wmsKpi2023SummaryMi表
 // @Security ApiKeyAuth

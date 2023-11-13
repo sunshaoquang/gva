@@ -80,6 +80,26 @@ func (wmsKpiSummary2MiApi *WmsKpiSummary2MiApi) DeleteWmsKpiSummary2Mi(c *gin.Co
 	}
 }
 
+// DeleteWmsKpiSummary2MiAll 删除wmsKpiSummary2Mi表
+// @Tags WmsKpiSummary2MiAll
+// @Summary 删除wmsKpiSummary2MiAll表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body manual.WmsKpiSummary2Mi true "删除wmsKpiSummary2MiAll表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsKpiSummary2Mi/deleteWmsKpiSummary2MiAll [delete]
+func (wmsKpiSummary2MiApi *WmsKpiSummary2MiApi) DeleteWmsKpiSummary2MiAll(c *gin.Context) {
+	var wmsKpiSummary2Mi manual.WmsKpiSummary2Mi
+	
+	if err := global.MustGetGlobalDBByDBName("ht_smartdata").Unscoped().Where("1 = 1").Delete(&wmsKpiSummary2Mi).Error; err != nil {
+        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
 // DeleteWmsKpiSummary2MiByIds 批量删除wmsKpiSummary2Mi表
 // @Tags WmsKpiSummary2Mi
 // @Summary 批量删除wmsKpiSummary2Mi表

@@ -73,6 +73,25 @@ func (wmsLogisticsPcsSummaryMiApi *WmsLogisticsPcsSummaryMiApi) DeleteWmsLogisti
 	}
 }
 
+// DeleteWmsLogisticsPcsSummaryMiAll 删除主要产品成本降本汇总表
+// @Tags WmsLogisticsPcsSummaryMiAll
+// @Summary 删除主要产品成本降本汇总表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body manual.WmsLogisticsPcsSummaryMiAll true "删除主要产品成本降本汇总表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsLogisticsPcsSummaryMi/deleteWmsLogisticsPcsSummaryMiAll [delete]
+func (wmsLogisticsPcsSummaryMiApi *WmsLogisticsPcsSummaryMiApi) DeleteWmsLogisticsPcsSummaryMiAll(c *gin.Context) {
+	var wmsLogisticsPcsSummaryMi manual.WmsLogisticsPcsSummaryMi
+	if err := global.MustGetGlobalDBByDBName("ht_smartdata").Unscoped().Where("1 = 1").Delete(&wmsLogisticsPcsSummaryMi).Error; err != nil {
+        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
 // DeleteWmsLogisticsPcsSummaryMiByIds 批量删除主要产品成本降本汇总表
 // @Tags WmsLogisticsPcsSummaryMi
 // @Summary 批量删除主要产品成本降本汇总表

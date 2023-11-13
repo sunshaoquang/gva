@@ -17,6 +17,7 @@ func (s *WmsLogisticsPcs2023MiRouter) InitWmsLogisticsPcs2023MiRouter(Router *gi
 	{
 		wmsLogisticsPcs2023MiRouter.POST("createWmsLogisticsPcs2023Mi", wmsLogisticsPcs2023MiApi.CreateWmsLogisticsPcs2023Mi)   // 新建2023年物流成本明细表
 		wmsLogisticsPcs2023MiRouter.DELETE("deleteWmsLogisticsPcs2023Mi", wmsLogisticsPcs2023MiApi.DeleteWmsLogisticsPcs2023Mi) // 删除2023年物流成本明细表
+		wmsLogisticsPcs2023MiRouter.DELETE("deleteWmsLogisticsPcs2023MiAll", wmsLogisticsPcs2023MiApi.DeleteWmsLogisticsPcs2023MiAll) // 删除2023年物流成本明细表
 		wmsLogisticsPcs2023MiRouter.DELETE("deleteWmsLogisticsPcs2023MiByIds", wmsLogisticsPcs2023MiApi.DeleteWmsLogisticsPcs2023MiByIds) // 批量删除2023年物流成本明细表
 		wmsLogisticsPcs2023MiRouter.PUT("updateWmsLogisticsPcs2023Mi", wmsLogisticsPcs2023MiApi.UpdateWmsLogisticsPcs2023Mi)    // 更新2023年物流成本明细表
 	}

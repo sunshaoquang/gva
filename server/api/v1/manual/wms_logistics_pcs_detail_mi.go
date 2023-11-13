@@ -73,6 +73,26 @@ func (wmsLogisticsPcsDetailMiApi *WmsLogisticsPcsDetailMiApi) DeleteWmsLogistics
 	}
 }
 
+// DeleteWmsLogisticsPcsDetailMiAll 删除主要产品成本明细表
+// @Tags WmsLogisticsPcsDetailMiAll
+// @Summary 删除主要产品成本明细表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body manual.WmsLogisticsPcsDetailMiAll true "删除主要产品成本明细表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsLogisticsPcsDetailMi/deleteWmsLogisticsPcsDetailMiAll [delete]
+func (wmsLogisticsPcsDetailMiApi *WmsLogisticsPcsDetailMiApi) DeleteWmsLogisticsPcsDetailMiAll(c *gin.Context) {
+	var wmsLogisticsPcsDetailMi manual.WmsLogisticsPcsDetailMi
+
+	if err := global.MustGetGlobalDBByDBName("ht_smartdata").Unscoped().Where("1 = 1").Delete(&wmsLogisticsPcsDetailMi).Error; err != nil {
+        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
 // DeleteWmsLogisticsPcsDetailMiByIds 批量删除主要产品成本明细表
 // @Tags WmsLogisticsPcsDetailMi
 // @Summary 批量删除主要产品成本明细表

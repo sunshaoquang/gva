@@ -1,0 +1,4 @@
+[uranus/server]2023/11/13 - 16:52:24.430	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/gorm.go:61	register table success
+[uranus/server]2023/11/13 - 16:52:24.791	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:38	register swagger handler
+[uranus/server]2023/11/13 - 16:52:24.792	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:85	router register success
+[uranus/server]2023/11/13 - 16:52:24.792	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:36	server run success on 	{"address": ":8888"}

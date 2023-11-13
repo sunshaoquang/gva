@@ -32,6 +32,21 @@ export const deleteWmsLogisticsPcsSummaryMi = (data) => {
   })
 }
 
+// @Tags WmsLogisticsPcsSummaryMiAll
+// @Summary 删除主要产品成本降本汇总表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.WmsLogisticsPcsSummaryMiAll true "删除主要产品成本降本汇总表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsLogisticsPcsSummaryMi/deleteWmsLogisticsPcsSummaryMiAll [delete]
+export const deleteWmsLogisticsPcsSummaryMiAll = () => {
+  return service({
+    url: '/wmsLogisticsPcsSummaryMi/deleteWmsLogisticsPcsSummaryMiAll',
+    method: 'delete'
+  })
+}
+
 // @Tags WmsLogisticsPcsSummaryMi
 // @Summary 批量删除主要产品成本降本汇总表
 // @Security ApiKeyAuth

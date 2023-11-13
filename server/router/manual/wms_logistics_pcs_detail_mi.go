@@ -17,6 +17,7 @@ func (s *WmsLogisticsPcsDetailMiRouter) InitWmsLogisticsPcsDetailMiRouter(Router
 	{
 		wmsLogisticsPcsDetailMiRouter.POST("createWmsLogisticsPcsDetailMi", wmsLogisticsPcsDetailMiApi.CreateWmsLogisticsPcsDetailMi)   // 新建主要产品成本明细表
 		wmsLogisticsPcsDetailMiRouter.DELETE("deleteWmsLogisticsPcsDetailMi", wmsLogisticsPcsDetailMiApi.DeleteWmsLogisticsPcsDetailMi) // 删除主要产品成本明细表
+		wmsLogisticsPcsDetailMiRouter.DELETE("deleteWmsLogisticsPcsDetailMiAll", wmsLogisticsPcsDetailMiApi.DeleteWmsLogisticsPcsDetailMiAll) // 删除主要产品成本明细表
 		wmsLogisticsPcsDetailMiRouter.DELETE("deleteWmsLogisticsPcsDetailMiByIds", wmsLogisticsPcsDetailMiApi.DeleteWmsLogisticsPcsDetailMiByIds) // 批量删除主要产品成本明细表
 		wmsLogisticsPcsDetailMiRouter.PUT("updateWmsLogisticsPcsDetailMi", wmsLogisticsPcsDetailMiApi.UpdateWmsLogisticsPcsDetailMi)    // 更新主要产品成本明细表
 	}

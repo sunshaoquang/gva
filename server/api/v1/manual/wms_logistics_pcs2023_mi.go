@@ -73,6 +73,26 @@ func (wmsLogisticsPcs2023MiApi *WmsLogisticsPcs2023MiApi) DeleteWmsLogisticsPcs2
 	}
 }
 
+// DeleteWmsLogisticsPcs2023MiAll 删除所有2023年物流成本明细表
+// @Tags WmsLogisticsPcs2023MiAll
+// @Summary 删除所有2023年物流成本明细表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body manual.WmsLogisticsPcs2023MiAll true "删除所有2023年物流成本明细表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsLogisticsPcs2023Mi/deleteWmsLogisticsPcs2023MiAll [delete]
+func (wmsLogisticsPcs2023MiApi *WmsLogisticsPcs2023MiApi) DeleteWmsLogisticsPcs2023MiAll(c *gin.Context) {
+	var wmsLogisticsPcs2023Mi manual.WmsLogisticsPcs2023Mi
+	// 用gorm硬删除所有表数据
+	if err := global.MustGetGlobalDBByDBName("ht_smartdata").Unscoped().Where("1 = 1").Delete(&wmsLogisticsPcs2023Mi).Error; err != nil {
+        global.GVA_LOG.Error("删除失败!", zap.Error(err))
+		response.FailWithMessage("删除失败", c)
+	} else {
+		response.OkWithMessage("删除成功", c)
+	}
+}
+
 // DeleteWmsLogisticsPcs2023MiByIds 批量删除2023年物流成本明细表
 // @Tags WmsLogisticsPcs2023Mi
 // @Summary 批量删除2023年物流成本明细表

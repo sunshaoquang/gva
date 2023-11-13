@@ -32,6 +32,21 @@ export const deleteWmsLogisticsPcs2023Mi = (data) => {
   })
 }
 
+// @Tags WmsLogisticsPcs2023MiAll
+// @Summary 删除2023年物流成本明细表
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.WmsLogisticsPcs2023MiAll true "删除2023年物流成本明细表"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"删除成功"}"
+// @Router /wmsLogisticsPcs2023Mi/deleteWmsLogisticsPcs2023MiAll [delete]
+export const deleteWmsLogisticsPcs2023MiAll = () => {
+  return service({
+    url: '/wmsLogisticsPcs2023Mi/deleteWmsLogisticsPcs2023MiAll',
+    method: 'delete'
+  })
+}
+
 // @Tags WmsLogisticsPcs2023Mi
 // @Summary 批量删除2023年物流成本明细表
 // @Security ApiKeyAuth

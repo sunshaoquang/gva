@@ -17,6 +17,7 @@ func (s *{{.StructName}}Router) Init{{.StructName}}Router(Router *gin.RouterGrou
 	{
 		{{.Abbreviation}}Router.POST("create{{.StructName}}", {{.Abbreviation}}Api.Create{{.StructName}})   // 新建{{.Description}}
 		{{.Abbreviation}}Router.DELETE("delete{{.StructName}}", {{.Abbreviation}}Api.Delete{{.StructName}}) // 删除{{.Description}}
+		{{.Abbreviation}}Router.DELETE("delete{{.StructName}}All", {{.Abbreviation}}Api.Delete{{.StructName}}All) // 全部删除{{.Description}}
 		{{.Abbreviation}}Router.DELETE("delete{{.StructName}}ByIds", {{.Abbreviation}}Api.Delete{{.StructName}}ByIds) // 批量删除{{.Description}}
 		{{.Abbreviation}}Router.PUT("update{{.StructName}}", {{.Abbreviation}}Api.Update{{.StructName}})    // 更新{{.Description}}
 	}
