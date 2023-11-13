@@ -1,6 +1,0 @@
-[uranus/server]2023/11/08 - 11:26:21.272	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
-[uranus/server]2023/11/08 - 14:16:33.521	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
-[uranus/server]2023/11/08 - 14:57:56.821	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/api/v1/system/sys_menu.go:143	添加失败!	{"error": "存在重复name，请修改name"}
-[uranus/server]2023/11/08 - 14:58:25.448	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/api/v1/system/sys_menu.go:143	添加失败!	{"error": "存在重复name，请修改name"}
-[uranus/server]2023/11/08 - 15:02:03.572	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
-[uranus/server]2023/11/08 - 16:44:27.121	[31merror[0m	/home/rightsun/Documents/git/gin-vue-admin/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
