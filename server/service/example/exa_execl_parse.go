@@ -65,7 +65,7 @@ var excelSheetList = map[string]ExcelSheetSettings{
         SheetName:      "Sheet1",
         SheetRow:       "A1",
         SheetHeadName:  []string{"产品简称","国家","降本基数10月成本","承诺达成降本金额","1月VS10月降本","2月VS10月降本","3月VS10月降本","4月VS10月降本","5月VS10月降本","6月VS10月降本","7月VS10月降本","8月VS10月降本","9月VS10月降本","10月VS10月降本","11月VS10月降本","12月VS10月降本","1-当前月累计加权降本金额","1-当前月累计加权降本完成度"},
-        SheetHeadValue: []string{"ProductAbbreviation","Country","ReduceBaseCostInOctober","CommitmentToAchieveCostReductionAmount","CostReductionInMonth1VsMonth10","CostReductionInMonth2VsMonth10","CostReductionInMonth3VsMonth10","CostReductionInMonth4VsMonth10","CostReductionInMonth5VsMonth10","CostReductionInMonth6VsMonth10","CostReductionInMonth7VsMonth10","CostReductionInMonth8VsMonth10","CostReductionInMonth9VsMonth10","CostReductionInMonth10VsMonth10","CostReductionInMonth11VsMonth10","CostReductionInMonth12VsMonth10","MonthlyCumulativeWeightedPrincipalReductionAmount","MonthlyCumulativeWeightedPrincipalReductionAmount"},
+        SheetHeadValue: []string{"ProductAbbreviation","Country","ReduceBaseCostInOctober","CommitmentToAchieveCostReductionAmount","CostReductionInMonth1VsMonth10","CostReductionInMonth2VsMonth10","CostReductionInMonth3VsMonth10","CostReductionInMonth4VsMonth10","CostReductionInMonth5VsMonth10","CostReductionInMonth6VsMonth10","CostReductionInMonth7VsMonth10","CostReductionInMonth8VsMonth10","CostReductionInMonth9VsMonth10","CostReductionInMonth10VsMonth10","CostReductionInMonth11VsMonth10","CostReductionInMonth12VsMonth10","MonthlyCumulativeWeightedPrincipalReductionAmount","MonthlyCumulativeWeightedCostReductionCompletionDegree"},
         SheetModel:     manual.WmsLogisticsPcsSummaryMi{},
     },
 	"主要产品成本明细表": {
