@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"strings"
 	"reflect"
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/xuri/excelize/v2"
@@ -75,6 +76,41 @@ var excelSheetList = map[string]ExcelSheetSettings{
         SheetHeadValue: []string{"ProductAbbreviation","Country","FeeTypeCNY","Year2022Month10","Year2022Month11","Year2022Month12","Year2023Month1","Year2023Month2","Year2023Month3","Year2023Month4","Year2023Month5","Year2023Month6","Year2023Month7","Year2023Month8","Year2023Month9","Year2023Month10","Year2023Month11","Year2023Month12"},
         SheetModel:     manual.WmsLogisticsPcsDetailMi{},
     },
+	"物流占销比": {
+        SheetName:      "Sheet1",
+        SheetRow:       "A1",
+        SheetHeadName:  []string{"区域","月份(YYYY-MM-DD)","指标","指标值"},
+        SheetHeadValue: []string{"Area","$Mmonth","Name","Value"},
+        SheetModel:     manual.WmsLogisticsRateMonths{},
+    },
+	"费用by运输方式": {
+        SheetName:      "Sheet1",
+        SheetRow:       "A1",
+        SheetHeadName:  []string{"区域","运输方式","月份(YYYY-MM-DD)","费用"},
+        SheetHeadValue: []string{"Area","TransMethod","$Mmonth","Cost"},
+        SheetModel:     manual.WmsLogisticsModeTransportMi{},
+    },
+	"费用by供应商":{
+		SheetName:      "Sheet1",
+        SheetRow:       "A1",
+		SheetHeadName:  []string{"类型","区域","目的国","供应商","2023年1月","2023年2月","2023年3月","2023年4月","2023年5月","2023年6月","2023年7月","2023年8月","2023年9月","2023年10月","2023年11月","2023年12月"},
+        SheetHeadValue: []string{"Type","Area","Country","Supplier","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"},
+		SheetModel:     manual.WmsLogisticsProviderMi{},
+	},
+	"收入by国家":{
+		SheetName:      "Sheet1",
+        SheetRow:       "A1",
+		SheetHeadName:  []string{"类型","区域","目的国","2023年1月","2023年2月","2023年3月","2023年4月","2023年5月","2023年6月","2023年7月","2023年8月","2023年9月","2023年10月","2023年11月","2023年12月"},
+        SheetHeadValue: []string{"Type","Area","Country","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"},
+		SheetModel:     manual.WmsLogisticsSalebycountryMi{},
+	},
+	"仓储费":{
+		SheetName:      "Sheet1",
+        SheetRow:       "A1",
+		SheetHeadName:  []string{"区域","费用类型","月份(YYYY-MM-DD)","不含税费用"},
+		SheetHeadValue: []string{"Area","CostType","$Mmonth","ExcludingTaxCost"},
+		SheetModel:     manual.WmsLogisticsStoragefeeMi{},
+	},
 }
 
 
@@ -99,8 +135,15 @@ func (exa *ExcelService) ParseInfoList2Excel(infoList []interface{}, filePath st
 			data[i] = []interface{}{}
 	
 			for _, propertyValue := range obj.SheetHeadValue {
+				var valueItem string
 				// 使用反射来获取属性值
-				value := infoMap[propertyValue]
+				if strings.HasPrefix(propertyValue, "$") {
+					// 去掉$
+					valueItem = strings.Trim(propertyValue, "$")
+				}else{
+					valueItem = propertyValue
+				}
+				value := infoMap[valueItem]
 				
 				// 检查值是否有效
 				if value != nil {
@@ -231,17 +274,29 @@ func (exa *ExcelService) ParseExcel2InfoList(c *gin.Context,fileName, sheetName,
 		
 		for i,_ := range row { 
 			cellName,err:= excelize.CoordinatesToCellName(i+1, j+1);
+			var valueItem string
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
 			// 获取单元格的原始值
-			originalValue, err := file.GetCellValue(obj.SheetName, cellName,excelize.Options{RawCellValue: true})
+			var originalValue string
+			
+			if strings.HasPrefix(obj.SheetHeadValue[i], "$") {
+				// 去掉$
+				valueItem = strings.Trim(obj.SheetHeadValue[i], "$")
+				// 去掉空格
+				valueItem = strings.TrimSpace(valueItem)
+				originalValue, err = file.GetCellValue(obj.SheetName, cellName,excelize.Options{RawCellValue: false})
+			}else{
+				valueItem = strings.TrimSpace(obj.SheetHeadValue[i])
+				originalValue, err = file.GetCellValue(obj.SheetName, cellName,excelize.Options{RawCellValue: true})
+			}
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
-			info[obj.SheetHeadValue[i]] = originalValue
+			info[valueItem] = originalValue
 		}
 		// 获取结构体类型
 		structType := reflect.TypeOf(obj.SheetModel)

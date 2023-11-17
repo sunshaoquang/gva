@@ -7,4 +7,9 @@ type RouterGroup struct {
 	WmsLogisticsPcsDetailMiRouter
 	WmsLogisticsPcsSummaryMiRouter
 	WmsLogisticsPcs2023MiRouter
+	WmsLogisticsRateMonthsRouter
+	WmsLogisticsProviderMiRouter
+	WmsLogisticsModeTransportMiRouter
+	WmsLogisticsSalebycountryMiRouter
+	WmsLogisticsStoragefeeMiRouter
 }

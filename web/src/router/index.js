@@ -41,6 +41,40 @@ const promotionChildren = [
     component: () =>
       import("@/view/wmsLogisticsPcs2023Mi/wmsLogisticsPcs2023Mi.vue"),
   },
+  {
+    path: "/template/wmsLogisticsModeTransportMi", //费用by运输方式
+    name: "WmsLogisticsModeTransportMi",
+    component: () =>
+      import(
+        "@/view/wmsLogisticsModeTransportMi/wmsLogisticsModeTransportMi.vue"
+      ),
+  },
+  {
+    path: "/template/wmsLogisticsProviderMi", //费用by供应商
+    name: "WmsLogisticsProviderMi",
+    component: () =>
+      import("@/view/wmsLogisticsProviderMi/wmsLogisticsProviderMi.vue"),
+  },
+  {
+    path: "/template/wmsLogisticsSalebycountryMi", //收入by国家
+    name: "WmsLogisticsSalebycountryMi",
+    component: () =>
+      import(
+        "@/view/wmsLogisticsSalebycountryMi/wmsLogisticsSalebycountryMi.vue"
+      ),
+  },
+  {
+    path: "/template/wmsLogisticsStoragefeeMi", //仓储费
+    name: "WmsLogisticsStoragefeeMi",
+    component: () =>
+      import("@/view/wmsLogisticsStoragefeeMi/wmsLogisticsStoragefeeMi.vue"),
+  },
+  {
+    path: "/template/wmsLogisticsRateMonths", //物流占销比
+    name: "WmsLogisticsRateMonths",
+    component: () =>
+      import("@/view/wmsLogisticsRateMonths/wmsLogisticsRateMonths.vue"),
+  },
 ];
 const routes = [
   {

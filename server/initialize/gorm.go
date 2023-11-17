@@ -59,5 +59,5 @@ func RegisterTables() {
 		os.Exit(0)
 	}
 	global.GVA_LOG.Info("register table success")
-	ht_smartdata.AutoMigrate(manual.WmsKpi2023SummaryMi{}, manual.WmsKpiSummary2Mi{}, manual.WmsLogisticsPcsDetailMi{}, manual.WmsLogisticsPcsSummaryMi{}, manual.WmsLogisticsPcs2023Mi{})
+	ht_smartdata.AutoMigrate(manual.WmsKpi2023SummaryMi{}, manual.WmsKpiSummary2Mi{}, manual.WmsLogisticsPcsDetailMi{}, manual.WmsLogisticsPcsSummaryMi{}, manual.WmsLogisticsPcs2023Mi{}, manual.WmsLogisticsRateMonths{}, manual.WmsLogisticsProviderMi{}, manual.WmsLogisticsModeTransportMi{}, manual.WmsLogisticsSalebycountryMi{}, manual.WmsLogisticsStoragefeeMi{})
 }

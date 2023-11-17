@@ -7,4 +7,9 @@ type ServiceGroup struct {
 	WmsLogisticsPcsDetailMiService
 	WmsLogisticsPcsSummaryMiService
 	WmsLogisticsPcs2023MiService
+	WmsLogisticsRateMonthsService
+	WmsLogisticsProviderMiService
+	WmsLogisticsModeTransportMiService
+	WmsLogisticsSalebycountryMiService
+	WmsLogisticsStoragefeeMiService
 }

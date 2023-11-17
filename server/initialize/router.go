@@ -80,6 +80,11 @@ func Routers() *gin.Engine {
 		manualRouter.InitWmsLogisticsPcsDetailMiRouter(PrivateGroup)
 		manualRouter.InitWmsLogisticsPcsSummaryMiRouter(PrivateGroup)
 		manualRouter.InitWmsLogisticsPcs2023MiRouter(PrivateGroup)
+		manualRouter.InitWmsLogisticsRateMonthsRouter(PrivateGroup)
+		manualRouter.InitWmsLogisticsProviderMiRouter(PrivateGroup)
+		manualRouter.InitWmsLogisticsModeTransportMiRouter(PrivateGroup)
+		manualRouter.InitWmsLogisticsSalebycountryMiRouter(PrivateGroup)
+		manualRouter.InitWmsLogisticsStoragefeeMiRouter(PrivateGroup)
 	}
 
 	global.GVA_LOG.Info("router register success")

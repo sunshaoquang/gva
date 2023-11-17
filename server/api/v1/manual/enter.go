@@ -7,4 +7,9 @@ type ApiGroup struct {
 	WmsLogisticsPcsDetailMiApi
 	WmsLogisticsPcsSummaryMiApi
 	WmsLogisticsPcs2023MiApi
+	WmsLogisticsRateMonthsApi
+	WmsLogisticsProviderMiApi
+	WmsLogisticsModeTransportMiApi
+	WmsLogisticsSalebycountryMiApi
+	WmsLogisticsStoragefeeMiApi
 }
