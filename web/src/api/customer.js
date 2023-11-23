@@ -181,7 +181,5 @@ export const outputExcelData = (fileName, sheetName, createdName) => {
       sheetName: sheetName,
       createdName: createdName,
     },
-  }).then((res) => {
-    handleFileError(res, fileName);
   });
 };

@@ -92,7 +92,7 @@ func (e *ExcelApi) OutputExcel(c *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("上传数据失败_%s",err), c)
 		return
 	}
-	response.OkWithMessage("上传成功", c)
+	response.OkWithMessage(fmt.Sprintf("上传成功,上传了%d条数据",len(infos)), c)
 }
 
 // @Tags excel

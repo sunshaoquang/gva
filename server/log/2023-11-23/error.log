@@ -1,0 +1,16 @@
+[uranus/server]2023/11/23 - 17:17:06.518	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误"}
+[uranus/server]2023/11/23 - 17:18:30.447	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误"}
+[uranus/server]2023/11/23 - 17:24:37.712	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/11/23 - 17:25:37.117	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第区域行"}
+[uranus/server]2023/11/23 - 17:28:19.944	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/11/23 - 17:36:59.411	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在区域,费用类型,月份,不含税费用行1"}
+[uranus/server]2023/11/23 - 17:38:36.651	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/11/23 - 17:38:50.266	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【区域,费用类型,月份,不含税费用】"}
+[uranus/server]2023/11/23 - 17:57:21.189	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【区域,费用类型,月份,不含税费用】"}
+[uranus/server]2023/11/23 - 18:03:00.716	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
+[uranus/server]2023/11/23 - 18:03:43.338	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【区域,费用类型,月份,不含税费用】"}
+[uranus/server]2023/11/23 - 18:06:50.677	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【区域,费用类型,月份(YYYY-MM-DD),不含税费用】"}
+[uranus/server]2023/11/23 - 18:07:00.863	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【区域,费用类型,月份(YYYY-MM-DD),不含税费用】"}
+[uranus/server]2023/11/23 - 18:09:56.178	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【项目,2021年,2022年,2023年】"}
+[uranus/server]2023/11/23 - 18:19:38.827	[31merror[0m	/home/rightsun/Documents/git/uranus/server/api/v1/example/exa_excel.go:83	加载数据失败!	{"error": "Excel格式错误在第1行【区域,费用类型,月份(YYYY-MM-DD),不含税费用】"}
+[uranus/server]2023/11/23 - 19:51:08.788	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection

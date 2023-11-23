@@ -286,6 +286,7 @@
         </el-descriptions>
       </el-scrollbar>
     </el-dialog>
+    <TagInfo />
   </div>
 </template>
 
@@ -614,8 +615,25 @@ const titleName = computed(() =>
   document?.title?.replace(` - ${config.appName}`, "")
 );
 const outputExcel = async () => {
-  await outputExcelData(titleName.value, sheetName.value, window.name);
-  getTableData();
+  try {
+    const res = await outputExcelData(
+      titleName.value,
+      sheetName.value,
+      window.name
+    );
+    if (res.code === 0) {
+      ElMessage({
+        type: "success",
+        message: res.msg,
+      });
+    }
+    getTableData();
+  } catch (error) {
+    ElMessage({
+      type: "error",
+      message: res.msg,
+    });
+  }
 };
 const downloadExcelTemplate = () => {
   downloadTemplate(`${titleName.value}__ExcelTemplate.xlsx`);

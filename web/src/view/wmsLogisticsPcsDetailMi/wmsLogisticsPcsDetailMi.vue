@@ -571,6 +571,7 @@
         </el-descriptions>
       </el-scrollbar>
     </el-dialog>
+    <TagInfo />
   </div>
 </template>
 
@@ -600,6 +601,7 @@ import { ref, reactive, computed } from "vue"; // 更新 新增 computed
 // ================== 增加 =====================
 import { outputExcelData, downloadTemplate } from "@/api/customer";
 import { useUserStore } from "@/pinia/modules/user";
+import TagInfo from "@/components/tagInfo/index.vue";
 import config from "@/core/config";
 const sheetName = ref("");
 const path = ref(import.meta.env.VITE_BASE_API);
@@ -935,8 +937,25 @@ const titleName = computed(() =>
   document?.title?.replace(` - ${config.appName}`, "")
 );
 const outputExcel = async () => {
-  await outputExcelData(titleName.value, sheetName.value, window.name);
-  getTableData();
+  try {
+    const res = await outputExcelData(
+      titleName.value,
+      sheetName.value,
+      window.name
+    );
+    if (res.code === 0) {
+      ElMessage({
+        type: "success",
+        message: res.msg,
+      });
+    }
+    getTableData();
+  } catch (error) {
+    ElMessage({
+      type: "error",
+      message: res.msg,
+    });
+  }
 };
 const downloadExcelTemplate = () => {
   downloadTemplate(`${titleName.value}__ExcelTemplate.xlsx`);

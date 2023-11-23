@@ -361,6 +361,7 @@ import { useUserStore } from "@/pinia/modules/user";
 import config from "@/core/config";
 const sheetName = ref("");
 const path = ref(import.meta.env.VITE_BASE_API);
+import TagInfo from "@/components/tagInfo/index.vue";
 // ================== 增加 =====================
 defineOptions({
   name: "WmsKpiSummary2Mi",

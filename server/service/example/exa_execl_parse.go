@@ -247,7 +247,7 @@ func (exa *ExcelService) ParseExcel2InfoList(c *gin.Context,fileName, sheetName,
 				skipHeader = false
 				continue
 			} else {
-				return nil, errors.New("Excel格式错误")
+				return nil, errors.New("Excel格式错误在第"+strconv.Itoa(j+1)+"行【"+strings.Join(row, ",")+"】")
 			}
 		}
 		if len(row) != len(fixedHeader) {

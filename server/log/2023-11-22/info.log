@@ -1,0 +1,12 @@
+[uranus/server]2023/11/22 - 16:09:20.638	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/gorm.go:61	register table success
+[uranus/server]2023/11/22 - 16:09:21.313	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:38	register swagger handler
+[uranus/server]2023/11/22 - 16:09:21.314	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:90	router register success
+[uranus/server]2023/11/22 - 16:09:21.314	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:36	server run success on 	{"address": ":8888"}
+[uranus/server]2023/11/22 - 16:49:03.797	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/gorm.go:61	register table success
+[uranus/server]2023/11/22 - 16:49:04.493	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:38	register swagger handler
+[uranus/server]2023/11/22 - 16:49:04.494	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:90	router register success
+[uranus/server]2023/11/22 - 16:49:04.494	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:36	server run success on 	{"address": ":8888"}
+[uranus/server]2023/11/22 - 17:49:43.964	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/gorm.go:61	register table success
+[uranus/server]2023/11/22 - 17:49:44.576	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:38	register swagger handler
+[uranus/server]2023/11/22 - 17:49:44.577	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/initialize/router.go:90	router register success
+[uranus/server]2023/11/22 - 17:49:44.577	[34minfo[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:36	server run success on 	{"address": ":8888"}
