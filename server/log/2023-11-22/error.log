@@ -1,2 +1,0 @@
-[uranus/server]2023/11/22 - 16:49:04.495	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	accept tcp [::]:8888: use of closed network connection
-[uranus/server]2023/11/22 - 17:49:44.578	[31merror[0m	/home/rightsun/Documents/git/uranus/server/core/server.go:42	net.Listen error: listen tcp :8888: bind: address already in use
