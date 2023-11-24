@@ -111,6 +111,20 @@ var excelSheetList = map[string]ExcelSheetSettings{
 		SheetHeadValue: []string{"Area","CostType","$Mmonth","ExcludingTaxCost"},
 		SheetModel:     manual.WmsLogisticsStoragefeeMi{},
 	},
+	"按天销售目标录入表":{
+		SheetName:      "Sheet1",
+        SheetRow:       "A1",
+		SheetHeadName:  []string{"类型","月份","渠道","版本","日期(YYYY-MM-DD)","销售目标"},
+		SheetHeadValue: []string{"Department","Month","Channel","Version","$Date","AmountTarget"},
+		SheetModel:     manual.OmsCnSalesTargetDaily{},
+	},
+	"京东自营销售录入表":{
+		SheetName:      "Sheet1",
+        SheetRow:       "A1",
+		SheetHeadName:  []string{"月份(YYYY-MM-DD)","渠道","类型","负责人","回款收入(未税)"},
+		SheetHeadValue: []string{"$Date","Channel","Department","Principal","Amount"},
+		SheetModel:     manual.OmsCnChannelSales{},
+	},
 }
 
 

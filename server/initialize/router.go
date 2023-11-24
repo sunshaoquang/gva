@@ -85,6 +85,8 @@ func Routers() *gin.Engine {
 		manualRouter.InitWmsLogisticsModeTransportMiRouter(PrivateGroup)
 		manualRouter.InitWmsLogisticsSalebycountryMiRouter(PrivateGroup)
 		manualRouter.InitWmsLogisticsStoragefeeMiRouter(PrivateGroup)
+		manualRouter.InitOmsCnSalesTargetDailyRouter(PrivateGroup)
+		manualRouter.InitOmsCnChannelSalesRouter(PrivateGroup)
 	}
 
 	global.GVA_LOG.Info("router register success")

@@ -18,7 +18,7 @@
           </ul>
           <h4>二、录入功能联系窗口：</h4>
           <div class="mb-3 ml-2">
-            IT信息中心：张坤动；邮箱：zhangkd@hello-tech.com"
+            IT信息中心：张坤动；邮箱：zhangkd@hello-tech.com
           </div>
         </div>
       </div>

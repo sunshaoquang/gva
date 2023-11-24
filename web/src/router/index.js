@@ -75,6 +75,17 @@ const promotionChildren = [
     component: () =>
       import("@/view/wmsLogisticsRateMonths/wmsLogisticsRateMonths.vue"),
   },
+  {
+    path: "/template/omsCnSalesTargetDaily", //按天销售目标录入表
+    name: "OmsCnSalesTargetDaily",
+    component: () =>
+      import("@/view/omsCnSalesTargetDaily/omsCnSalesTargetDaily.vue"),
+  },
+  {
+    path: "/template/omsCnChannelSales", //京东自营销售录入表
+    name: "OmsCnChannelSales",
+    component: () => import("@/view/omsCnChannelSales/omsCnChannelSales.vue"),
+  },
 ];
 const routes = [
   {

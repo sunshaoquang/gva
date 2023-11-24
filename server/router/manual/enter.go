@@ -12,4 +12,6 @@ type RouterGroup struct {
 	WmsLogisticsModeTransportMiRouter
 	WmsLogisticsSalebycountryMiRouter
 	WmsLogisticsStoragefeeMiRouter
+	OmsCnSalesTargetDailyRouter
+	OmsCnChannelSalesRouter
 }

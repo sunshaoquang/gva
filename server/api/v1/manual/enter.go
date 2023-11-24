@@ -12,4 +12,6 @@ type ApiGroup struct {
 	WmsLogisticsModeTransportMiApi
 	WmsLogisticsSalebycountryMiApi
 	WmsLogisticsStoragefeeMiApi
+	OmsCnSalesTargetDailyApi
+	OmsCnChannelSalesApi
 }
