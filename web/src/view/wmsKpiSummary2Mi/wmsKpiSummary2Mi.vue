@@ -330,6 +330,7 @@
         </el-descriptions>
       </el-scrollbar>
     </el-dialog>
+    <TagInfo />
   </div>
 </template>
 
