@@ -6,40 +6,35 @@
       @click="handleReload"
     />
     <Screenfull class="search-icon" />
-    <div
-      class="gvaIcon gvaIcon-customer-service"
-      @click="toService"
-    />
+    <div class="gvaIcon gvaIcon-customer-service" @click="toService" />
   </div>
 </template>
 
 <script setup>
-import Screenfull from '@/view/layout/screenfull/index.vue'
-import { emitter } from '@/utils/bus.js'
-import { ref } from 'vue'
+import Screenfull from "@/view/layout/screenfull/index.vue";
+import { emitter } from "@/utils/bus.js";
+import { ref } from "vue";
 
 defineOptions({
-  name: 'BtnBox',
-})
+  name: "BtnBox",
+});
 
-const reload = ref(false)
+const reload = ref(false);
 const handleReload = () => {
-  reload.value = true
-  emitter.emit('reload')
+  reload.value = true;
+  emitter.emit("reload");
   setTimeout(() => {
-    reload.value = false
-  }, 500)
-}
+    reload.value = false;
+  }, 500);
+};
 const toService = () => {
-  window.open('https://support.qq.com/product/371961')
-}
-
+  window.open("https://support.qq.com/product/371961");
+};
 </script>
 <style scoped lang="scss">
-
 .search-component {
   @apply inline-flex overflow-hidden text-center gap-5 mr-5;
-  div{
+  div {
     @apply cursor-pointer;
   }
   .el-input__inner {
@@ -54,8 +49,8 @@ const toService = () => {
   font-size: 18px;
 }
 
-.reloading{
-  animation:turn 0.5s linear infinite;
+.reloading {
+  animation: turn 0.5s linear infinite;
 }
 
 @keyframes turn {
@@ -79,5 +74,4 @@ const toService = () => {
     transform: rotate(360deg);
   }
 }
-
 </style>

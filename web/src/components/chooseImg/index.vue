@@ -1,12 +1,6 @@
 <template>
-  <el-drawer
-    v-model="drawer"
-    title="媒体库"
-    size="650px"
-  >
-    <warning-bar
-      title="点击“文件名/备注”可以编辑文件名或者备注内容。"
-    />
+  <el-drawer v-model="drawer" title="媒体库" size="650px">
+    <warning-bar title="点击“文件名/备注”可以编辑文件名或者备注内容。" />
     <div class="gva-btn-list">
       <upload-common
         v-model:imageCommon="imageCommon"
@@ -20,11 +14,7 @@
         class="upload-btn-media-library"
         @on-success="open"
       />
-      <el-form
-        ref="searchForm"
-        :inline="true"
-        :model="search"
-      >
+      <el-form ref="searchForm" :inline="true" :model="search">
         <el-form-item label="">
           <el-input
             v-model="search.keyword"
@@ -34,25 +24,17 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button
-            type="primary"
-            icon="search"
-            @click="open"
-          >查询</el-button>
+          <el-button type="primary" icon="search" @click="open">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="media">
-      <div
-        v-for="(item,key) in picList"
-        :key="key"
-        class="media-box"
-      >
+      <div v-for="(item, key) in picList" :key="key" class="media-box">
         <div class="header-img-box-list">
           <el-image
             :key="key"
             :src="getUrl(item.url)"
-            @click="chooseImg(item.url,target,targetKey)"
+            @click="chooseImg(item.url, target, targetKey)"
           >
             <template #error>
               <div class="header-img-box-list">
@@ -63,17 +45,16 @@
             </template>
           </el-image>
         </div>
-        <div
-          class="img-title"
-          @click="editFileNameFunc(item)"
-        >{{ item.name }}</div>
+        <div class="img-title" @click="editFileNameFunc(item)">
+          {{ item.name }}
+        </div>
       </div>
     </div>
     <el-pagination
       :current-page="page"
       :page-size="pageSize"
       :total="total"
-      :style="{'justify-content':'center'}"
+      :style="{ 'justify-content': 'center' }"
       layout="total, prev, pager, next, jumper"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
@@ -82,34 +63,34 @@
 </template>
 
 <script setup>
-import { getUrl } from '@/utils/image'
-import { ref } from 'vue'
-import { getFileList, editFileName } from '@/api/fileUploadAndDownload'
-import UploadImage from '@/components/upload/image.vue'
-import UploadCommon from '@/components/upload/common.vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import WarningBar from '@/components/warningBar/warningBar.vue'
+import { getUrl } from "@/utils/image";
+import { ref } from "vue";
+import { getFileList, editFileName } from "@/api/fileUploadAndDownload";
+import UploadImage from "@/components/upload/image.vue";
+import UploadCommon from "@/components/upload/common.vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import WarningBar from "@/components/warningBar/warningBar.vue";
 
-const imageUrl = ref('')
-const imageCommon = ref('')
+const imageUrl = ref("");
+const imageCommon = ref("");
 
-const search = ref({})
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(20)
+const search = ref({});
+const page = ref(1);
+const total = ref(0);
+const pageSize = ref(20);
 
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val
-  open()
-}
+  pageSize.value = val;
+  open();
+};
 
 const handleCurrentChange = (val) => {
-  page.value = val
-  open()
-}
+  page.value = val;
+  open();
+};
 
-const emit = defineEmits(['enterImg'])
+const emit = defineEmits(["enterImg"]);
 defineProps({
   target: {
     type: Object,
@@ -117,64 +98,70 @@ defineProps({
   },
   targetKey: {
     type: String,
-    default: '',
+    default: "",
   },
-})
+});
 
-const drawer = ref(false)
-const picList = ref([])
+const drawer = ref(false);
+const picList = ref([]);
 
 const chooseImg = (url, target, targetKey) => {
   if (target && targetKey) {
-    target[targetKey] = url
+    target[targetKey] = url;
   }
-  emit('enterImg', url)
-  drawer.value = false
-}
+  emit("enterImg", url);
+  drawer.value = false;
+};
 
-const open = async() => {
-  const res = await getFileList({ page: page.value, pageSize: pageSize.value, ...search.value })
+const open = async () => {
+  const res = await getFileList({
+    page: page.value,
+    pageSize: pageSize.value,
+    ...search.value,
+  });
   if (res.code === 0) {
-    picList.value = res.data.list
-    total.value = res.data.total
-    page.value = res.data.page
-    pageSize.value = res.data.pageSize
-    drawer.value = true
+    picList.value = res.data.list;
+    total.value = res.data.total;
+    page.value = res.data.page;
+    pageSize.value = res.data.pageSize;
+    drawer.value = true;
   }
-}
+};
 
 /**
  * 编辑文件名或者备注
  * @param row
  * @returns {Promise<void>}
  */
-const editFileNameFunc = async(row) => {
-  ElMessageBox.prompt('请输入文件名或者备注', '编辑', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
+const editFileNameFunc = async (row) => {
+  ElMessageBox.prompt("请输入文件名或者备注", "编辑", {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
     inputPattern: /\S/,
-    inputErrorMessage: '不能为空',
-    inputValue: row.name
-  }).then(async({ value }) => {
-    row.name = value
-    // console.log(row)
-    const res = await editFileName(row)
-    if (res.code === 0) {
-      ElMessage({
-        type: 'success',
-        message: '编辑成功!',
-      })
-      open()
-    }
-  }).catch(() => {
-    ElMessage({
-      type: 'info',
-      message: '取消修改'
-    })
+    inputErrorMessage: "不能为空",
+    inputValue: row.name,
   })
-}
+    .then(async ({ value }) => {
+      row.name = value;
+      // console.log(row)
+      const res = await editFileName(row);
+      if (res.code === 0) {
+        ElMessage({
+          type: "success",
+          message: "编辑成功!",
+        });
+        open();
+      }
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "取消修改",
+      });
+    });
+};
 
-defineExpose({ open })
+defineExpose({ open });
 </script>
 
 <style lang="scss">
@@ -218,5 +205,4 @@ defineExpose({ open })
     }
   }
 }
-
 </style>

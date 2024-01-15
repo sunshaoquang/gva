@@ -23,7 +23,6 @@
   </el-menu-item>
 </template>
 
-
 <script setup>
 import { ref, watch } from 'vue'
 
@@ -32,13 +31,10 @@ defineOptions({
 })
 
 const props = defineProps({
-  routerInfo: {
     default: function() {
       return null
     },
     type: Object
-  },
-  isCollapse: {
     default: function() {
       return false
     },
@@ -65,56 +61,53 @@ watch(() => props.theme, () => {
   hoverBackground.value = props.theme.hoverBackground
   hoverText.value = props.theme.hoverText
 })
-
 </script>
 
 <style lang="scss" scoped>
+.gva-menu-item {
+  width: 100%;
+  flex: 1;
+  height: 44px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-left: 4px;
 
- .gva-menu-item{
-   width: 100%;
-    flex:1;
-    height: 44px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding-left: 4px;
-
-.gva-menu-item-title {
-    flex:1;
+  .gva-menu-item-title {
+    flex: 1;
   }
 }
 
-.el-menu--collapse{
-  .el-menu-item.is-active{
+.el-menu--collapse {
+  .el-menu-item.is-active {
     color: v-bind(activeBackground);
   }
 }
 
-.el-menu-item{
+.el-menu-item {
   color: v-bind(normalText);
 }
 
-.el-menu-item.is-active{
-  .gva-menu-item{
+.el-menu-item.is-active {
+  .gva-menu-item {
     background: v-bind(activeBackground) !important;
     border-radius: 4px;
     box-shadow: 0 0 2px 1px v-bind(activeBackground) !important;
-    i{
+    i {
       color: v-bind(activeText);
     }
-    span{
+    span {
       color: v-bind(activeText);
     }
   }
 }
 
-.el-menu-item:hover{
-  .gva-menu-item{
+.el-menu-item:hover {
+  .gva-menu-item {
     background: v-bind(hoverBackground);
     border-radius: 4px;
     box-shadow: 0 0 2px 1px v-bind(hoverBackground);
     color: v-bind(hoverText);
   }
 }
-
 </style>

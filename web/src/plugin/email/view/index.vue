@@ -18,11 +18,7 @@
           <el-input
             v-model="form.body"
             type="textarea"
-          />
         </el-form-item>
-        <el-form-item>
-          <el-button @click="sendTestEmail">发送测试邮件</el-button>
-          <el-button @click="sendEmail">发送邮件</el-button>
         </el-form-item>
       </el-form>
     </div>

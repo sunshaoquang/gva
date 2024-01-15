@@ -28,6 +28,7 @@ func (a *AuthorityApi) CreateAuthority(c *gin.Context) {
 	var err error
 
 	if err = c.ShouldBindJSON(&authority); err != nil {
+
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
@@ -113,7 +114,7 @@ func (a *AuthorityApi) DeleteAuthority(c *gin.Context) {
 		return
 	}
 	_ = casbinService.FreshCasbin()
-	response.OkWithMessage("删除成功", c)
+
 }
 
 // UpdateAuthority

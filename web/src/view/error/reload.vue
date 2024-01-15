@@ -3,12 +3,12 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 
 defineOptions({
-  name: 'Reload'
-})
+  name: "Reload",
+});
 
-const router = useRouter()
-router.go(-1)
+const router = useRouter();
+router.go(-1);
 </script>

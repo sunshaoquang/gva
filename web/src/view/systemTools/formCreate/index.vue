@@ -1,5 +1,5 @@
 <template>
-  <div style="height:80vh">
+  <div style="height: 80vh">
     <iframe
       width="100%"
       height="100%"
@@ -10,10 +10,10 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-const basePath = ref(import.meta.env.VITE_BASE_PATH)
-const basePort = ref(import.meta.env.VITE_SERVER_PORT)
+import { ref } from "vue";
+const basePath = ref(import.meta.env.VITE_BASE_PATH);
+const basePort = ref(import.meta.env.VITE_SERVER_PORT);
 defineOptions({
-  name: 'FormGenerator'
-})
+  name: "FormGenerator",
+});
 </script>

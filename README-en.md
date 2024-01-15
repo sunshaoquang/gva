@@ -1,4 +1,3 @@
-
 <div align=center>
 <img src="http://qmplusimg.henrongyi.top/gvalogo.jpg" width=300" height="300" />
 </div>
@@ -21,11 +20,12 @@ English | [简体中文](./README.md)
 [Approval flow branch](https://github.com/flipped-aurora/gin-vue-admin/tree/gva_workflow): https://github.com/flipped-aurora/gin-vue-admin/tree/gva_workflow
 
 # Project Guidelines
+
 [Online Documentation](https://www.gin-vue-admin.com/) : https://www.gin-vue-admin.com/
 
 [From the environment to the deployment of teaching videos](https://www.bilibili.com/video/BV1fV411y7dT)
 
-[Development Steps](https://www.gin-vue-admin.com/guide/start-quickly/env.html) (Contributor:  <a href="https://github.com/LLemonGreen">LLemonGreen</a> And <a href="https://github.com/fkk0509">Fann</a>)
+[Development Steps](https://www.gin-vue-admin.com/guide/start-quickly/env.html) (Contributor: <a href="https://github.com/LLemonGreen">LLemonGreen</a> And <a href="https://github.com/fkk0509">Fann</a>)
 
 ## 1. Basic Introduction
 
@@ -96,7 +96,7 @@ cd server
 # use go mod And install the go dependency package
 go generate
 
-# Compile 
+# Compile
 go build -o server main.go (windows the compile command is go build -o server.exe main.go )
 
 # Run binary
@@ -130,41 +130,41 @@ go build
 
 ### 2.3 API docs auto-generation using swagger
 
-#### 2.3.1 install swagger 
+#### 2.3.1 install swagger
 
 ##### (1) Using VPN or outside mainland China
-````
+
+```
 go get -u github.com/swaggo/swag/cmd/swag
-````
+```
 
 ##### (2) In mainland China
 
 In mainland China, access to go.org/x is prohibited，we recommend [goproxy.io](https://goproxy.io/zh/) or [goproxy.cn](https://goproxy.cn)
 
-````bash
+```bash
 # If you are using a version of Go 1.13 - 1.15 Need to set up manually GO111MODULE=on, The opening mode is as follows, If your Go version is 1.16 ~ Latest edition You can ignore the following step one
 # Step one、Enable Go Modules Function
-go env -w GO111MODULE=on 
+go env -w GO111MODULE=on
 # Step two、Configuration GOPROXY Environment variable
 go env -w GOPROXY=https://goproxy.cn,https://goproxy.io,direct
 
-# If you dislike trouble,You can use the go generate Automatically execute code before compilation, But this can't be used command line terminal of `Goland` or `Vscode` 
+# If you dislike trouble,You can use the go generate Automatically execute code before compilation, But this can't be used command line terminal of `Goland` or `Vscode`
 cd server
 go generate -run "go env -w .*?"
 
 # 使用如下命令下载swag
 go get -u github.com/swaggo/swag/cmd/swag
-````
+```
 
 #### 2.3.2 API docs generation
 
-````
+```
 cd server
 swag init
-````
+```
 
 > After executing the above command，server directory will appear in the docs folder `docs.go`, `swagger.json`, `swagger.yaml` Three file updates，After starting the go service, type in the browser [http://localhost:8888/swagger/index.html](http://localhost:8888/swagger/index.html) You can view swagger document
-
 
 ## 3. Technical selection
 
@@ -195,25 +195,25 @@ swag init
         ├── config          (configuration package)
         ├── core            (core document)
         ├── docs            (swagger document directory)
-        ├── global          (global object)                    
-        ├── initialize      (initialization)                        
-        │   └── internal    (initialize internal function)                            
-        ├── middleware      (middleware layer)                        
-        ├── model           (model layer)                    
-        │   ├── request     (input parameter structure)                        
-        │   └── response    (out-of-parameter structure)                            
-        ├── packfile        (static file packaging)                        
-        ├── resource        (static resource folder)                        
-        │   ├── excel       (excel import and export default path)                        
-        │   ├── page        (form generator)                        
-        │   └── template    (template)                            
-        ├── router          (routing layer)                    
-        ├── service         (service layer)                    
-        ├── source          (source layer)                    
-        └── utils           (tool kit)                    
-            ├── timer       (timer interface encapsulation)                        
-            └── upload      (oss interface encapsulation)  
-            
+        ├── global          (global object)
+        ├── initialize      (initialization)
+        │   └── internal    (initialize internal function)
+        ├── middleware      (middleware layer)
+        ├── model           (model layer)
+        │   ├── request     (input parameter structure)
+        │   └── response    (out-of-parameter structure)
+        ├── packfile        (static file packaging)
+        ├── resource        (static resource folder)
+        │   ├── excel       (excel import and export default path)
+        │   ├── page        (form generator)
+        │   └── template    (template)
+        ├── router          (routing layer)
+        ├── service         (service layer)
+        ├── source          (source layer)
+        └── utils           (tool kit)
+            ├── timer       (timer interface encapsulation)
+            └── upload      (oss interface encapsulation)
+
     └─web            （frontend）
         ├─public        （deploy templates）
         └─src           （source code）
@@ -230,7 +230,7 @@ swag init
 
 ## 5. Features
 
-- Authority management: Authority management based on `jwt` and `casbin`. 
+- Authority management: Authority management based on `jwt` and `casbin`.
 - File upload and download: implement file upload operations based on `Qiniuyun', `Aliyun 'and `Tencent Cloud` (please develop your own application for each platform corresponding to `token` or `key` ).
 - Pagination Encapsulation：The frontend uses `mixins` to encapsulate paging, and the paging method can call `mixins` .
 - User management: The system administrator assigns user roles and role permissions.
@@ -253,7 +253,7 @@ swag init
 
 > https://www.yuque.com/flipped-aurora
 >
->There are video courses about frontend framework in our blo. If you think the project is helpful to you, you can add my personal WeChat:shouzi_1994，your comments is welcomed。
+> There are video courses about frontend framework in our blo. If you think the project is helpful to you, you can add my personal WeChat:shouzi_1994，your comments is welcomed。
 
 ### 6.2 Video courses
 
@@ -278,6 +278,7 @@ swag init
 > bilibili：https://space.bilibili.com/322210472/channel/detail?cid=126418&ctype=0
 
 (6) gin-vue-admin version update introduction video
+
 > bilibili：https://space.bilibili.com/322210472/channel/detail?cid=126418&ctype=0
 
 ## 7.Contacts
@@ -286,16 +287,16 @@ swag init
 
 #### QQ group: 622360840
 
-| QQ group |d
-|  :---:  |
+|                            QQ group                            | d   |
+| :------------------------------------------------------------: | --- |
 | <img src="http://qmplusimg.henrongyi.top/qq.jpg" width="180"/> |
 
-
-#### Wechat group: comment "加入gin-vue-admin交流群"
+#### Wechat group: comment "加入 gin-vue-admin 交流群"
 
 | Wechat |
-|  :---:  | 
-| <img width="150" src="http://qmplusimg.henrongyi.top/qrjjz.png"> 
+| :----: |
+
+| <img width="150" src="http://qmplusimg.henrongyi.top/qrjjz.png">
 
 #### [About Us](https://www.gin-vue-admin.com/about/join.html)
 
@@ -314,4 +315,3 @@ If you find this project useful, you can buy author a glass of juice :tropical_d
 ## 10. Commercial considerations
 
 If you use this project for commercial purposes, please comply with the Apache2.0 agreement and retain the author's technical support statement.
-

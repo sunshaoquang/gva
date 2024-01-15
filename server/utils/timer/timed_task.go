@@ -1,8 +1,9 @@
 package timer
 
 import (
-	"github.com/robfig/cron/v3"
 	"sync"
+
+	"github.com/robfig/cron/v3"
 )
 
 type Timer interface {

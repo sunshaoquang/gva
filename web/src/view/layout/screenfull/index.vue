@@ -1,60 +1,53 @@
 <template>
   <div @click="clickFull">
-    <div
-      v-if="isShow"
-      class="gvaIcon gvaIcon-fullscreen-expand"
-    />
-    <div
-      v-else
-      class="gvaIcon gvaIcon-fullscreen-shrink"
-    />
+    <div v-if="isShow" class="gvaIcon gvaIcon-fullscreen-expand" />
+    <div v-else class="gvaIcon gvaIcon-fullscreen-shrink" />
   </div>
 </template>
 
 <script setup>
-import screenfull from 'screenfull' // 引入screenfull
-import { onMounted, onUnmounted, ref } from 'vue'
+import screenfull from "screenfull"; // 引入screenfull
+import { onMounted, onUnmounted, ref } from "vue";
 
 defineOptions({
-  name: 'Screenfull',
-})
+  name: "Screenfull",
+});
 
 defineProps({
   width: {
     type: Number,
-    default: 22
+    default: 22,
   },
   height: {
     type: Number,
-    default: 22
+    default: 22,
   },
   fill: {
     type: String,
-    default: '#48576a'
-  }
-})
+    default: "#48576a",
+  },
+});
 
 onMounted(() => {
   if (screenfull.isEnabled) {
-    screenfull.on('change', changeFullShow)
+    screenfull.on("change", changeFullShow);
   }
-})
+});
 
 onUnmounted(() => {
-  screenfull.off('change')
-})
+  screenfull.off("change");
+});
 
 const clickFull = () => {
   if (screenfull.isEnabled) {
-    screenfull.toggle()
+    screenfull.toggle();
   }
-}
+};
 
-const isShow = ref(true)
+const isShow = ref(true);
 const changeFullShow = () => {
-  isShow.value = !screenfull.isFullscreen
-}
-
+  isShow.value = !screenfull.isFullscreen;
+};
 </script>
 
 <style scoped lang="scss">

@@ -29,5 +29,4 @@ func (j *JwtApi) JsonInBlacklist(c *gin.Context) {
 		return
 	}
 	utils.ClearToken(c)
-	response.OkWithMessage("jwt作废成功", c)
 }

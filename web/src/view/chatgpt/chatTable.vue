@@ -1,6 +1,8 @@
 <template>
   <div class="gva-table-box">
-    <warning-bar title="使用GPT-3.5模型，存在一定不稳定性，成功率为50%左右，使用GPT-4可以极大提升成功率，但是费用较高。" />
+    <warning-bar
+      title="使用GPT-3.5模型，存在一定不稳定性，成功率为50%左右，使用GPT-4可以极大提升成功率，但是费用较高。"
+    />
     <div v-if="!chatToken">
       <el-input
         v-model="skObj.sk"
@@ -8,37 +10,23 @@
         placeholder="请输入您的ChatGpt SK"
         clearable
       />
-      <el-button
-        type="primary"
-        @click="save"
-      >保存</el-button>
+      <el-button type="primary" @click="save">保存</el-button>
       <div class="secret">
-        <el-empty description="请到gpt网站获取您的sk：https://platform.openai.com/account/api-keys" />
+        <el-empty
+          description="请到gpt网站获取您的sk：https://platform.openai.com/account/api-keys"
+        />
       </div>
     </div>
     <div v-else>
-      <el-form
-        :model="form"
-        label-width="120px"
-      >
+      <el-form :model="form" label-width="120px">
         <el-form-item label="删除当前sk：">
-          <el-popover
-            placement="top"
-            width="160"
-          >
+          <el-popover placement="top" width="160">
             <p>确定要删除并返回吗？</p>
-            <div style="text-align: right; margin-top: 8px;">
-              <el-button
-                type="primary"
-                @click="deleteSK"
-              >确定</el-button>
+            <div style="text-align: right; margin-top: 8px">
+              <el-button type="primary" @click="deleteSK">确定</el-button>
             </div>
             <template #reference>
-              <el-button
-                type="primary"
-                link
-                icon="delete"
-              >删除</el-button>
+              <el-button type="primary" link icon="delete">删除</el-button>
             </template>
           </el-popover>
         </el-form-item>
@@ -74,10 +62,7 @@
             placeholder="此处展示自动生成的sql"
           />
         </el-form-item>
-        <el-button
-          type="primary"
-          @click="handleQueryTable"
-        >查询</el-button>
+        <el-button type="primary" @click="handleQueryTable">查询</el-button>
       </el-form>
       <div class="tables">
         <el-table
@@ -97,102 +82,96 @@
             show-overflow-tooltip
           />
         </el-table>
-        <p
-          v-else
-          class="text"
-        >请在对话框输入你需要AI帮你查询的内容：）</p>
+        <p v-else class="text">请在对话框输入你需要AI帮你查询的内容：）</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import WarningBar from '@/components/warningBar/warningBar.vue'
-import { getTableApi,
-  createSKApi,
-  getSKApi,
-  deleteSKApi } from '@/api/chatgpt'
-import { getDB as getDBAPI } from '@/api/autoCode'
-import { ref, reactive } from 'vue'
+import WarningBar from "@/components/warningBar/warningBar.vue";
+import { getTableApi, createSKApi, getSKApi, deleteSKApi } from "@/api/chatgpt";
+import { getDB as getDBAPI } from "@/api/autoCode";
+import { ref, reactive } from "vue";
 
-const chatToken = ref(null)
+const chatToken = ref(null);
 const skObj = reactive({
-  sk: '',
-})
-const sql = ref('')
-const getSK = async() => {
-  const res = await getSKApi()
-  chatToken.value = res.data.ok
-}
+  sk: "",
+});
+const sql = ref("");
+const getSK = async () => {
+  const res = await getSKApi();
+  chatToken.value = res.data.ok;
+};
 
-const getDB = async() => {
-  const res = await getDBAPI()
+const getDB = async () => {
+  const res = await getDBAPI();
   if (res.code === 0) {
-    dbArr.value = res.data.dbs
+    dbArr.value = res.data.dbs;
   }
-}
-getSK()
-getDB()
-const save = async() => {
-  const res = await createSKApi(skObj)
+};
+getSK();
+getDB();
+const save = async () => {
+  const res = await createSKApi(skObj);
   if (res.code === 0) {
-    await getSK()
+    await getSK();
   }
-}
+};
 
-const deleteSK = async() => {
-  const res = await deleteSKApi()
+const deleteSK = async () => {
+  const res = await deleteSKApi();
   if (res.code === 0) {
-    await getSK()
+    await getSK();
   }
-}
+};
 
 const form = ref({
-  dbname: '',
-  chat: '',
-})
-const dbArr = ref([])
-const tableData = ref([])
+  dbname: "",
+  chat: "",
+});
+const dbArr = ref([]);
+const tableData = ref([]);
 
-const handleQueryTable = async() => {
-  const res = await getTableApi(form.value)
+const handleQueryTable = async () => {
+  const res = await getTableApi(form.value);
   if (res.code === 0) {
-    tableData.value = res.data.results || []
+    tableData.value = res.data.results || [];
   }
-  sql.value = res.data.sql
+  sql.value = res.data.sql;
   // 根据后台返回值动态渲染表格
-}
+};
 </script>
 
 <style scoped lang="scss">
-.secret{
+.secret {
   padding: 30px;
   margin-top: 20px;
-  background: #F5F5F5;
+  background: #f5f5f5;
   p {
     line-height: 30px;
   }
 }
-.query-ipt{
+.query-ipt {
   width: 300px;
   margin-right: 30px;
 }
-.content{
+.content {
   p {
     font-size: 16px;
     line-height: 20px;
   }
   padding: 10px;
   width: 100%;
-  background: #F5F5F5;
+  background: #f5f5f5;
   margin-top: 30px;
 }
-.tables{
+.tables {
   width: 100%;
   margin-top: 30px;
-  .text{
+  .text {
     font-size: 18px;
-    color: #6B7687;
+    color: #6b7687;
     text-align: center;
   }
 }

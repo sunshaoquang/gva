@@ -1,10 +1,11 @@
 package internal
 
 import (
-	"gorm.io/gorm/schema"
 	"log"
 	"os"
 	"time"
+
+	"gorm.io/gorm/schema"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"gorm.io/gorm"

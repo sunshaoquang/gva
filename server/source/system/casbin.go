@@ -39,6 +39,7 @@ func (i initCasbin) InitializerName() string {
 	return entity.TableName()
 }
 
+//TODO 自动默认加角色权限
 func (i *initCasbin) InitializeData(ctx context.Context) (context.Context, error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {

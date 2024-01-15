@@ -1,4 +1,4 @@
-import service from '@/utils/request'
+import service from "@/utils/request";
 
 // @Tags api
 // @Summary 分页获取角色列表
@@ -14,11 +14,11 @@ import service from '@/utils/request'
 // }
 export const getApiList = (data) => {
   return service({
-    url: '/api/getApiList',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/getApiList",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags Api
 // @Summary 创建基础api
@@ -30,11 +30,11 @@ export const getApiList = (data) => {
 // @Router /api/createApi [post]
 export const createApi = (data) => {
   return service({
-    url: '/api/createApi',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/createApi",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags menu
 // @Summary 根据id获取菜单
@@ -46,11 +46,11 @@ export const createApi = (data) => {
 // @Router /menu/getApiById [post]
 export const getApiById = (data) => {
   return service({
-    url: '/api/getApiById',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/getApiById",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags Api
 // @Summary 更新api
@@ -62,11 +62,11 @@ export const getApiById = (data) => {
 // @Router /api/updateApi [post]
 export const updateApi = (data) => {
   return service({
-    url: '/api/updateApi',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/updateApi",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags Api
 // @Summary 更新api
@@ -78,11 +78,11 @@ export const updateApi = (data) => {
 // @Router /api/setAuthApi [post]
 export const setAuthApi = (data) => {
   return service({
-    url: '/api/setAuthApi',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/setAuthApi",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags Api
 // @Summary 获取所有的Api 不分页
@@ -93,11 +93,11 @@ export const setAuthApi = (data) => {
 // @Router /api/getAllApis [post]
 export const getAllApis = (data) => {
   return service({
-    url: '/api/getAllApis',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/getAllApis",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags Api
 // @Summary 删除指定api
@@ -109,11 +109,11 @@ export const getAllApis = (data) => {
 // @Router /api/deleteApi [post]
 export const deleteApi = (data) => {
   return service({
-    url: '/api/deleteApi',
-    method: 'post',
-    data
-  })
-}
+    url: "/api/deleteApi",
+    method: "post",
+    data,
+  });
+};
 
 // @Tags SysApi
 // @Summary 删除选中Api
@@ -125,11 +125,11 @@ export const deleteApi = (data) => {
 // @Router /api/deleteApisByIds [delete]
 export const deleteApisByIds = (data) => {
   return service({
-    url: '/api/deleteApisByIds',
-    method: 'delete',
-    data
-  })
-}
+    url: "/api/deleteApisByIds",
+    method: "delete",
+    data,
+  });
+};
 
 // FreshCasbin
 // @Tags      SysApi
@@ -140,7 +140,7 @@ export const deleteApisByIds = (data) => {
 // @Router    /api/freshCasbin [get]
 export const freshCasbin = () => {
   return service({
-    url: '/api/freshCasbin',
-    method: 'get'
-  })
-}
+    url: "/api/freshCasbin",
+    method: "get",
+  });
+};

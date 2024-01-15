@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: [ '*' ]
+    branches: ["*"]
   pull_request:
   release:
-    types: [ created, edited ]
+    types: [created, edited]
   workflow_dispatch:
     inputs:
       gva_version:
@@ -76,7 +76,7 @@ jobs:
   devops-test:
     if: github.ref == 'refs/heads/test'
     name: devops-test
-    needs: 
+    needs:
       - init
       - backend
       - frontend
@@ -111,7 +111,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Build-go
         run: |
-          cd server/ && go mod tidy && CGO_ENABLED=0 go build && mkdir ../web/ser && mv server ../web/ser/ && cd ../web/ser/ && ls -s 
+          cd server/ && go mod tidy && CGO_ENABLED=0 go build && mkdir ../web/ser && mv server ../web/ser/ && cd ../web/ser/ && ls -s
       - name: restart
         env:
           KEY: ${{ secrets.KEY }}
@@ -194,8 +194,8 @@ jobs:
     name: devops-prod
     strategy:
       matrix:
-        node-version: ['16.x']
-        go-version: ['1.21']
+        node-version: ["16.x"]
+        go-version: ["1.21"]
     steps:
       - uses: actions/checkout@v2
       - name: tag major and minor versions
@@ -220,7 +220,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Build-go
         run: |
-          cd server/ && go mod tidy && CGO_ENABLED=0 go build && mkdir ../web/ser && mv server ../web/ser/ && cd ../web/ser/ && ls -s 
+          cd server/ && go mod tidy && CGO_ENABLED=0 go build && mkdir ../web/ser && mv server ../web/ser/ && cd ../web/ser/ && ls -s
       - name: restart
         env:
           KEY: ${{ secrets.KEY }}

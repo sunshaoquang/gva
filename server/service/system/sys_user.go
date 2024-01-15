@@ -6,11 +6,13 @@ import (
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/App"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gofrs/uuid/v5"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -45,13 +47,40 @@ func (userService *UserService) Login(u *system.SysUser) (userInter *system.SysU
 		return nil, fmt.Errorf("db not init")
 	}
 
+	// TODO UPDATE 用户逻辑修改
 	var user system.SysUser
-	err = global.GVA_DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Authority").First(&user).Error
-	if err == nil {
-		if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
-			return nil, errors.New("密码错误")
+	var appUser App.AppUser
+	println(u.AppUser.OpenId)
+	if u.AppUser.OpenId != "" {
+		if err = global.GVA_DB.Where("OpenId = ?", u.AppUser.OpenId).First(&appUser).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				// 如果数据不存在，创建数据并再次查询
+				if err := global.GVA_DB.Clauses(clause.OnConflict{
+					DoNothing: true,
+				}).Create(&u.AppUser).Error; err != nil {
+					return nil, fmt.Errorf("failed to create user")
+				}
+				if err := global.GVA_DB.Where("OpenId = ?", u.AppUser.OpenId).First(&appUser).Error; err != nil {
+					return nil, fmt.Errorf("failed to find user")
+				}
+			} else {
+				return nil, fmt.Errorf("failed to find user")
+			}
 		}
-		MenuServiceApp.UserAuthorityDefaultRouter(&user)
+		if appUser.SysUserID != nil {
+			err = global.GVA_DB.Where("id = ?", appUser.SysUserID).Preload("AppUser").First(&user).Error
+		} else {
+			user.AppUser = appUser
+		}
+	} else {
+
+		err = global.GVA_DB.Where("username = ?", u.Username).Preload("Authorities").Preload("Authority").Preload("AppUser").First(&user).Error
+		if err == nil {
+			if ok := utils.BcryptCheck(u.Password, user.Password); !ok {
+				return nil, errors.New("密码错误")
+			}
+			MenuServiceApp.UserAuthorityDefaultRouter(&user)
+		}
 	}
 	return &user, err
 }
@@ -201,7 +230,7 @@ func (userService *UserService) SetSelfInfo(req system.SysUser) error {
 
 func (userService *UserService) GetUserInfo(uuid uuid.UUID) (user system.SysUser, err error) {
 	var reqUser system.SysUser
-	err = global.GVA_DB.Preload("Authorities").Preload("Authority").First(&reqUser, "uuid = ?", uuid).Error
+	err = global.GVA_DB.Preload("Authorities").Preload("Authority").Preload("AppUser").First(&reqUser, "uuid = ?", uuid).Error
 	if err != nil {
 		return reqUser, err
 	}

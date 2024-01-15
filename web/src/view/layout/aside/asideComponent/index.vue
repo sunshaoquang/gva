@@ -6,7 +6,7 @@
     :theme="theme"
     :router-info="routerInfo"
   >
-    <template v-if="routerInfo.children&&routerInfo.children.length">
+    <template v-if="routerInfo.children && routerInfo.children.length">
       <AsideComponent
         v-for="item in routerInfo.children"
         :key="item.name"
@@ -18,15 +18,14 @@
   </component>
 </template>
 
-
 <script setup>
-import MenuItem from './menuItem.vue'
-import AsyncSubmenu from './asyncSubmenu.vue'
-import { computed } from 'vue'
+import MenuItem from "./menuItem.vue";
+import AsyncSubmenu from "./asyncSubmenu.vue";
+import { computed } from "vue";
 
 defineOptions({
-  name: 'AsideComponent',
-})
+  name: "AsideComponent",
+});
 
 const props = defineProps({
   routerInfo: {
@@ -34,26 +33,27 @@ const props = defineProps({
     default: () => null,
   },
   isCollapse: {
-    default: function() {
-      return false
+    default: function () {
+      return false;
     },
-    type: Boolean
+    type: Boolean,
   },
   theme: {
-    default: function() {
-      return {}
+    default: function () {
+      return {};
     },
-    type: Object
-  }
-})
+    type: Object,
+  },
+});
 
 const menuComponent = computed(() => {
-  if (props.routerInfo.children && props.routerInfo.children.filter(item => !item.hidden).length) {
-    return AsyncSubmenu
+  if (
+    props.routerInfo.children &&
+    props.routerInfo.children.filter((item) => !item.hidden).length
+  ) {
+    return AsyncSubmenu;
   } else {
-    return MenuItem
+    return MenuItem;
   }
-})
-
+});
 </script>
-

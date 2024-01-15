@@ -2,9 +2,10 @@ package system
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"strconv"
 	"sync"
+
+	"gorm.io/gorm"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
