@@ -24,43 +24,49 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch } from "vue";
 
 defineOptions({
-  name: 'MenuItem',
-})
+  name: "MenuItem",
+});
 
 const props = defineProps({
-    default: function() {
-      return null
+  routerInfo: {
+    default: function () {
+      return null;
     },
-    type: Object
-    default: function() {
-      return false
+    type: Object,
+  },
+  isCollapse: {
+    default: function () {
+      return false;
     },
-    type: Boolean
+    type: Boolean,
   },
   theme: {
-    default: function() {
-      return {}
+    default: function () {
+      return {};
     },
-    type: Object
+    type: Object,
+  },
+});
+
+const activeBackground = ref(props.theme.activeBackground);
+const activeText = ref(props.theme.activeText);
+const normalText = ref(props.theme.normalText);
+const hoverBackground = ref(props.theme.hoverBackground);
+const hoverText = ref(props.theme.hoverText);
+
+watch(
+  () => props.theme,
+  () => {
+    activeBackground.value = props.theme.activeBackground;
+    activeText.value = props.theme.activeText;
+    normalText.value = props.theme.normalText;
+    hoverBackground.value = props.theme.hoverBackground;
+    hoverText.value = props.theme.hoverText;
   }
-})
-
-const activeBackground = ref(props.theme.activeBackground)
-const activeText = ref(props.theme.activeText)
-const normalText = ref(props.theme.normalText)
-const hoverBackground = ref(props.theme.hoverBackground)
-const hoverText = ref(props.theme.hoverText)
-
-watch(() => props.theme, () => {
-  activeBackground.value = props.theme.activeBackground
-  activeText.value = props.theme.activeText
-  normalText.value = props.theme.normalText
-  hoverBackground.value = props.theme.hoverBackground
-  hoverText.value = props.theme.hoverText
-})
+);
 </script>
 
 <style lang="scss" scoped>
