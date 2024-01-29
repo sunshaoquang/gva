@@ -15,6 +15,7 @@ const createIconComponent = (name) => ({
   }
 })
 
+// eslint-disable-next-line space-before-function-paren
 const registerIcons = async (app) => {
   const iconModules = import.meta.glob('@/assets/icons/**/*.svg')
   for (const path in iconModules) {
