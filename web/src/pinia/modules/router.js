@@ -1,31 +1,31 @@
-import { asyncRouterHandle } from "@/utils/asyncRouter";
-import { emitter } from "@/utils/bus.js";
-import { asyncMenu } from "@/api/menu";
-import { defineStore } from "pinia";
-import { ref } from "vue";
+import { asyncRouterHandle } from '@/utils/asyncRouter'
+import { emitter } from '@/utils/bus.js'
+import { asyncMenu } from '@/api/menu'
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-const notLayoutRouterArr = [];
-const keepAliveRoutersArr = [];
-const nameMap = {};
+const notLayoutRouterArr = []
+const keepAliveRoutersArr = []
+const nameMap = {}
 
 const formatRouter = (routes, routeMap, parent) => {
   routes &&
     routes.forEach((item) => {
-      item.parent = parent;
-      item.meta.btns = item.btns;
-      item.meta.hidden = item.hidden;
+      item.parent = parent
+      item.meta.btns = item.btns
+      item.meta.hidden = item.hidden
       if (item.meta.defaultMenu === true) {
         if (!parent) {
-          item = { ...item, path: `/${item.path}` };
-          notLayoutRouterArr.push(item);
+          item = { ...item, path: `/${item.path}` }
+          notLayoutRouterArr.push(item)
         }
       }
-      routeMap[item.name] = item;
+      routeMap[item.name] = item
       if (item.children && item.children.length > 0) {
-        formatRouter(item.children, routeMap, item);
+        formatRouter(item.children, routeMap, item)
       }
-    });
-};
+    })
+}
 
 const KeepAliveFilter = (routes) => {
   routes &&
@@ -37,69 +37,69 @@ const KeepAliveFilter = (routes) => {
       ) {
         item.component &&
           item.component().then((val) => {
-            keepAliveRoutersArr.push(val.default.name);
-            nameMap[item.name] = val.default.name;
-          });
+            keepAliveRoutersArr.push(val.default.name)
+            nameMap[item.name] = val.default.name
+          })
       }
       if (item.children && item.children.length > 0) {
-        KeepAliveFilter(item.children);
+        KeepAliveFilter(item.children)
       }
-    });
-};
+    })
+}
 
-export const useRouterStore = defineStore("router", () => {
-  const keepAliveRouters = ref([]);
-  const asyncRouterFlag = ref(0);
+export const useRouterStore = defineStore('router', () => {
+  const keepAliveRouters = ref([])
+  const asyncRouterFlag = ref(0)
   const setKeepAliveRouters = (history) => {
-    const keepArrTemp = [];
+    const keepArrTemp = []
     history.forEach((item) => {
       if (nameMap[item.name]) {
-        keepArrTemp.push(nameMap[item.name]);
+        keepArrTemp.push(nameMap[item.name])
       }
-    });
-    keepAliveRouters.value = Array.from(new Set(keepArrTemp));
-  };
-  emitter.on("setKeepAlive", setKeepAliveRouters);
+    })
+    keepAliveRouters.value = Array.from(new Set(keepArrTemp))
+  }
+  emitter.on('setKeepAlive', setKeepAliveRouters)
 
-  const asyncRouters = ref([]);
-  const routeMap = {};
+  const asyncRouters = ref([])
+  const routeMap = {}
   // 从后台获取动态路由
-  const SetAsyncRouter = async () => {
-    asyncRouterFlag.value++;
+  const SetAsyncRouter = async() => {
+    asyncRouterFlag.value++
     const baseRouter = [
       {
-        path: "/layout",
-        name: "layout",
-        component: "view/layout/index.vue",
+        path: '/layout',
+        name: 'layout',
+        component: 'view/layout/index.vue',
         meta: {
-          title: "底层layout",
+          title: '底层layout',
         },
         children: [],
       },
-    ];
-    const asyncRouterRes = await asyncMenu();
-    const asyncRouter = asyncRouterRes.data.menus;
+    ]
+    const asyncRouterRes = await asyncMenu()
+    const asyncRouter = asyncRouterRes.data.menus
     asyncRouter &&
       asyncRouter.push({
-        path: "reload",
-        name: "Reload",
+        path: 'reload',
+        name: 'Reload',
         hidden: true,
         meta: {
-          title: "",
+          title: '',
           closeTab: true,
         },
-        component: "view/error/reload.vue",
-      });
-    formatRouter(asyncRouter, routeMap);
-    baseRouter[0].children = asyncRouter;
+        component: 'view/error/reload.vue',
+      })
+    formatRouter(asyncRouter, routeMap)
+    baseRouter[0].children = asyncRouter
     if (notLayoutRouterArr.length !== 0) {
-      baseRouter.push(...notLayoutRouterArr);
+      baseRouter.push(...notLayoutRouterArr)
     }
-    asyncRouterHandle(baseRouter);
-    KeepAliveFilter(asyncRouter);
-    asyncRouters.value = baseRouter;
-    return true;
-  };
+    asyncRouterHandle(baseRouter)
+    KeepAliveFilter(asyncRouter)
+    asyncRouters.value = baseRouter
+    return true
+  }
 
   return {
     asyncRouters,
@@ -107,5 +107,5 @@ export const useRouterStore = defineStore("router", () => {
     asyncRouterFlag,
     SetAsyncRouter,
     routeMap,
-  };
-});
+  }
+})

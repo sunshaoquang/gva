@@ -1,14 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./index.html",
-    "./src/**/*.{vue,js,ts,jsx,tsx}",
+    './index.html',
+    './src/**/*.{vue,js,ts,jsx,tsx}',
   ],
   important: true,
   theme: {
     extend: {
       backgroundColor: {
-        "main": "#F5F5F5",
+        'main': '#F5F5F5',
       }
     },
   },

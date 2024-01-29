@@ -7,7 +7,7 @@
         :class="[
           isShadowBg && isMobile
             ? 'bg-black opacity-30 w-full h-full absolute top-0 left-0 z-[1001]'
-            : '',
+            : ''
         ]"
         @click="changeShadow()"
       />
@@ -192,179 +192,179 @@
 </template>
 
 <script setup>
-import Aside from "@/view/layout/aside/index.vue";
-import HistoryComponent from "@/view/layout/aside/historyComponent/history.vue";
-import Search from "@/view/layout/search/search.vue";
-import BottomInfo from "@/view/layout/bottomInfo/bottomInfo.vue";
-import CustomPic from "@/components/customPic/index.vue";
-import CommandMenu from "@/components/commandMenu/index.vue";
-import Setting from "./setting/index.vue";
-import { setUserAuthority } from "@/api/user";
-import { emitter } from "@/utils/bus.js";
-import { computed, ref, onMounted, nextTick } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useRouterStore } from "@/pinia/modules/router";
-import { fmtTitle } from "@/utils/fmtRouterTitle";
-import { useUserStore } from "@/pinia/modules/user";
+import Aside from '@/view/layout/aside/index.vue'
+import HistoryComponent from '@/view/layout/aside/historyComponent/history.vue'
+import Search from '@/view/layout/search/search.vue'
+import BottomInfo from '@/view/layout/bottomInfo/bottomInfo.vue'
+import CustomPic from '@/components/customPic/index.vue'
+import CommandMenu from '@/components/commandMenu/index.vue'
+import Setting from './setting/index.vue'
+import { setUserAuthority } from '@/api/user'
+import { emitter } from '@/utils/bus.js'
+import { computed, ref, onMounted, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useRouterStore } from '@/pinia/modules/router'
+import { fmtTitle } from '@/utils/fmtRouterTitle'
+import { useUserStore } from '@/pinia/modules/user'
 
 defineOptions({
-  name: "Layout",
-});
+  name: 'Layout'
+})
 
-const router = useRouter();
-const route = useRoute();
-const routerStore = useRouterStore();
+const router = useRouter()
+const route = useRoute()
+const routerStore = useRouterStore()
 // 三种窗口适配
-const isCollapse = ref(false);
-const isSider = ref(true);
-const isMobile = ref(false);
+const isCollapse = ref(false)
+const isSider = ref(true)
+const isMobile = ref(false)
 
-const first = ref("");
-const dialogVisible = ref(false);
+const first = ref('')
+const dialogVisible = ref(false)
 const initPage = () => {
   // 判断当前用户的操作系统
-  if (window.localStorage.getItem("osType") === "WIN") {
-    first.value = "Ctrl";
+  if (window.localStorage.getItem('osType') === 'WIN') {
+    first.value = 'Ctrl'
   } else {
-    first.value = "⌘";
+    first.value = '⌘'
   }
   // 当用户同时按下ctrl和k键的时候
   const handleKeyDown = (e) => {
-    if (e.ctrlKey && e.key === "k") {
+    if (e.ctrlKey && e.key === 'k') {
       // 阻止浏览器默认事件
-      e.preventDefault();
-      handleCommand();
+      e.preventDefault()
+      handleCommand()
     }
-  };
-  window.addEventListener("keydown", handleKeyDown);
-
-  const screenWidth = document.body.clientWidth;
-  if (screenWidth < 1000) {
-    isMobile.value = true;
-    isSider.value = false;
-    isCollapse.value = true;
-  } else if (screenWidth >= 1000 && screenWidth < 1200) {
-    isMobile.value = false;
-    isSider.value = false;
-    isCollapse.value = true;
-  } else {
-    isMobile.value = false;
-    isSider.value = true;
-    isCollapse.value = false;
   }
-};
+  window.addEventListener('keydown', handleKeyDown)
 
-initPage();
+  const screenWidth = document.body.clientWidth
+  if (screenWidth < 1000) {
+    isMobile.value = true
+    isSider.value = false
+    isCollapse.value = true
+  } else if (screenWidth >= 1000 && screenWidth < 1200) {
+    isMobile.value = false
+    isSider.value = false
+    isCollapse.value = true
+  } else {
+    isMobile.value = false
+    isSider.value = true
+    isCollapse.value = false
+  }
+}
 
-const command = ref();
+initPage()
+
+const command = ref()
 const handleCommand = () => {
-  command.value.open();
-};
+  command.value.open()
+}
 
-const loadingFlag = ref(false);
+const loadingFlag = ref(false)
 onMounted(() => {
   // 挂载一些通用的事件
-  emitter.emit("collapse", isCollapse.value);
-  emitter.emit("mobile", isMobile.value);
-  emitter.on("reload", reload);
-  emitter.on("showLoading", () => {
-    loadingFlag.value = true;
-  });
-  emitter.on("closeLoading", () => {
-    loadingFlag.value = false;
-  });
+  emitter.emit('collapse', isCollapse.value)
+  emitter.emit('mobile', isMobile.value)
+  emitter.on('reload', reload)
+  emitter.on('showLoading', () => {
+    loadingFlag.value = true
+  })
+  emitter.on('closeLoading', () => {
+    loadingFlag.value = false
+  })
   window.onresize = () => {
     return (() => {
-      initPage();
-      emitter.emit("collapse", isCollapse.value);
-      emitter.emit("mobile", isMobile.value);
-    })();
-  };
-  if (userStore.loadingInstance) {
-    userStore.loadingInstance.close();
+      initPage()
+      emitter.emit('collapse', isCollapse.value)
+      emitter.emit('mobile', isMobile.value)
+    })()
   }
-});
+  if (userStore.loadingInstance) {
+    userStore.loadingInstance.close()
+  }
+})
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
 const asideWidth = () => {
   if (isMobile.value) {
-    return isCollapse.value ? "0px" : "220px";
+    return isCollapse.value ? '0px' : '220px'
   }
-  return isCollapse.value ? "54px" : "220px";
-};
+  return isCollapse.value ? '54px' : '220px'
+}
 
 const getAsideWidth = () => {
-  if (isMobile.value) return "0px";
-  return isCollapse.value ? "54px" : "220px";
-};
+  if (isMobile.value) return '0px'
+  return isCollapse.value ? '54px' : '220px'
+}
 
 const textColor = computed(() => {
-  if (userStore.sideMode === "dark") {
-    return "#fff";
-  } else if (userStore.sideMode === "light") {
-    return "#191a23";
+  if (userStore.sideMode === 'dark') {
+    return '#fff'
+  } else if (userStore.sideMode === 'light') {
+    return '#191a23'
   } else {
-    return userStore.baseColor;
+    return userStore.baseColor
   }
-});
+})
 
 const backgroundColor = computed(() => {
-  if (userStore.sideMode === "dark") {
-    return "#191a23";
-  } else if (userStore.sideMode === "light") {
-    return "#fff";
+  if (userStore.sideMode === 'dark') {
+    return '#191a23'
+  } else if (userStore.sideMode === 'light') {
+    return '#fff'
   } else {
-    return userStore.sideMode;
+    return userStore.sideMode
   }
-});
+})
 
-const matched = computed(() => route.meta.matched);
+const matched = computed(() => route.meta.matched)
 
 const changeUserAuth = async (id) => {
   const res = await setUserAuthority({
-    authorityId: id,
-  });
+    authorityId: id
+  })
   if (res.code === 0) {
-    window.sessionStorage.setItem("needCloseAll", "true");
-    window.location.reload();
+    window.sessionStorage.setItem('needCloseAll', 'true')
+    window.location.reload()
   }
-};
+}
 
-const reloadFlag = ref(true);
-let reloadTimer = null;
+const reloadFlag = ref(true)
+let reloadTimer = null
 const reload = async () => {
   if (reloadTimer) {
-    window.clearTimeout(reloadTimer);
+    window.clearTimeout(reloadTimer)
   }
   reloadTimer = window.setTimeout(async () => {
     if (route.meta.keepAlive) {
-      reloadFlag.value = false;
-      await nextTick();
-      reloadFlag.value = true;
+      reloadFlag.value = false
+      await nextTick()
+      reloadFlag.value = true
     } else {
-      const title = route.meta.title;
-      router.push({ name: "Reload", params: { title } });
+      const title = route.meta.title
+      router.push({ name: 'Reload', params: { title } })
     }
-  }, 400);
-};
+  }, 400)
+}
 
-const isShadowBg = ref(false);
+const isShadowBg = ref(false)
 const totalCollapse = () => {
-  isCollapse.value = !isCollapse.value;
-  isSider.value = !isCollapse.value;
-  isShadowBg.value = !isCollapse.value;
-  emitter.emit("collapse", isCollapse.value);
-};
+  isCollapse.value = !isCollapse.value
+  isSider.value = !isCollapse.value
+  isShadowBg.value = !isCollapse.value
+  emitter.emit('collapse', isCollapse.value)
+}
 
 const toPerson = () => {
-  router.push({ name: "person" });
-};
+  router.push({ name: 'person' })
+}
 const changeShadow = () => {
-  isShadowBg.value = !isShadowBg.value;
-  isSider.value = !!isCollapse.value;
-  totalCollapse();
-};
+  isShadowBg.value = !isShadowBg.value
+  isSider.value = !!isCollapse.value
+  totalCollapse()
+}
 </script>
 
 <style lang="scss">

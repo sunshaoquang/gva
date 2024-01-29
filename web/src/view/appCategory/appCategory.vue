@@ -220,8 +220,8 @@
 
 <script>
 export default {
-  name: "AppCategory",
-};
+  name: 'AppCategory'
+}
 </script>
 
 <script setup>
@@ -231,227 +231,227 @@ import {
   deleteAppCategoryByIds,
   updateAppCategory,
   findAppCategory,
-  getAppCategoryList,
-} from "@/api/appCategory";
+  getAppCategoryList
+} from '@/api/appCategory'
 
 // 全量引入格式化工具 请按需保留
 import {
   getDictFunc,
   formatDate,
   formatBoolean,
-  filterDict,
-} from "@/utils/format";
-import icon from "@/view/superAdmin/menu/icon.vue";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive } from "vue";
-import { useUserStore } from "@/pinia/modules/user";
-const { userIsAdmin, userId } = useUserStore();
+  filterDict
+} from '@/utils/format'
+import icon from '@/view/superAdmin/menu/icon.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, reactive } from 'vue'
+import { useUserStore } from '@/pinia/modules/user'
+const { userIsAdmin, userId } = useUserStore()
 
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
-  name: "",
-  icon: "",
+  name: '',
+  icon: '',
   categoryPar: 0,
   state: true,
-  remark: "",
-});
+  remark: ''
+})
 
 // 验证规则
-const rule = reactive({});
+const rule = reactive({})
 
-const elFormRef = ref();
+const elFormRef = ref()
 
 // =========== 表格控制部分 ===========
-const page = ref(1);
-const total = ref(0);
-const pageSize = ref(10);
-const tableData = ref([]);
-const searchInfo = ref({});
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(10)
+const tableData = ref([])
+const searchInfo = ref({})
 
 // 重置
 const onReset = () => {
-  searchInfo.value = {};
-  getTableData();
-};
+  searchInfo.value = {}
+  getTableData()
+}
 
 // 搜索
 const onSubmit = () => {
-  page.value = 1;
-  pageSize.value = 10;
-  if (searchInfo.value.state === "") {
-    searchInfo.value.state = null;
+  page.value = 1
+  pageSize.value = 10
+  if (searchInfo.value.state === '') {
+    searchInfo.value.state = null
   }
-  getTableData();
-};
+  getTableData()
+}
 
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val;
-  getTableData();
-};
+  pageSize.value = val
+  getTableData()
+}
 
 // 修改页面容量
 const handleCurrentChange = (val) => {
-  page.value = val;
-  getTableData();
-};
+  page.value = val
+  getTableData()
+}
 
 // 查询
 const getTableData = async () => {
-  let options = { page: page.value, pageSize: pageSize.value };
+  let options = { page: page.value, pageSize: pageSize.value }
   if (userIsAdmin) {
-    options = { ...options, ...searchInfo.value };
+    options = { ...options, ...searchInfo.value }
   } else {
-    options = { ...options, ...searchInfo.value, ID: userId };
+    options = { ...options, ...searchInfo.value, ID: userId }
   }
-  const table = await getAppCategoryList(options);
+  const table = await getAppCategoryList(options)
   if (table.code === 0) {
-    tableData.value = table.data.list;
-    total.value = table.data.total;
-    page.value = table.data.page;
-    pageSize.value = table.data.pageSize;
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
   }
-};
+}
 
-getTableData();
+getTableData()
 
 // ============== 表格控制部分结束 ===============
 
 // 获取需要的字典 可能为空 按需保留
-const setOptions = async () => {};
+const setOptions = async () => {}
 
 // 获取需要的字典 可能为空 按需保留
-setOptions();
+setOptions()
 
 // 多选数据
-const multipleSelection = ref([]);
+const multipleSelection = ref([])
 // 多选
 const handleSelectionChange = (val) => {
-  multipleSelection.value = val;
-};
+  multipleSelection.value = val
+}
 
 // 删除行
 const deleteRow = (row) => {
-  ElMessageBox.confirm("确定要删除吗?", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
   }).then(() => {
-    deleteAppCategoryFunc(row);
-  });
-};
+    deleteAppCategoryFunc(row)
+  })
+}
 
 // 批量删除控制标记
-const deleteVisible = ref(false);
+const deleteVisible = ref(false)
 
 // 多选删除
 const onDelete = async () => {
-  const ids = [];
+  const ids = []
   if (multipleSelection.value.length === 0) {
     ElMessage({
-      type: "warning",
-      message: "请选择要删除的数据",
-    });
-    return;
+      type: 'warning',
+      message: '请选择要删除的数据'
+    })
+    return
   }
   multipleSelection.value &&
     multipleSelection.value.map((item) => {
-      ids.push(item.ID);
-    });
-  const res = await deleteAppCategoryByIds({ ids });
+      ids.push(item.ID)
+    })
+  const res = await deleteAppCategoryByIds({ ids })
   if (res.code === 0) {
     ElMessage({
-      type: "success",
-      message: "删除成功",
-    });
+      type: 'success',
+      message: '删除成功'
+    })
     if (tableData.value.length === ids.length && page.value > 1) {
-      page.value--;
+      page.value--
     }
-    deleteVisible.value = false;
-    getTableData();
+    deleteVisible.value = false
+    getTableData()
   }
-};
+}
 
 // 行为控制标记（弹窗内部需要增还是改）
-const type = ref("");
+const type = ref('')
 
 // 添加子类目
 const addAppCategory = async (row) => {
-  type.value = "create";
-  formData.value.categoryPar = row.ID;
-  dialogFormVisible.value = true;
-};
+  type.value = 'create'
+  formData.value.categoryPar = row.ID
+  dialogFormVisible.value = true
+}
 // 更新行
 const updateAppCategoryFunc = async (row) => {
-  const res = await findAppCategory({ ID: row.ID });
-  type.value = "update";
+  const res = await findAppCategory({ ID: row.ID })
+  type.value = 'update'
   if (res.code === 0) {
-    formData.value = res.data.reappCategory;
-    dialogFormVisible.value = true;
+    formData.value = res.data.reappCategory
+    dialogFormVisible.value = true
   }
-};
+}
 
 // 删除行
 const deleteAppCategoryFunc = async (row) => {
-  const res = await deleteAppCategory({ ID: row.ID });
+  const res = await deleteAppCategory({ ID: row.ID })
   if (res.code === 0) {
     ElMessage({
-      type: "success",
-      message: "删除成功",
-    });
+      type: 'success',
+      message: '删除成功'
+    })
     if (tableData.value.length === 1 && page.value > 1) {
-      page.value--;
+      page.value--
     }
-    getTableData();
+    getTableData()
   }
-};
+}
 
 // 弹窗控制标记
-const dialogFormVisible = ref(false);
+const dialogFormVisible = ref(false)
 
 // 打开弹窗
 const openDialog = () => {
-  type.value = "create";
-  dialogFormVisible.value = true;
-};
+  type.value = 'create'
+  dialogFormVisible.value = true
+}
 
 // 关闭弹窗
 const closeDialog = () => {
-  dialogFormVisible.value = false;
+  dialogFormVisible.value = false
   formData.value = {
-    name: "",
-    icon: "",
+    name: '',
+    icon: '',
     categoryPar: 0,
     state: true,
-    remark: "",
-  };
-};
+    remark: ''
+  }
+}
 // 弹窗确定
 const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
-    if (!valid) return;
-    let res;
+    if (!valid) return
+    let res
     switch (type.value) {
-      case "create":
-        res = await createAppCategory(formData.value);
-        break;
-      case "update":
-        res = await updateAppCategory(formData.value);
-        break;
+      case 'create':
+        res = await createAppCategory(formData.value)
+        break
+      case 'update':
+        res = await updateAppCategory(formData.value)
+        break
       default:
-        res = await createAppCategory(formData.value);
-        break;
+        res = await createAppCategory(formData.value)
+        break
     }
     if (res.code === 0) {
       ElMessage({
-        type: "success",
-        message: "创建/更改成功",
-      });
-      closeDialog();
-      getTableData();
+        type: 'success',
+        message: '创建/更改成功'
+      })
+      closeDialog()
+      getTableData()
     }
-  });
-};
+  })
+}
 </script>
 
 <style></style>
