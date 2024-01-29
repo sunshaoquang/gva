@@ -9,7 +9,7 @@ import (
 type AppUser struct {
 	global.GVA_MODEL
 	Username   string        `json:"username" form:"username" gorm:"column:username;comment:用户名;size:60;"`
-	OpenId     string        `json:"OpenId" form:"OpenId" gorm:"uniqueIndex;column:OpenId;comment:微信唯一OpenId;size:150;"`
+	OpenId     string        `json:"openId" form:"openId" gorm:"uniqueIndex;column:openid;comment:微信唯一OpenId;size:150;"`
 	Unionid    string        `json:"unionid" form:"unionid" gorm:"column:unionid;comment:unionid;size:100;"`
 	LoginCount *int          `json:"loginCount" form:"loginCount" gorm:"column:login_count;comment:用户登陆的次数;size:10;"`
 	Sex        *int          `json:"sex" form:"sex" gorm:"column:sex;comment:性别;size:10;"`
