@@ -51,17 +51,17 @@
                 label: 'authorityName',
                 value: 'authorityId',
                 disabled: 'disabled',
-                emitPath: false,
+                emitPath: false
               }"
               :clearable="false"
               @visible-change="
                 (flag) => {
-                  changeAuthority(scope.row, flag, 0);
+                  changeAuthority(scope.row, flag, 0)
                 }
               "
               @remove-tag="
                 (removeAuth) => {
-                  changeAuthority(scope.row, false, removeAuth);
+                  changeAuthority(scope.row, false, removeAuth)
                 }
               "
             />
@@ -76,7 +76,7 @@
               :inactive-value="2"
               @change="
                 () => {
-                  switchEnable(scope.row);
+                  switchEnable(scope.row)
                 }
               "
             />
@@ -184,7 +184,7 @@
                 label: 'authorityName',
                 value: 'authorityId',
                 disabled: 'disabled',
-                emitPath: false,
+                emitPath: false
               }"
               :clearable="false"
             />
@@ -211,6 +211,11 @@
                 "
               />
               <div v-else class="header-img-box">从媒体库选择</div>
+              <ChooseImg
+                ref="chooseImg"
+                :target="userInfo"
+                :target-key="`headerImg`"
+              />
             </div>
           </el-form-item>
         </el-form>
@@ -225,7 +230,6 @@
         </div>
       </template>
     </el-dialog>
-    <ChooseImg ref="chooseImg" :target="userInfo" :target-key="`headerImg`" />
   </div>
 </template>
 
@@ -234,23 +238,23 @@ import {
   getUserList,
   setUserAuthorities,
   register,
-  deleteUser,
-} from "@/api/user";
+  deleteUser
+} from '@/api/user'
 
-import { getAuthorityList } from "@/api/authority";
-import CustomPic from "@/components/customPic/index.vue";
-import ChooseImg from "@/components/chooseImg/index.vue";
-import WarningBar from "@/components/warningBar/warningBar.vue";
-import { setUserInfo, resetPassword } from "@/api/user.js";
+import { getAuthorityList } from '@/api/authority'
+import CustomPic from '@/components/customPic/index.vue'
+import ChooseImg from '@/components/chooseImg/index.vue'
+import WarningBar from '@/components/warningBar/warningBar.vue'
+import { setUserInfo, resetPassword } from '@/api/user.js'
 
-import { nextTick, ref, watch } from "vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { nextTick, ref, watch } from 'vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 defineOptions({
-  name: "User",
-});
+  name: 'User'
+})
 
-const path = ref(import.meta.env.VITE_BASE_API + "/");
+const path = ref(import.meta.env.VITE_BASE_API + '/')
 // 初始化相关
 const setAuthorityOptions = (AuthorityData, optionsData) => {
   AuthorityData &&
@@ -259,245 +263,245 @@ const setAuthorityOptions = (AuthorityData, optionsData) => {
         const option = {
           authorityId: item.authorityId,
           authorityName: item.authorityName,
-          children: [],
-        };
-        setAuthorityOptions(item.children, option.children);
-        optionsData.push(option);
+          children: []
+        }
+        setAuthorityOptions(item.children, option.children)
+        optionsData.push(option)
       } else {
         const option = {
           authorityId: item.authorityId,
-          authorityName: item.authorityName,
-        };
-        optionsData.push(option);
+          authorityName: item.authorityName
+        }
+        optionsData.push(option)
       }
-    });
-};
+    })
+}
 
-const page = ref(1);
-const total = ref(0);
-const pageSize = ref(10);
-const tableData = ref([]);
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(10)
+const tableData = ref([])
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val;
-  getTableData();
-};
+  pageSize.value = val
+  getTableData()
+}
 
 const handleCurrentChange = (val) => {
-  page.value = val;
-  getTableData();
-};
+  page.value = val
+  getTableData()
+}
 
 // 查询
 const getTableData = async () => {
   const table = await getUserList({
     page: page.value,
-    pageSize: pageSize.value,
-  });
+    pageSize: pageSize.value
+  })
   if (table.code === 0) {
-    tableData.value = table.data.list;
-    total.value = table.data.total;
-    page.value = table.data.page;
-    pageSize.value = table.data.pageSize;
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
   }
-};
+}
 
 watch(
   () => tableData.value,
   () => {
-    setAuthorityIds();
+    setAuthorityIds()
   }
-);
+)
 
 const initPage = async () => {
-  getTableData();
-  const res = await getAuthorityList({ page: 1, pageSize: 999 });
-  setOptions(res.data.list);
-};
+  getTableData()
+  const res = await getAuthorityList({ page: 1, pageSize: 999 })
+  setOptions(res.data.list)
+}
 
-initPage();
+initPage()
 
 const resetPasswordFunc = (row) => {
-  ElMessageBox.confirm("是否将此用户密码重置为123456?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('是否将此用户密码重置为123456?', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
   }).then(async () => {
     const res = await resetPassword({
-      ID: row.ID,
-    });
+      ID: row.ID
+    })
     if (res.code === 0) {
       ElMessage({
-        type: "success",
-        message: res.msg,
-      });
+        type: 'success',
+        message: res.msg
+      })
     } else {
       ElMessage({
-        type: "error",
-        message: res.msg,
-      });
+        type: 'error',
+        message: res.msg
+      })
     }
-  });
-};
+  })
+}
 const setAuthorityIds = () => {
   tableData.value &&
     tableData.value.forEach((user) => {
       user.authorityIds =
         user.authorities &&
         user.authorities.map((i) => {
-          return i.authorityId;
-        });
-    });
-};
+          return i.authorityId
+        })
+    })
+}
 
-const chooseImg = ref(null);
+const chooseImg = ref(null)
 const openHeaderChange = () => {
-  chooseImg.value.open();
-};
+  chooseImg.value.open()
+}
 
-const authOptions = ref([]);
+const authOptions = ref([])
 const setOptions = (authData) => {
-  authOptions.value = [];
-  setAuthorityOptions(authData, authOptions.value);
-};
+  authOptions.value = []
+  setAuthorityOptions(authData, authOptions.value)
+}
 
 const deleteUserFunc = async (row) => {
-  const res = await deleteUser({ id: row.ID });
+  const res = await deleteUser({ id: row.ID })
   if (res.code === 0) {
-    ElMessage.success("删除成功");
-    row.visible = false;
-    await getTableData();
+    ElMessage.success('删除成功')
+    row.visible = false
+    await getTableData()
   }
-};
+}
 
 // 弹窗相关
 const userInfo = ref({
-  username: "",
-  password: "",
-  nickName: "",
-  headerImg: "",
-  authorityId: "",
+  username: '',
+  password: '',
+  nickName: '',
+  headerImg: '',
+  authorityId: '',
   authorityIds: [],
-  enable: 1,
-});
+  enable: 1
+})
 
 const rules = ref({
   userName: [
-    { required: true, message: "请输入用户名", trigger: "blur" },
-    { min: 5, message: "最低5位字符", trigger: "blur" },
+    { required: true, message: '请输入用户名', trigger: 'blur' },
+    { min: 5, message: '最低5位字符', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: "请输入用户密码", trigger: "blur" },
-    { min: 6, message: "最低6位字符", trigger: "blur" },
+    { required: true, message: '请输入用户密码', trigger: 'blur' },
+    { min: 6, message: '最低6位字符', trigger: 'blur' }
   ],
-  nickName: [{ required: true, message: "请输入用户昵称", trigger: "blur" }],
+  nickName: [{ required: true, message: '请输入用户昵称', trigger: 'blur' }],
   phone: [
     {
       pattern: /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/,
-      message: "请输入合法手机号",
-      trigger: "blur",
-    },
+      message: '请输入合法手机号',
+      trigger: 'blur'
+    }
   ],
   email: [
     {
       pattern: /^([0-9A-Za-z\-_.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g,
-      message: "请输入正确的邮箱",
-      trigger: "blur",
-    },
+      message: '请输入正确的邮箱',
+      trigger: 'blur'
+    }
   ],
-  authorityId: [{ required: true, message: "请选择用户角色", trigger: "blur" }],
-});
-const userForm = ref(null);
+  authorityId: [{ required: true, message: '请选择用户角色', trigger: 'blur' }]
+})
+const userForm = ref(null)
 const enterAddUserDialog = async () => {
-  userInfo.value.authorityId = userInfo.value.authorityIds[0];
+  userInfo.value.authorityId = userInfo.value.authorityIds[0]
   userForm.value.validate(async (valid) => {
     if (valid) {
       const req = {
-        ...userInfo.value,
-      };
-      if (dialogFlag.value === "add") {
-        const res = await register(req);
+        ...userInfo.value
+      }
+      if (dialogFlag.value === 'add') {
+        const res = await register(req)
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "创建成功" });
-          await getTableData();
-          closeAddUserDialog();
+          ElMessage({ type: 'success', message: '创建成功' })
+          await getTableData()
+          closeAddUserDialog()
         }
       }
-      if (dialogFlag.value === "edit") {
-        const res = await setUserInfo(req);
+      if (dialogFlag.value === 'edit') {
+        const res = await setUserInfo(req)
         if (res.code === 0) {
-          ElMessage({ type: "success", message: "编辑成功" });
-          await getTableData();
-          closeAddUserDialog();
+          ElMessage({ type: 'success', message: '编辑成功' })
+          await getTableData()
+          closeAddUserDialog()
         }
       }
     }
-  });
-};
+  })
+}
 
-const addUserDialog = ref(false);
+const addUserDialog = ref(false)
 const closeAddUserDialog = () => {
-  userForm.value.resetFields();
-  userInfo.value.headerImg = "";
-  userInfo.value.authorityIds = [];
-  addUserDialog.value = false;
-};
+  userForm.value.resetFields()
+  userInfo.value.headerImg = ''
+  userInfo.value.authorityIds = []
+  addUserDialog.value = false
+}
 
-const dialogFlag = ref("add");
+const dialogFlag = ref('add')
 
 const addUser = () => {
-  dialogFlag.value = "add";
-  addUserDialog.value = true;
-};
+  dialogFlag.value = 'add'
+  addUserDialog.value = true
+}
 
-const tempAuth = {};
+const tempAuth = {}
 const changeAuthority = async (row, flag, removeAuth) => {
   if (flag) {
     if (!removeAuth) {
-      tempAuth[row.ID] = [...row.authorityIds];
+      tempAuth[row.ID] = [...row.authorityIds]
     }
-    return;
+    return
   }
-  await nextTick();
+  await nextTick()
   const res = await setUserAuthorities({
     ID: row.ID,
-    authorityIds: row.authorityIds,
-  });
+    authorityIds: row.authorityIds
+  })
   if (res.code === 0) {
-    ElMessage({ type: "success", message: "角色设置成功" });
+    ElMessage({ type: 'success', message: '角色设置成功' })
   } else {
     if (!removeAuth) {
-      row.authorityIds = [...tempAuth[row.ID]];
-      delete tempAuth[row.ID];
+      row.authorityIds = [...tempAuth[row.ID]]
+      delete tempAuth[row.ID]
     } else {
-      row.authorityIds = [removeAuth, ...row.authorityIds];
+      row.authorityIds = [removeAuth, ...row.authorityIds]
     }
   }
-};
+}
 
 const openEdit = (row) => {
-  dialogFlag.value = "edit";
-  userInfo.value = JSON.parse(JSON.stringify(row));
-  addUserDialog.value = true;
-};
+  dialogFlag.value = 'edit'
+  userInfo.value = JSON.parse(JSON.stringify(row))
+  addUserDialog.value = true
+}
 
 const switchEnable = async (row) => {
-  userInfo.value = JSON.parse(JSON.stringify(row));
-  await nextTick();
+  userInfo.value = JSON.parse(JSON.stringify(row))
+  await nextTick()
   const req = {
-    ...userInfo.value,
-  };
-  const res = await setUserInfo(req);
+    ...userInfo.value
+  }
+  const res = await setUserInfo(req)
   if (res.code === 0) {
     ElMessage({
-      type: "success",
-      message: `${req.enable === 2 ? "禁用" : "启用"}成功`,
-    });
-    await getTableData();
-    userInfo.value.headerImg = "";
-    userInfo.value.authorityIds = [];
+      type: 'success',
+      message: `${req.enable === 2 ? '禁用' : '启用'}成功`
+    })
+    await getTableData()
+    userInfo.value.headerImg = ''
+    userInfo.value.authorityIds = []
   }
-};
+}
 </script>
 
 <style lang="scss">

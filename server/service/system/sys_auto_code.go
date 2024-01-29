@@ -8,6 +8,7 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -136,6 +137,9 @@ func (autoCodeService *AutoCodeService) PreviewTemp(autoCode system.AutoCodeStru
 	for i := range autoCode.Fields {
 		if autoCode.Fields[i].FieldType == "time.Time" {
 			autoCode.HasTimer = true
+			if autoCode.Fields[i].FieldSearchType != "" {
+				autoCode.HasSearchTimer = true
+			}
 		}
 		if autoCode.Fields[i].Sort {
 			autoCode.NeedSort = true
@@ -156,6 +160,21 @@ func (autoCodeService *AutoCodeService) PreviewTemp(autoCode system.AutoCodeStru
 		if autoCode.Fields[i].FieldType == "file" {
 			autoCode.HasFile = true
 			autoCode.NeedJSON = true
+		}
+
+		if autoCode.GvaModel {
+			autoCode.PrimaryField = &system.Field{
+				FieldName:    "ID",
+				FieldType:    "uint",
+				FieldDesc:    "ID",
+				FieldJson:    "ID",
+				DataTypeLong: "20",
+				Comment:      "主键ID",
+				ColumnName:   "id",
+			}
+		}
+		if !autoCode.GvaModel && autoCode.PrimaryField == nil && autoCode.Fields[i].PrimaryKey {
+			autoCode.PrimaryField = autoCode.Fields[i]
 		}
 	}
 	dataList, _, needMkdir, err := autoCodeService.getNeedList(&autoCode)
@@ -240,6 +259,9 @@ func (autoCodeService *AutoCodeService) CreateTemp(autoCode system.AutoCodeStruc
 	for i := range autoCode.Fields {
 		if autoCode.Fields[i].FieldType == "time.Time" {
 			autoCode.HasTimer = true
+			if autoCode.Fields[i].FieldSearchType != "" {
+				autoCode.HasSearchTimer = true
+			}
 		}
 		if autoCode.Fields[i].Sort {
 			autoCode.NeedSort = true
@@ -260,6 +282,20 @@ func (autoCodeService *AutoCodeService) CreateTemp(autoCode system.AutoCodeStruc
 		if autoCode.Fields[i].FieldType == "file" {
 			autoCode.NeedJSON = true
 			autoCode.HasFile = true
+		}
+		if autoCode.GvaModel {
+			autoCode.PrimaryField = &system.Field{
+				FieldName:    "ID",
+				FieldType:    "uint",
+				FieldDesc:    "ID",
+				FieldJson:    "ID",
+				DataTypeLong: "20",
+				Comment:      "主键ID",
+				ColumnName:   "id",
+			}
+		}
+		if !autoCode.GvaModel && autoCode.PrimaryField == nil && autoCode.Fields[i].PrimaryKey {
+			autoCode.PrimaryField = autoCode.Fields[i]
 		}
 	}
 	// 增加判断: 重复创建struct
@@ -739,36 +775,44 @@ func (autoCodeService *AutoCodeService) InstallPlugin(file *multipart.FileHeader
 	paths = filterFile(paths)
 	var webIndex = -1
 	var serverIndex = -1
+	webPlugin := ""
+	serverPlugin := ""
+
 	for i := range paths {
 		paths[i] = filepath.ToSlash(paths[i])
 		pathArr := strings.Split(paths[i], "/")
 		ln := len(pathArr)
-		if ln < 2 {
+
+		if ln < 4 {
 			continue
 		}
-		if pathArr[ln-2] == "server" && pathArr[ln-1] == "plugin" {
-			serverIndex = i
+		if pathArr[2]+"/"+pathArr[3] == `server/plugin` && len(serverPlugin) == 0 {
+			serverPlugin = path.Join(pathArr[0], pathArr[1], pathArr[2], pathArr[3])
 		}
-		if pathArr[ln-2] == "web" && pathArr[ln-1] == "plugin" {
-			webIndex = i
+		if pathArr[2]+"/"+pathArr[3] == `web/plugin` && len(webPlugin) == 0 {
+			webPlugin = path.Join(pathArr[0], pathArr[1], pathArr[2], pathArr[3])
 		}
 	}
-	if webIndex == -1 && serverIndex == -1 {
+	if len(serverPlugin) == 0 && len(webPlugin) == 0 {
 		zap.L().Error("非标准插件，请按照文档自动迁移使用")
 		return webIndex, serverIndex, errors.New("非标准插件，请按照文档自动迁移使用")
 	}
 
-	if webIndex != -1 {
-		err = installation(paths[webIndex], global.GVA_CONFIG.AutoCode.Server, global.GVA_CONFIG.AutoCode.Web)
+	if len(serverPlugin) != 0 {
+		err = installation(serverPlugin, global.GVA_CONFIG.AutoCode.Server, global.GVA_CONFIG.AutoCode.Server)
 		if err != nil {
 			return webIndex, serverIndex, err
 		}
 	}
 
-	if serverIndex != -1 {
-		err = installation(paths[serverIndex], global.GVA_CONFIG.AutoCode.Server, global.GVA_CONFIG.AutoCode.Server)
+	if len(webPlugin) != 0 {
+		err = installation(webPlugin, global.GVA_CONFIG.AutoCode.Server, global.GVA_CONFIG.AutoCode.Web)
+		if err != nil {
+			return webIndex, serverIndex, err
+		}
 	}
-	return webIndex, serverIndex, err
+
+	return 1, 1, err
 }
 
 func installation(path string, formPath string, toPath string) error {
@@ -820,11 +864,11 @@ func (autoCodeService *AutoCodeService) PubPlug(plugName string) (zipPath string
 	// 创建一个新的zip文件
 
 	// 判断目录是否存在
-	webInfo, err := os.Stat(webPath)
+	_, err = os.Stat(webPath)
 	if err != nil {
 		return "", errors.New("web路径不存在")
 	}
-	serverInfo, err := os.Stat(serverPath)
+	_, err = os.Stat(serverPath)
 	if err != nil {
 		return "", errors.New("server路径不存在")
 	}
@@ -842,72 +886,29 @@ func (autoCodeService *AutoCodeService) PubPlug(plugName string) (zipPath string
 	zipWriter := zip.NewWriter(zipFile)
 	defer zipWriter.Close()
 
-	// 创建一个新的文件头
-	webHeader, err := zip.FileInfoHeader(webInfo)
+	webHeaderName := filepath.Join(plugName, "web", "plugin", plugName)
+	err = autoCodeService.doZip(zipWriter, webPath, webHeaderName)
 	if err != nil {
 		return
 	}
-
-	// 创建一个新的文件头
-	serverHeader, err := zip.FileInfoHeader(serverInfo)
+	serverHeaderName := filepath.Join(plugName, "server", "plugin", plugName)
+	err = autoCodeService.doZip(zipWriter, serverPath, serverHeaderName)
 	if err != nil {
 		return
 	}
+	return filepath.Join(global.GVA_CONFIG.AutoCode.Root, global.GVA_CONFIG.AutoCode.Server, fileName), nil
+}
 
-	webHeader.Name = filepath.Join(plugName, "web", "plugin")
-	serverHeader.Name = filepath.Join(plugName, "server", "plugin")
+/*
+*
 
-	// 将文件添加到zip归档中
-	_, err = zipWriter.CreateHeader(serverHeader)
-	_, err = zipWriter.CreateHeader(webHeader)
+	zipWriter zip写入器
+	serverPath 存储的路径
+	headerName 写有zip的路径
 
-	// 遍历webPath目录并将所有非隐藏文件添加到zip归档中
-	err = filepath.Walk(webPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil {
-			return err
-		}
-
-		// 跳过隐藏文件
-		if strings.HasPrefix(info.Name(), ".") {
-			return nil
-		}
-
-		// 创建一个新的文件头
-		header, err := zip.FileInfoHeader(info)
-		if err != nil {
-			return err
-		}
-
-		// 将文件头的名称设置为文件的相对路径
-		rel, _ := filepath.Rel(webPath, path)
-		header.Name = filepath.Join(plugName, "web", "plugin", plugName, rel)
-
-		// 将文件添加到zip归档中
-		writer, err := zipWriter.CreateHeader(header)
-		if err != nil {
-			return err
-		}
-
-		if info.IsDir() {
-			return nil
-		}
-
-		// 打开文件并将其内容复制到zip归档中
-		file, err := os.Open(path)
-		if err != nil {
-			return err
-		}
-		defer file.Close()
-		_, err = io.Copy(writer, file)
-		if err != nil {
-			return err
-		}
-		return nil
-	})
-	if err != nil {
-		return
-	}
-
+*
+*/
+func (autoCodeService *AutoCodeService) doZip(zipWriter *zip.Writer, serverPath, headerName string) (err error) {
 	// 遍历serverPath目录并将所有非隐藏文件添加到zip归档中
 	err = filepath.Walk(serverPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -927,7 +928,11 @@ func (autoCodeService *AutoCodeService) PubPlug(plugName string) (zipPath string
 
 		// 将文件头的名称设置为文件的相对路径
 		rel, _ := filepath.Rel(serverPath, path)
-		header.Name = filepath.Join(plugName, "server", "plugin", plugName, rel)
+		header.Name = filepath.Join(headerName, rel)
+		// 目录需要拼上一个 "/" ，否则会出现一个和目录一样的文件在压缩包中
+		if info.IsDir() {
+			header.Name += "/"
+		}
 		// 将文件添加到zip归档中
 		writer, err := zipWriter.CreateHeader(header)
 		if err != nil {
@@ -951,8 +956,5 @@ func (autoCodeService *AutoCodeService) PubPlug(plugName string) (zipPath string
 
 		return nil
 	})
-	if err != nil {
-		return
-	}
-	return filepath.Join(global.GVA_CONFIG.AutoCode.Root, global.GVA_CONFIG.AutoCode.Server, fileName), nil
+	return err
 }

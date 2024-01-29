@@ -15,7 +15,7 @@ func ClearToken(c *gin.Context) {
 	if err != nil {
 		host = c.Request.Host
 	}
-	c.SetCookie("x-token", "", -1, "/", host, false, false)
+	c.SetCookie("x-token", "", -1, "/", host, true, false)
 }
 
 func SetToken(c *gin.Context, token string, maxAge int) {
@@ -24,7 +24,7 @@ func SetToken(c *gin.Context, token string, maxAge int) {
 	if err != nil {
 		host = c.Request.Host
 	}
-	c.SetCookie("x-token", token, maxAge, "/", host, false, false)
+	c.SetCookie("x-token", token, maxAge, "/", host, true, false)
 }
 
 func GetToken(c *gin.Context) string {

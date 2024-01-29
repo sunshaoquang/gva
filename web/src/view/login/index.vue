@@ -124,34 +124,34 @@
 </template>
 
 <script setup>
-import { captcha } from "@/api/user";
-import { checkDB } from "@/api/initdb";
-import BottomInfo from "@/view/layout/bottomInfo/bottomInfo.vue";
-import { reactive, ref } from "vue";
-import { ElMessage } from "element-plus";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/pinia/modules/user";
+import { captcha } from '@/api/user'
+import { checkDB } from '@/api/initdb'
+import BottomInfo from '@/view/layout/bottomInfo/bottomInfo.vue'
+import { reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/pinia/modules/user'
 
 defineOptions({
-  name: "Login",
-});
+  name: 'Login'
+})
 
-const router = useRouter();
+const router = useRouter()
 // 验证函数
 const checkUsername = (rule, value, callback) => {
   if (value.length < 5) {
-    return callback(new Error("请输入正确的用户名"));
+    return callback(new Error('请输入正确的用户名'))
   } else {
-    callback();
+    callback()
   }
-};
+}
 const checkPassword = (rule, value, callback) => {
   if (value.length < 6) {
-    return callback(new Error("请输入正确的密码"));
+    return callback(new Error('请输入正确的密码'))
   } else {
-    callback();
+    callback()
   }
-};
+}
 
 // 获取验证码
 const loginVerify = () => {
@@ -160,72 +160,72 @@ const loginVerify = () => {
       max: ele.data.captchaLength,
       min: ele.data.captchaLength,
       message: `请输入${ele.data.captchaLength}位验证码`,
-      trigger: "blur",
-    });
-    picPath.value = ele.data.picPath;
-    loginFormData.captchaId = ele.data.captchaId;
-    loginFormData.openCaptcha = ele.data.openCaptcha;
-  });
-};
-loginVerify();
+      trigger: 'blur'
+    })
+    picPath.value = ele.data.picPath
+    loginFormData.captchaId = ele.data.captchaId
+    loginFormData.openCaptcha = ele.data.openCaptcha
+  })
+}
+loginVerify()
 
 // 登录相关操作
-const loginForm = ref(null);
-const picPath = ref("");
+const loginForm = ref(null)
+const picPath = ref('')
 const loginFormData = reactive({
-  username: "admin",
-  password: "123456",
-  captcha: "",
-  captchaId: "",
-  openCaptcha: false,
-});
+  username: 'admin',
+  password: '123456',
+  captcha: '',
+  captchaId: '',
+  openCaptcha: false
+})
 const rules = reactive({
-  username: [{ validator: checkUsername, trigger: "blur" }],
-  password: [{ validator: checkPassword, trigger: "blur" }],
+  username: [{ validator: checkUsername, trigger: 'blur' }],
+  password: [{ validator: checkPassword, trigger: 'blur' }],
   captcha: [
     {
-      message: "验证码格式不正确",
-      trigger: "blur",
-    },
-  ],
-});
+      message: '验证码格式不正确',
+      trigger: 'blur'
+    }
+  ]
+})
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 const login = async () => {
-  return await userStore.LoginIn(loginFormData);
-};
+  return await userStore.LoginIn(loginFormData)
+}
 const submitForm = () => {
   loginForm.value.validate(async (v) => {
     if (v) {
-      const flag = await login();
+      const flag = await login()
       if (!flag) {
-        loginVerify();
+        loginVerify()
       }
     } else {
       ElMessage({
-        type: "error",
-        message: "请正确填写登录信息",
-        showClose: true,
-      });
-      loginVerify();
-      return false;
+        type: 'error',
+        message: '请正确填写登录信息',
+        showClose: true
+      })
+      loginVerify()
+      return false
     }
-  });
-};
+  })
+}
 
 // 跳转初始化
 const checkInit = async () => {
-  const res = await checkDB();
+  const res = await checkDB()
   if (res.code === 0) {
     if (res.data?.needInit) {
-      userStore.NeedInit();
-      router.push({ name: "Init" });
+      userStore.NeedInit()
+      router.push({ name: 'Init' })
     } else {
       ElMessage({
-        type: "info",
-        message: "已配置数据库信息，无法初始化",
-      });
+        type: 'info',
+        message: '已配置数据库信息，无法初始化'
+      })
     }
   }
-};
+}
 </script>
