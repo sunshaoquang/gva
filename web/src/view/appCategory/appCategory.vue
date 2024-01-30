@@ -241,7 +241,7 @@ import {
   formatBoolean,
   filterDict
 } from '@/utils/format'
-import icon from '@/view/superAdmin/menu/icon.vue'
+import icon from './components/icon.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { useUserStore } from '@/pinia/modules/user'
