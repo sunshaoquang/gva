@@ -5,7 +5,6 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/App"
 	AppReq "github.com/flipped-aurora/gin-vue-admin/server/model/App/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 )
 
 type AppCategoryService struct {
@@ -71,13 +70,7 @@ func (appCategoryService *AppCategoryService) GetAppCategoryInfoList(info AppReq
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	// 创建db
-	userDb := global.GVA_DB.Model(&system.SysUser{})
-	appUserDb := global.GVA_DB.Model(&App.AppUser{})
 	db := global.GVA_DB.Model(&App.AppCategory{})
-	var userAdminId int
-	// 查询admin
-	userDb.Where("username = 'admin AND authority_id = 888'").Select("ID").First(&userAdminId)
-	appUserDb.Where("sys_user_id = ?", userAdminId).Select("ID").First(&userAdminId)
 	var appCategorys []App.AppCategory
 	// 如果有条件搜索 下方会自动创建搜索语句
 	if info.StartCreatedAt != nil && info.EndCreatedAt != nil {
