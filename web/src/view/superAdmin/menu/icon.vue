@@ -1,21 +1,16 @@
 <template>
   <div>
-    <span
-      class="gva-icon"
-      style="position: absolute; z-index: 9999; padding: 3px 10px 0"
-    >
-      <el-icon>
-        <component :is="metaData.icon" />
-      </el-icon>
-    </span>
     <el-select
       v-model="metaData.icon"
-      style="width: 100%"
       clearable
       filterable
-      class="gva-select"
       placeholder="请选择"
     >
+      <template #prefix>
+        <el-icon>
+          <component :is="metaData.icon" />
+        </el-icon>
+      </template>
       <el-option
         v-for="item in options"
         :key="item.key"
@@ -1187,11 +1182,7 @@ if (!metaData.value.icon) {
   margin-right: 10px;
 }
 
-.gva-select .el-input__inner {
-  padding: 0 30px !important;
-}
-
-.select__option_item {
+main .select__option_item {
   display: flex;
   align-items: center;
   justify-content: flex-start;

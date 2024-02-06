@@ -21,10 +21,7 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="分类标题">
-          <el-input v-model="searchInfo.name" placeholder="搜索条件" />
-        </el-form-item>
-        <el-form-item label="分类图标">
-          <icon :meta="searchInfo.icon" style="width: 100%" />
+          <icon :meta="searchInfo" style="width: 100%" />
         </el-form-item>
         <el-form-item label="是否启用" prop="state">
           <el-select v-model="searchInfo.state" clearable placeholder="请选择">

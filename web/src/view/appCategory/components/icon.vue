@@ -1,25 +1,20 @@
 <template>
   <div>
-    <span
-      class="gva-icon"
-      style="position: absolute; z-index: 9999; padding: 3px 10px 0"
-    >
-      <div :class="`ssqIcon ssqIcon-${metaData.icon}`" />
-    </span>
     <el-select
-      v-model="metaData.icon"
-      style="width: 100%"
+      v-model="metaData.name"
       clearable
       filterable
-      class="gva-select"
       placeholder="请选择"
     >
+      <template #prefix>
+        <div :class="`ssqIcon ssqIcon-${metaData.icon}`" />
+      </template>
       <el-option
         v-for="item in options"
         :key="item.label"
         class="select__option_item"
         :label="item.label"
-        :value="item.extend"
+        :value="item.label"
       >
         <span class="gva-icon" style="padding: 3px 0 0" :class="item.extend">
           <div :class="`ssqIcon ssqIcon-${item.extend}`" />
@@ -31,8 +26,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick } from 'vue'
+import { ref, reactive, nextTick, watch } from 'vue'
 import { getDictFunc, filterDict } from '@/utils/format'
+import { showDictLabel } from '@/utils/dictionary'
 
 defineOptions({
   name: 'AppCategoryIcon'
@@ -51,10 +47,21 @@ const props = defineProps({
 const options = ref([])
 const metaData = ref(props.meta)
 
+watch(
+  () => metaData.value.name,
+  (newVal) => {
+    metaData.value.icon = showDictLabel(
+      options.value,
+      newVal,
+      'label',
+      'extend'
+    )
+  }
+)
 nextTick(async () => {
   options.value = await getDictFunc('io_icon_dict')
-  if (!metaData.value.icon) {
-    metaData.value.icon = options.value[0].extend
+  if (!metaData.value.name) {
+    metaData.value.name = options.value[0].label
   }
 })
 </script>
@@ -64,10 +71,6 @@ nextTick(async () => {
   color: rgb(132, 146, 166);
   font-size: 14px;
   margin-right: 10px;
-}
-
-.gva-select .el-input__inner {
-  padding: 0 30px !important;
 }
 
 .select__option_item {
