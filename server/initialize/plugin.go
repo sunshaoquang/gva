@@ -6,6 +6,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/middleware"
 	"github.com/flipped-aurora/gin-vue-admin/server/plugin/email"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/wxpay"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils/plugin"
 	"github.com/gin-gonic/gin"
 )
@@ -32,5 +33,13 @@ func InstallPlugin(Router *gin.Engine) {
 		global.GVA_CONFIG.Email.Nickname,
 		global.GVA_CONFIG.Email.Port,
 		global.GVA_CONFIG.Email.IsSSL,
+	))
+	PluginInit(PublicGroup, wxpay.CreateWxpayPlug(
+		global.GVA_CONFIG.Wxpay.MchID,
+		global.GVA_CONFIG.Wxpay.AppID,
+		global.GVA_CONFIG.Wxpay.MchCertificateSerialNumber,
+		global.GVA_CONFIG.Wxpay.MchAPIv3Key,
+		global.GVA_CONFIG.Wxpay.PemPath,
+		global.GVA_CONFIG.Wxpay.NotifyUrl,
 	))
 }

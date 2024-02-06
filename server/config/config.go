@@ -6,6 +6,7 @@ type Server struct {
 	Redis   Redis   `mapstructure:"redis" json:"redis" yaml:"redis"`
 	Mongo   Mongo   `mapstructure:"mongo" json:"mongo" yaml:"mongo"`
 	Email   Email   `mapstructure:"email" json:"email" yaml:"email"`
+	Wxpay   Wxpay   `mapstructure:"wxpay" json:"wxpay" yaml:"wxpay"`
 	System  System  `mapstructure:"system" json:"system" yaml:"system"`
 	Captcha Captcha `mapstructure:"captcha" json:"captcha" yaml:"captcha"`
 	// auto
