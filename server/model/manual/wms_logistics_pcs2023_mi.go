@@ -33,8 +33,8 @@ type WmsLogisticsPcs2023Mi struct {
 }
 
 
-// TableName 2023年物流成本明细表 WmsLogisticsPcs2023Mi自定义表名 wms_logistics_pcs_2023_mi
+// TableName 2023年物流成本明细表 WmsLogisticsPcs2023Mi自定义表名 wms_logistics_pcs_mi
 func (WmsLogisticsPcs2023Mi) TableName() string {
-  return "wms_logistics_pcs_2023_mi"
+  return "wms_logistics_pcs_mi"
 }
 
