@@ -55,7 +55,7 @@ var excelSheetList = map[string]ExcelSheetSettings{
         SheetHeadValue: []string{"IndicatorClassification","IndicatorName","Target","January","February","March","April","May","June","July","August","September","October","November","December"},
         SheetModel:     manual.WmsKpi2023SummaryMi{},
     },
-	"2023年物流成本明细表": {
+	"物流成本明细表": {
         SheetName:      "Sheet1",
         SheetRow:       "A1",
         SheetHeadName:  []string{"产品简称","国家","类型","1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"},
