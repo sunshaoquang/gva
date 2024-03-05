@@ -93,14 +93,14 @@ var excelSheetList = map[string]ExcelSheetSettings{
 	"费用by供应商":{
 		SheetName:      "Sheet1",
         SheetRow:       "A1",
-		SheetHeadName:  []string{"类型","区域","目的国","供应商","2023年1月","2023年2月","2023年3月","2023年4月","2023年5月","2023年6月","2023年7月","2023年8月","2023年9月","2023年10月","2023年11月","2023年12月"},
+		SheetHeadName:  []string{"类型","区域","目的国","供应商","1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"},
         SheetHeadValue: []string{"Type","Area","Country","Supplier","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"},
 		SheetModel:     manual.WmsLogisticsProviderMi{},
 	},
 	"收入by国家":{
 		SheetName:      "Sheet1",
         SheetRow:       "A1",
-		SheetHeadName:  []string{"类型","区域","目的国","2023年1月","2023年2月","2023年3月","2023年4月","2023年5月","2023年6月","2023年7月","2023年8月","2023年9月","2023年10月","2023年11月","2023年12月"},
+		SheetHeadName:  []string{"类型","区域","目的国","1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"},
         SheetHeadValue: []string{"Type","Area","Country","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sept","Oct","Nov","Dec"},
 		SheetModel:     manual.WmsLogisticsSalebycountryMi{},
 	},
