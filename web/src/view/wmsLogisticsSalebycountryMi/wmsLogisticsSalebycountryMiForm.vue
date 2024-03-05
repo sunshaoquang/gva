@@ -11,40 +11,40 @@
         <el-form-item label="目的国:" prop="country">
           <el-input v-model="formData.country" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年1月:" prop="jan">
+        <el-form-item label="1月:" prop="jan">
           <el-input v-model="formData.jan" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年2月:" prop="feb">
+        <el-form-item label="2月:" prop="feb">
           <el-input v-model="formData.feb" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年3月:" prop="mar">
+        <el-form-item label="3月:" prop="mar">
           <el-input v-model="formData.mar" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年4月:" prop="apr">
+        <el-form-item label="4月:" prop="apr">
           <el-input v-model="formData.apr" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年5月:" prop="may">
+        <el-form-item label="5月:" prop="may">
           <el-input v-model="formData.may" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年6月:" prop="jun">
+        <el-form-item label="6月:" prop="jun">
           <el-input v-model="formData.jun" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年7月:" prop="jul">
+        <el-form-item label="7月:" prop="jul">
           <el-input v-model="formData.jul" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年8月:" prop="aug">
+        <el-form-item label="8月:" prop="aug">
           <el-input v-model="formData.aug" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年9月:" prop="sept">
+        <el-form-item label="9月:" prop="sept">
           <el-input v-model="formData.sept" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年10月:" prop="oct">
+        <el-form-item label="10月:" prop="oct">
           <el-input v-model="formData.oct" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年11月:" prop="nov">
+        <el-form-item label="11月:" prop="nov">
           <el-input v-model="formData.nov" :clearable="true" placeholder="请输入" />
        </el-form-item>
-        <el-form-item label="2023年12月:" prop="dec">
+        <el-form-item label="12月:" prop="dec">
           <el-input v-model="formData.dec" :clearable="true" placeholder="请输入" />
        </el-form-item>
         <el-form-item label="创建人:" prop="createdName">
