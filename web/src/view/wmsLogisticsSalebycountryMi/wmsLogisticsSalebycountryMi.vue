@@ -183,84 +183,84 @@
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年1月"
+          label="1月"
           prop="jan"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年2月"
+          label="2月"
           prop="feb"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年3月"
+          label="3月"
           prop="mar"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年4月"
+          label="4月"
           prop="apr"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年5月"
+          label="5月"
           prop="may"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年6月"
+          label="6月"
           prop="jun"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年7月"
+          label="7月"
           prop="jul"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年8月"
+          label="8月"
           prop="aug"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年9月"
+          label="9月"
           prop="sept"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年10月"
+          label="10月"
           prop="oct"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年11月"
+          label="11月"
           prop="nov"
           width="120"
         />
         <el-table-column
           align="left"
           show-overflow-tooltip
-          label="2023年12月"
+          label="12月"
           prop="dec"
           width="120"
         />
@@ -360,88 +360,88 @@
               placeholder="请输入目的国"
             />
           </el-form-item>
-          <el-form-item label="2023年1月:" prop="jan">
+          <el-form-item label="1月:" prop="jan">
             <el-input
               v-model="formData.jan"
               :clearable="true"
-              placeholder="请输入2023年1月"
+              placeholder="请输入1月"
             />
           </el-form-item>
-          <el-form-item label="2023年2月:" prop="feb">
+          <el-form-item label="2月:" prop="feb">
             <el-input
               v-model="formData.feb"
               :clearable="true"
-              placeholder="请输入2023年2月"
+              placeholder="请输入2月"
             />
           </el-form-item>
-          <el-form-item label="2023年3月:" prop="mar">
+          <el-form-item label="3月:" prop="mar">
             <el-input
               v-model="formData.mar"
               :clearable="true"
-              placeholder="请输入2023年3月"
+              placeholder="请输入3月"
             />
           </el-form-item>
-          <el-form-item label="2023年4月:" prop="apr">
+          <el-form-item label="4月:" prop="apr">
             <el-input
               v-model="formData.apr"
               :clearable="true"
-              placeholder="请输入2023年4月"
+              placeholder="请输入4月"
             />
           </el-form-item>
-          <el-form-item label="2023年5月:" prop="may">
+          <el-form-item label="5月:" prop="may">
             <el-input
               v-model="formData.may"
               :clearable="true"
-              placeholder="请输入2023年5月"
+              placeholder="请输入5月"
             />
           </el-form-item>
-          <el-form-item label="2023年6月:" prop="jun">
+          <el-form-item label="6月:" prop="jun">
             <el-input
               v-model="formData.jun"
               :clearable="true"
-              placeholder="请输入2023年6月"
+              placeholder="请输入6月"
             />
           </el-form-item>
-          <el-form-item label="2023年7月:" prop="jul">
+          <el-form-item label="7月:" prop="jul">
             <el-input
               v-model="formData.jul"
               :clearable="true"
-              placeholder="请输入2023年7月"
+              placeholder="请输入7月"
             />
           </el-form-item>
-          <el-form-item label="2023年8月:" prop="aug">
+          <el-form-item label="8月:" prop="aug">
             <el-input
               v-model="formData.aug"
               :clearable="true"
-              placeholder="请输入2023年8月"
+              placeholder="请输入8月"
             />
           </el-form-item>
-          <el-form-item label="2023年9月:" prop="sept">
+          <el-form-item label="9月:" prop="sept">
             <el-input
               v-model="formData.sept"
               :clearable="true"
-              placeholder="请输入2023年9月"
+              placeholder="请输入9月"
             />
           </el-form-item>
-          <el-form-item label="2023年10月:" prop="oct">
+          <el-form-item label="10月:" prop="oct">
             <el-input
               v-model="formData.oct"
               :clearable="true"
-              placeholder="请输入2023年10月"
+              placeholder="请输入10月"
             />
           </el-form-item>
-          <el-form-item label="2023年11月:" prop="nov">
+          <el-form-item label="11月:" prop="nov">
             <el-input
               v-model="formData.nov"
               :clearable="true"
-              placeholder="请输入2023年11月"
+              placeholder="请输入11月"
             />
           </el-form-item>
-          <el-form-item label="2023年12月:" prop="dec">
+          <el-form-item label="12月:" prop="dec">
             <el-input
               v-model="formData.dec"
               :clearable="true"
-              placeholder="请输入2023年12月"
+              placeholder="请输入12月"
             />
           </el-form-item>
           <el-form-item label="创建人:" prop="createdName">
@@ -487,40 +487,40 @@
           <el-descriptions-item label="目的国">
             {{ formData.country }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年1月">
+          <el-descriptions-item label="1月">
             {{ formData.jan }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年2月">
+          <el-descriptions-item label="2月">
             {{ formData.feb }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年3月">
+          <el-descriptions-item label="3月">
             {{ formData.mar }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年4月">
+          <el-descriptions-item label="4月">
             {{ formData.apr }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年5月">
+          <el-descriptions-item label="5月">
             {{ formData.may }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年6月">
+          <el-descriptions-item label="6月">
             {{ formData.jun }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年7月">
+          <el-descriptions-item label="7月">
             {{ formData.jul }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年8月">
+          <el-descriptions-item label="8月">
             {{ formData.aug }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年9月">
+          <el-descriptions-item label="9月">
             {{ formData.sept }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年10月">
+          <el-descriptions-item label="10月">
             {{ formData.oct }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年11月">
+          <el-descriptions-item label="11月">
             {{ formData.nov }}
           </el-descriptions-item>
-          <el-descriptions-item label="2023年12月">
+          <el-descriptions-item label="12月">
             {{ formData.dec }}
           </el-descriptions-item>
           <el-descriptions-item label="创建人">
