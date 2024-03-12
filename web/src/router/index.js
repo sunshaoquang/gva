@@ -70,6 +70,12 @@ const promotionChildren = [
       import("@/view/wmsLogisticsStoragefeeMi/wmsLogisticsStoragefeeMi.vue"),
   },
   {
+    path: "/template/wmsLogisticsTailfeeMi", //尾程费用结构
+    name: "WmsLogisticsTailfeeMi",
+    component: () =>
+      import("@/view/wmsLogisticsTailfeeMi/wmsLogisticsTailfeeMi.vue"),
+  },
+  {
     path: "/template/wmsLogisticsRateMonths", //物流占销比
     name: "WmsLogisticsRateMonths",
     component: () =>
