@@ -14,4 +14,5 @@ type ServiceGroup struct {
 	WmsLogisticsStoragefeeMiService
 	OmsCnSalesTargetDailyService
 	OmsCnChannelSalesService
+	WmsLogisticsTailfeeMiService
 }

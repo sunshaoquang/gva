@@ -14,4 +14,5 @@ type ApiGroup struct {
 	WmsLogisticsStoragefeeMiApi
 	OmsCnSalesTargetDailyApi
 	OmsCnChannelSalesApi
+	WmsLogisticsTailfeeMiApi
 }

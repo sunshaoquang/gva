@@ -14,4 +14,5 @@ type RouterGroup struct {
 	WmsLogisticsStoragefeeMiRouter
 	OmsCnSalesTargetDailyRouter
 	OmsCnChannelSalesRouter
+	WmsLogisticsTailfeeMiRouter
 }
