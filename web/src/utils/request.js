@@ -8,23 +8,23 @@ const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
   timeout: 99999
 })
-let acitveAxios = 0
+let activeAxios = 0
 let timer
 const showLoading = () => {
-  acitveAxios++
+  activeAxios++
   if (timer) {
     clearTimeout(timer)
   }
   timer = setTimeout(() => {
-    if (acitveAxios > 0) {
+    if (activeAxios > 0) {
       emitter.emit('showLoading')
     }
   }, 400)
 }
 
 const closeLoading = () => {
-  acitveAxios--
-  if (acitveAxios <= 0) {
+  activeAxios--
+  if (activeAxios <= 0) {
     clearTimeout(timer)
     emitter.emit('closeLoading')
   }
@@ -80,7 +80,7 @@ service.interceptors.response.use(
       })
       if (response.data.data && response.data.data.reload) {
         userStore.token = ''
-        localStorage.clear()
+        window.localStorage.removeItem('token')
         router.push({ name: 'Login', replace: true })
       }
       return response.data.msg ? response.data : response

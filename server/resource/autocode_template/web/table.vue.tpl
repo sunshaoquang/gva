@@ -86,16 +86,7 @@
     <div class="gva-table-box">
         <div class="gva-btn-list">
             <el-button type="primary" icon="plus" @click="openDialog">新增</el-button>
-            <el-popover v-model:visible="deleteVisible" :disabled="!multipleSelection.length" placement="top" width="160">
-            <p>确定要删除吗？</p>
-            <div style="text-align: right; margin-top: 8px;">
-                <el-button type="primary" link @click="deleteVisible = false">取消</el-button>
-                <el-button type="primary" @click="onDelete">确定</el-button>
-            </div>
-            <template #reference>
-                <el-button icon="delete" style="margin-left: 10px;" :disabled="!multipleSelection.length" @click="deleteVisible = true">删除</el-button>
-            </template>
-            </el-popover>
+            <el-button icon="delete" style="margin-left: 10px;" :disabled="!multipleSelection.length" @click="onDelete">删除</el-button>
         </div>
         <el-table
         ref="multipleTable"
@@ -139,7 +130,7 @@
            <el-table-column label="{{.FieldDesc}}" width="200">
               <template #default="scope">
                  <div class="multiple-img-box">
-                    <el-image v-for="(item,index) in scope.row.{{.FieldJson}}" style="width: 80px; height: 80px" :src="getUrl(item)" fit="cover"/>
+                    <el-image v-for="(item,index) in scope.row.{{.FieldJson}}" :key="index" style="width: 80px; height: 80px" :src="getUrl(item)" fit="cover"/>
                 </div>
               </template>
            </el-table-column>
@@ -266,7 +257,7 @@
 
     <el-dialog v-model="detailShow" style="width: 800px" lock-scroll :before-close="closeDetailShow" title="查看详情" destroy-on-close>
       <el-scrollbar height="550px">
-        <el-descriptions column="1" border>
+        <el-descriptions :column="1" border>
         {{- range .Fields}}
                 <el-descriptions-item label="{{ .FieldDesc }}">
                 {{- if .DictType}}
@@ -452,7 +443,22 @@ const searchInfo = ref({})
 {{- if .NeedSort}}
 // 排序
 const sortChange = ({ prop, order }) => {
-  searchInfo.value.sort = prop
+  const sortMap = {
+    {{- range .Fields}}
+      {{- if and .Sort}}
+        {{- if not (eq .ColumnName "")}}
+            {{.FieldJson}}: '{{.ColumnName}}',
+        {{- end}}
+      {{- end}}
+    {{- end}}
+  }
+
+  let sort = sortMap[prop]
+  if(!sort){
+   sort = prop.replace(/[A-Z]/g, match => _${match.toLowerCase()})
+  }
+
+  searchInfo.value.sort = sort
   searchInfo.value.order = order
   getTableData()
 }
@@ -534,12 +540,13 @@ const deleteRow = (row) => {
         })
     }
 
-
-// 批量删除控制标记
-const deleteVisible = ref(false)
-
 // 多选删除
 const onDelete = async() => {
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async() => {
       const {{.PrimaryField.FieldJson}}s = []
       if (multipleSelection.value.length === 0) {
         ElMessage({
@@ -561,9 +568,9 @@ const onDelete = async() => {
         if (tableData.value.length === {{.PrimaryField.FieldJson}}s.length && page.value > 1) {
           page.value--
         }
-        deleteVisible.value = false
         getTableData()
       }
+      })
     }
 
 // 行为控制标记（弹窗内部需要增还是改）
