@@ -1,197 +1,3 @@
-# github.com/flipped-aurora/gin-vue-admin/server Global Configuration
-
-# jwt configuration
-jwt:
-  signing-key: qmPlus
-  expires-time: 7d
-  buffer-time: 1d
-  issuer: qmPlus
-# zap logger configuration
-zap:
-  level: info
-  format: console
-  prefix: "[github.com/flipped-aurora/gin-vue-admin/server]"
-  director: log
-  show-line: true
-  encode-level: LowercaseColorLevelEncoder
-  stacktrace-key: stacktrace
-  log-in-console: true
-
-# redis configuration
-redis:
-  #是否使用redis集群模式
-  useCluster: false
-  #使用集群模式addr和db默认无效
-  addr: 127.0.0.1:6379
-  password: ""
-  db: 0
-  clusterAddrs:
-    - "172.21.0.3:7000"
-    - "172.21.0.4:7001"
-    - "172.21.0.2:7002"
-
-
-# mongo configuration
-mongo:
-  coll: ''
-  options: ''
-  database: ''
-  username: ''
-  password: ''
-  auth-source: ''
-  min-pool-size: 0
-  max-pool-size: 100
-  socket-timeout-ms: 0
-  connect-timeout-ms: 0
-  is-zap: false
-  hosts:
-    - host: ''
-      port: ''
-
-# email configuration
-email:
-  to: xxx@qq.com
-  port: 465
-  from: xxx@163.com
-  host: smtp.163.com
-  is-ssl: true
-  secret: xxx
-  nickname: test
-
-# system configuration
-system:
-  env: local # 修改为public可以关闭路由日志输出
-  addr: 8888
-  db-type: mysql
-  oss-type: local # 控制oss选择走本地还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
-  use-redis: false # 使用redis
-  use-mongo: false     # 使用mongo
-  use-multipoint: false
-  # IP限制次数 一个小时15000次
-  iplimit-count: 15000
-  #  IP限制一个小时
-  iplimit-time: 3600
-  #  路由全局前缀
-  router-prefix: ""
-
-# captcha configuration
-captcha:
-  key-long: 6
-  img-width: 240
-  img-height: 80
-  open-captcha: 0 # 0代表一直开启，大于0代表限制次数
-  open-captcha-timeout: 3600 # open-captcha大于0时才生效
-
-# mysql connect configuration
-# 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
-mysql:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
-
-# pgsql connect configuration
-# 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
-pgsql:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
-oracle:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
-mssql:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
-sqlite:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
-  max-idle-conns: 10
-  max-open-conns: 100
-  log-mode: ""
-  log-zap: false
-db-list:
-  - disable: true # 是否禁用
-    type: "" # 数据库的类型,目前支持mysql、pgsql、mssql、oracle
-    alias-name: "" # 数据库的名称,注意: alias-name 需要在db-list中唯一
-    path: ""
-    port: ""
-    config: ""
-    db-name: ""
-    username: ""
-    password: ""
-    max-idle-conns: 10
-    max-open-conns: 100
-    log-mode: ""
-    log-zap: false
-
-# local configuration
-local:
-  path: uploads/file
-  store-path: uploads/file
-
-# autocode configuration
-autocode:
-  transfer-restart: true
-  # root 自动适配项目根目录
-  # 请不要手动配置,他会在项目加载的时候识别出根路径
-  root: ""
-  server: /server
-  server-plug: /plugin/%s
-  server-api: /api/v1/%s
-  server-initialize: /initialize
-  server-model: /model/%s
-  server-request: /model/%s/request/
-  server-router: /router/%s
-  server-service: /service/%s
-  web: /web/src
-  web-api: /api
-  web-form: /view
-  web-table: /view
-
-# qiniu configuration (请自行七牛申请对应的 公钥 私钥 bucket 和 域名地址)
-qiniu:
-  zone: ZoneHuaDong
-  bucket: ""
-  img-path: ""
-  use-https: false
-  access-key: ""
-  secret-key: ""
-  use-cdn-domains: false
-
-# aliyun oss configuration
 aliyun-oss:
   endpoint: yourEndpoint
   access-key-id: yourAccessKeyId
@@ -199,8 +5,168 @@ aliyun-oss:
   bucket-name: yourBucketName
   bucket-url: yourBucketUrl
   base-path: yourBasePath
-
-# tencent cos configuration
+autocode:
+  server-model: /model/%s
+  server-router: /router/%s
+  server: /server
+  server-api: /api/v1/%s
+  server-plug: /plugin/%s
+  server-initialize: /initialize
+  root: /Users/rightsun/Documents/git/gva
+  web-table: /view
+  web: /web/src
+  server-service: /service/%s
+  server-request: /model/%s/request/
+  web-api: /api
+  web-form: /view
+  transfer-restart: true
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
+  open-captcha: 0
+  open-captcha-timeout: 3600
+db-list:
+  - type: ""
+    alias-name: ""
+    prefix: ""
+    port: ""
+    config: ""
+    db-name: ""
+    username: ""
+    password: ""
+    path: ""
+    engine: ""
+    log-mode: ""
+    max-idle-conns: 10
+    max-open-conns: 100
+    singular: false
+    log-zap: false
+    disable: true
+email:
+  to: xxx@qq.com
+  from: xxx@163.com
+  host: smtp.163.com
+  secret: xxx
+  nickname: test
+  port: 465
+  is-ssl: true
+jwt:
+  signing-key: befac9f3-2c9a-43cb-ac87-fcecb46b9dce
+  expires-time: 7d
+  buffer-time: 1d
+  issuer: rightSun
+local:
+  path: uploads/file
+  store-path: uploads/file
+mongo:
+  coll: ""
+  options: ""
+  database: ""
+  username: ""
+  password: ""
+  auth-source: ""
+  min-pool-size: 0
+  max-pool-size: 100
+  socket-timeout-ms: 0
+  connect-timeout-ms: 0
+  is-zap: false
+  hosts:
+    - host: ""
+      port: ""
+mssql:
+  prefix: ""
+  port: ""
+  config: ""
+  db-name: ""
+  username: ""
+  password: ""
+  path: ""
+  engine: ""
+  log-mode: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+mysql:
+  prefix: ""
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: gva
+  username: root
+  password: "q4956225"
+  path: 47.106.160.34
+  engine: ""
+  log-mode: error
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+oracle:
+  prefix: ""
+  port: ""
+  config: ""
+  db-name: ""
+  username: ""
+  password: ""
+  path: ""
+  engine: ""
+  log-mode: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+pgsql:
+  prefix: ""
+  port: ""
+  config: ""
+  db-name: ""
+  username: ""
+  password: ""
+  path: ""
+  engine: ""
+  log-mode: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+qiniu:
+  zone: ZoneHuaDong
+  bucket: ""
+  img-path: ""
+  access-key: ""
+  secret-key: ""
+  use-https: false
+  use-cdn-domains: false
+redis:
+  addr: 127.0.0.1:6379
+  password: ""
+  db: 0
+sqlite:
+  prefix: ""
+  port: ""
+  config: ""
+  db-name: ""
+  username: ""
+  password: ""
+  path: ""
+  engine: ""
+  log-mode: ""
+  max-idle-conns: 10
+  max-open-conns: 100
+  singular: false
+  log-zap: false
+system:
+  env: local
+  db-type: mysql
+  oss-type: local
+  router-prefix: ""
+  addr: 8888
+  iplimit-count: 15000
+  iplimit-time: 3600
+  use-multipoint: false
+  use-redis: false
+  use-mongo: false
 tencent-cos:
   bucket: xxxxx-10005608
   region: ap-shanghai

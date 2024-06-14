@@ -2,6 +2,7 @@ package system
 
 import (
 	"context"
+
 	sysModel "github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
 	"github.com/pkg/errors"
@@ -37,6 +38,7 @@ func (i *initApi) TableCreated(ctx context.Context) bool {
 	return db.Migrator().HasTable(&sysModel.SysApi{})
 }
 
+// TODO 默认自动加api权限
 func (i *initApi) InitializeData(ctx context.Context) (context.Context, error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {

@@ -7,15 +7,14 @@
 </template>
 
 <script setup>
-import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import zhCn from "element-plus/dist/locale/zh-cn.mjs";
 // element 2.3.8之前使用下面的语句
 // import zhCn from 'element-plus/lib/locale/lang/zh-cn'
 import {useAppStore} from "@/pinia";
 useAppStore()
 defineOptions({
-  name: 'App'
-})
-
+  name: "App",
+});
 </script>
 <style lang="scss">
 
@@ -25,7 +24,7 @@ defineOptions({
   overflow: hidden;
   font-weight: 400 !important;
 }
-.el-button{
+.el-button {
   font-weight: 400 !important;
 }
 

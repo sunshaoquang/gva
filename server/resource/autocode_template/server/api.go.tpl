@@ -38,7 +38,6 @@ func ({{.Abbreviation}}Api *{{.StructName}}Api) Create{{.StructName}}(c *gin.Con
 	{{- if .AutoCreateResource }}
     {{.Abbreviation}}.CreatedBy = utils.GetUserID(c)
 	{{- end }}
-
 	if err := {{.Abbreviation}}Service.Create{{.StructName}}(&{{.Abbreviation}}); err != nil {
         global.GVA_LOG.Error("创建失败!", zap.Error(err))
 		response.FailWithMessage("创建失败", c)
@@ -109,7 +108,6 @@ func ({{.Abbreviation}}Api *{{.StructName}}Api) Update{{.StructName}}(c *gin.Con
 	    {{- if .AutoCreateResource }}
     {{.Abbreviation}}.UpdatedBy = utils.GetUserID(c)
         {{- end }}
-
 	if err := {{.Abbreviation}}Service.Update{{.StructName}}({{.Abbreviation}}); err != nil {
         global.GVA_LOG.Error("更新失败!", zap.Error(err))
 		response.FailWithMessage("更新失败", c)

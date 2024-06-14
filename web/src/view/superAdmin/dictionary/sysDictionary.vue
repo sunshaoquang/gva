@@ -14,10 +14,7 @@
             新增
           </el-button>
         </div>
-        <el-scrollbar
-          class="mt-4"
-          style="height: calc(100vh - 300px)"
-        >
+        <el-scrollbar class="mt-4" style="height: calc(100vh - 300px)">
           <div
             v-for="dictionary in dictionaryData"
             :key="dictionary.ID"
@@ -50,7 +47,7 @@
     <el-dialog
       v-model="dialogFormVisible"
       :before-close="closeDialog"
-      :title="type==='create'?'添加字典':'修改字典'"
+      :title="type === 'create' ? '添加字典' : '修改字典'"
     >
       <el-form
         ref="dialogForm"
@@ -58,10 +55,7 @@
         :rules="rules"
         label-width="110px"
       >
-        <el-form-item
-          label="字典名（中）"
-          prop="name"
-        >
+        <el-form-item label="字典名（中）" prop="name">
           <el-input
             v-model="formData.name"
             placeholder="请输入字典名（中）"
@@ -69,10 +63,7 @@
             :style="{ width: '100%' }"
           />
         </el-form-item>
-        <el-form-item
-          label="字典名（英）"
-          prop="type"
-        >
+        <el-form-item label="字典名（英）" prop="type">
           <el-input
             v-model="formData.type"
             placeholder="请输入字典名（英）"
@@ -80,21 +71,14 @@
             :style="{ width: '100%' }"
           />
         </el-form-item>
-        <el-form-item
-          label="状态"
-          prop="status"
-          required
-        >
+        <el-form-item label="状态" prop="status" required>
           <el-switch
             v-model="formData.status"
             active-text="开启"
             inactive-text="停用"
           />
         </el-form-item>
-        <el-form-item
-          label="描述"
-          prop="desc"
-        >
+        <el-form-item label="描述" prop="desc">
           <el-input
             v-model="formData.desc"
             placeholder="请输入描述"
@@ -106,11 +90,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="closeDialog">取 消</el-button>
-          <el-button
-
-            type="primary"
-            @click="enterDialog"
-          >确 定</el-button>
+          <el-button type="primary" @click="enterDialog">确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -129,73 +109,73 @@ import WarningBar from '@/components/warningBar/warningBar.vue'
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-import sysDictionaryDetail from './sysDictionaryDetail.vue'
-import { Edit } from '@element-plus/icons-vue'
+import sysDictionaryDetail from "./sysDictionaryDetail.vue";
+import { Edit } from "@element-plus/icons-vue";
 
 defineOptions({
-  name: 'SysDictionary',
-})
+  name: "SysDictionary",
+});
 
-const selectID = ref(1)
+const selectID = ref(1);
 
 const formData = ref({
   name: null,
   type: null,
   status: true,
   desc: null,
-})
+});
 const rules = ref({
   name: [
     {
       required: true,
-      message: '请输入字典名（中）',
-      trigger: 'blur',
+      message: "请输入字典名（中）",
+      trigger: "blur",
     },
   ],
   type: [
     {
       required: true,
-      message: '请输入字典名（英）',
-      trigger: 'blur',
+      message: "请输入字典名（英）",
+      trigger: "blur",
     },
   ],
   desc: [
     {
       required: true,
-      message: '请输入描述',
-      trigger: 'blur',
+      message: "请输入描述",
+      trigger: "blur",
     },
   ],
-})
+});
 
-const dictionaryData = ref([])
+const dictionaryData = ref([]);
 
 // 查询
-const getTableData = async() => {
-  const res = await getSysDictionaryList()
+const getTableData = async () => {
+  const res = await getSysDictionaryList();
   if (res.code === 0) {
-    dictionaryData.value = res.data
+    dictionaryData.value = res.data;
   }
-}
+};
 
-getTableData()
+getTableData();
 
 const toDetail = (row) => {
-  selectID.value = row.ID
-}
+  selectID.value = row.ID;
+};
 
-const dialogFormVisible = ref(false)
-const type = ref('')
-const updateSysDictionaryFunc = async(row) => {
-  const res = await findSysDictionary({ ID: row.ID, status: row.status })
-  type.value = 'update'
+const dialogFormVisible = ref(false);
+const type = ref("");
+const updateSysDictionaryFunc = async (row) => {
+  const res = await findSysDictionary({ ID: row.ID, status: row.status });
+  type.value = "update";
   if (res.code === 0) {
-    formData.value = res.data.resysDictionary
-    dialogFormVisible.value = true
+    formData.value = res.data.resysDictionary;
+    dialogFormVisible.value = true;
   }
-}
+};
 const closeDialog = () => {
-  dialogFormVisible.value = false
+  dialogFormVisible.value = false;
   formData.value = {
     name: null,
     type: null,
@@ -220,37 +200,37 @@ const deleteSysDictionaryFunc = async(row) => {
   })
 }
 
-const dialogForm = ref(null)
-const enterDialog = async() => {
-  dialogForm.value.validate(async(valid) => {
-    if (!valid) return
-    let res
+const dialogForm = ref(null);
+const enterDialog = async () => {
+  dialogForm.value.validate(async (valid) => {
+    if (!valid) return;
+    let res;
     switch (type.value) {
-      case 'create':
-        res = await createSysDictionary(formData.value)
-        break
-      case 'update':
-        res = await updateSysDictionary(formData.value)
-        break
+      case "create":
+        res = await createSysDictionary(formData.value);
+        break;
+      case "update":
+        res = await updateSysDictionary(formData.value);
+        break;
       default:
-        res = await createSysDictionary(formData.value)
-        break
+        res = await createSysDictionary(formData.value);
+        break;
     }
     if (res.code === 0) {
-      ElMessage.success('操作成功')
-      closeDialog()
-      getTableData()
+      ElMessage.success("操作成功");
+      closeDialog();
+      getTableData();
     }
-  })
-}
+  });
+};
 const openDialog = () => {
-  type.value = 'create'
-  dialogFormVisible.value = true
-}
+  type.value = "create";
+  dialogFormVisible.value = true;
+};
 </script>
 
 <style>
-.dict-box{
+.dict-box {
   height: calc(100vh - 240px);
 }
 .active {

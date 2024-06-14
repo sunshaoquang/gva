@@ -10,15 +10,19 @@ const createIconComponent = (name) => ({
   name: 'SvgIcon',
   render() {
     return h(svgIcon, {
-      name: name,
+      name: name
     })
-  },
+  }
 })
 
-const registerIcons = async(app) => {
+// eslint-disable-next-line space-before-function-paren
+const registerIcons = async (app) => {
   const iconModules = import.meta.glob('@/assets/icons/**/*.svg')
   for (const path in iconModules) {
-    const iconName = path.split('/').pop().replace(/\.svg$/, '')
+    const iconName = path
+      .split('/')
+      .pop()
+      .replace(/\.svg$/, '')
     // 如果iconName带空格则不加入到图标库中并且提示名称不合法
     console.log(iconName)
     if (iconName.indexOf(' ') !== -1) {
@@ -27,8 +31,8 @@ const registerIcons = async(app) => {
     }
     const iconComponent = createIconComponent(iconName)
     config.logs.push({
-      'key': iconName,
-      'label': iconName,
+      key: iconName,
+      label: iconName
     })
     app.component(iconName, iconComponent)
   }

@@ -7,7 +7,7 @@ const config = {
   appName: 'Gin-Vue-Admin',
   appLogo: 'https://www.gin-vue-admin.com/img/logo.png',
   showViteLogo: true,
-  logs: [],
+  logs: []
 }
 
 export const viteLogo = (env) => {
@@ -18,6 +18,10 @@ export const viteLogo = (env) => {
         `> 欢迎使用Gin-Vue-Admin，开源地址：https://github.com/flipped-aurora/gin-vue-admin`
       )
     )
+    console.log(chalk.green(`> 当前版本:v2.5.9`))
+    console.log(chalk.green(`> 加群方式:微信：shouzi_1994 QQ群：622360840`))
+    console.log(chalk.green(`> 当前版本:v2.6.0`))
+    console.log(chalk.green(`> 加群方式:微信：shouzi_1994 QQ群：622360840`))
     console.log(
       chalk.green(
         `> 当前版本:v2.6.5`
@@ -38,6 +42,7 @@ export const viteLogo = (env) => {
         `> 插件市场:https://plugin.gin-vue-admin.com`
       )
     )
+    console.log(chalk.green(`> 插件市场:https://plugin.gin-vue-admin.com`))
     console.log(
         chalk.green(
             `> GVA讨论社区:https://support.qq.com/products/371961`

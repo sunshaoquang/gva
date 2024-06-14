@@ -1,27 +1,24 @@
 <template>
-  <div
-    id="userLayout"
-    class="w-full h-full relative"
-  >
+  <div id="userLayout" class="relative w-full h-full">
     <div
       class="rounded-lg flex items-center justify-evenly w-full h-full md:w-screen md:h-screen md:bg-[#194bfb]"
     >
       <div class="md:w-3/5 w-10/12 h-full flex items-center justify-evenly">
         <div class="oblique h-[130%] w-3/5 bg-white dark:bg-slate-900 transform -rotate-12 absolute -ml-52" />
         <!-- 分割斜块 -->
-        <div class="z-[999] pt-12 pb-10 md:w-96 w-full  rounded-lg flex flex-col justify-between box-border">
+        <div
+          class="z-[999] pt-12 pb-10 md:w-96 w-full rounded-lg flex flex-col justify-between box-border"
+        >
           <div>
             <div class="flex items-center justify-center">
-
-              <img
-                class="w-24"
-                :src="$GIN_VUE_ADMIN.appLogo"
-                alt
-              >
+              <img class="w-24" :src="$GIN_VUE_ADMIN.appLogo" alt />
             </div>
             <div class="mb-9">
-              <p class="text-center text-4xl font-bold">{{ $GIN_VUE_ADMIN.appName }}</p>
-              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">A management platform using Golang and Vue
+              <p class="text-4xl font-bold text-center">
+                {{ $GIN_VUE_ADMIN.appName }}
+              </p>
+              <p class="text-center text-sm font-normal text-gray-500 mt-2.5">
+                A management platform using Golang and Vue
               </p>
             </div>
             <el-form
@@ -31,10 +28,7 @@
               :validate-on-rule-change="false"
               @keyup.enter="submitForm"
             >
-              <el-form-item
-                prop="username"
-                class="mb-6"
-              >
+              <el-form-item prop="username" class="mb-6">
                 <el-input
                   v-model="loginFormData.username"
                   size="large"
@@ -42,10 +36,7 @@
                   suffix-icon="user"
                 />
               </el-form-item>
-              <el-form-item
-                prop="password"
-                class="mb-6"
-              >
+              <el-form-item prop="password" class="mb-6">
                 <el-input
                   v-model="loginFormData.password"
                   show-password
@@ -59,7 +50,7 @@
                 prop="captcha"
                 class="mb-6"
               >
-                <div class="flex w-full justify-between">
+                <div class="flex justify-between w-full">
                   <el-input
                     v-model="loginFormData.captcha"
                     placeholder="请输入验证码"
@@ -73,7 +64,7 @@
                       :src="picPath"
                       alt="请输入验证码"
                       @click="loginVerify()"
-                    >
+                    />
                   </div>
                 </div>
               </el-form-item>
@@ -83,7 +74,8 @@
                   type="primary"
                   size="large"
                   @click="submitForm"
-                >登 录</el-button>
+                  >登 录</el-button
+                >
               </el-form-item>
               <el-form-item class="mb-6">
                 <el-button
@@ -91,61 +83,38 @@
                   type="primary"
                   size="large"
                   @click="checkInit"
-                >前往初始化</el-button>
-
+                  >前往初始化</el-button
+                >
               </el-form-item>
             </el-form>
           </div>
         </div>
       </div>
-      <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]"><img
-        class="h-full"
-        src="@/assets/login_right_banner.jpg"
-        alt="banner"
-      ></div>
+      <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]">
+        <img
+          class="h-full"
+          src="@/assets/login_right_banner.jpg"
+          alt="banner"
+        />
+      </div>
     </div>
 
-    <BottomInfo class="left-0 right-0 absolute bottom-3 mx-auto  w-full z-20">
-      <div class="links items-center justify-center gap-2 hidden md:flex">
-        <a
-          href="http://doc.henrongyi.top/"
-          target="_blank"
-        >
-          <img
-            src="@/assets/docs.png"
-            class="w-8 h-8"
-            alt="文档"
-          >
+    <BottomInfo class="absolute left-0 right-0 z-20 w-full mx-auto bottom-3">
+      <div class="items-center justify-center hidden gap-2 links md:flex">
+        <a href="http://doc.henrongyi.top/" target="_blank">
+          <img src="@/assets/docs.png" class="w-8 h-8" alt="文档" />
         </a>
-        <a
-          href="https://support.qq.com/product/371961"
-          target="_blank"
-        >
-          <img
-            src="@/assets/kefu.png"
-            class="w-8 h-8"
-            alt="客服"
-          >
+        <a href="https://support.qq.com/product/371961" target="_blank">
+          <img src="@/assets/kefu.png" class="w-8 h-8" alt="客服" />
         </a>
         <a
           href="https://github.com/flipped-aurora/gin-vue-admin"
           target="_blank"
         >
-          <img
-            src="@/assets/github.png"
-            class="w-8 h-8"
-            alt="github"
-          >
+          <img src="@/assets/github.png" class="w-8 h-8" alt="github" />
         </a>
-        <a
-          href="https://space.bilibili.com/322210472"
-          target="_blank"
-        >
-          <img
-            src="@/assets/video.png"
-            class="w-8 h-8"
-            alt="视频站"
-          >
+        <a href="https://space.bilibili.com/322210472" target="_blank">
+          <img src="@/assets/video.png" class="w-8 h-8" alt="视频站" />
         </a>
       </div>
     </BottomInfo>
@@ -205,7 +174,7 @@ const loginFormData = reactive({
   password: '',
   captcha: '',
   captchaId: '',
-  openCaptcha: false,
+  openCaptcha: false
 })
 const rules = reactive({
   username: [{ validator: checkUsername, trigger: 'blur' }],
@@ -213,13 +182,13 @@ const rules = reactive({
   captcha: [
     {
       message: '验证码格式不正确',
-      trigger: 'blur',
-    },
-  ],
+      trigger: 'blur'
+    }
+  ]
 })
 
 const userStore = useUserStore()
-const login = async() => {
+const login = async () => {
   return await userStore.LoginIn(loginFormData)
 }
 const submitForm = () => {
@@ -229,7 +198,7 @@ const submitForm = () => {
       ElMessage({
         type: 'error',
         message: '请正确填写登录信息',
-        showClose: true,
+        showClose: true
       })
       loginVerify()
       return false
@@ -250,7 +219,7 @@ const submitForm = () => {
 }
 
 // 跳转初始化
-const checkInit = async() => {
+const checkInit = async () => {
   const res = await checkDB()
   if (res.code === 0) {
     if (res.data?.needInit) {
@@ -259,10 +228,9 @@ const checkInit = async() => {
     } else {
       ElMessage({
         type: 'info',
-        message: '已配置数据库信息，无法初始化',
+        message: '已配置数据库信息，无法初始化'
       })
     }
   }
 }
-
 </script>

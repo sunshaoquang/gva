@@ -45,6 +45,7 @@ func (i *initMenu) TableCreated(ctx context.Context) bool {
 		m.HasTable(&SysBaseMenuBtn{})
 }
 
+// TODO 自动加菜单权限
 func (i *initMenu) InitializeData(ctx context.Context) (next context.Context, err error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {

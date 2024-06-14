@@ -6,10 +6,7 @@
     />
     <!-- 从数据库直接获取字段 -->
     <div class="gva-search-box">
-      <el-collapse
-        v-model="activeNames"
-        class="mb-3"
-      >
+      <el-collapse v-model="activeNames" class="mb-3">
         <el-collapse-item name="1">
           <template #title>
             <div class="text-xl pl-4 flex items-center">
@@ -21,22 +18,21 @@
           </template>
           <el-form
             ref="getTableForm"
-            style="margin-top:24px"
+            style="margin-top: 24px"
             :inline="true"
             :model="dbform"
             label-width="120px"
           >
-            <el-form-item
-              label="业务库"
-              prop="selectDBtype"
-            >
+            <el-form-item label="业务库" prop="selectDBtype">
               <template #label>
                 <el-tooltip
                   content="注：需要提前到db-list自行配置多数据库，如未配置需配置后重启服务方可使用。（此处可选择对应库表，可理解为从哪个库选择表）"
                   placement="bottom"
                   effect="light"
                 >
-                  <div> 业务库 <el-icon><QuestionFilled /></el-icon> </div>
+                  <div>
+                    业务库 <el-icon><QuestionFilled /></el-icon>
+                  </div>
                 </el-tooltip>
               </template>
               <el-select
@@ -54,15 +50,15 @@
                 >
                   <div>
                     <span>{{ item.aliasName }}</span>
-                    <span style="float:right;color:#8492a6;font-size:13px">{{ item.dbName }}</span>
+                    <span
+                      style="float: right; color: #8492a6; font-size: 13px"
+                      >{{ item.dbName }}</span
+                    >
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item
-              label="数据库名"
-              prop="structName"
-            >
+            <el-form-item label="数据库名" prop="structName">
               <el-select
                 v-model="dbform.dbName"
                 clearable
@@ -78,10 +74,7 @@
                 />
               </el-select>
             </el-form-item>
-            <el-form-item
-              label="表名"
-              prop="structName"
-            >
+            <el-form-item label="表名" prop="structName">
               <el-select
                 v-model="dbform.tableName"
                 :disabled="!dbform.dbName"
@@ -97,10 +90,9 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button
-                type="primary"
-                @click="getColumnFunc"
-              >使用此表创建</el-button>
+              <el-button type="primary" @click="getColumnFunc"
+                >使用此表创建</el-button
+              >
             </el-form-item>
           </el-form>
         </el-collapse-item>
@@ -125,34 +117,25 @@
         label-width="120px"
         :inline="true"
       >
-        <el-form-item
-          label="Struct名称"
-          prop="structName"
-        >
+        <el-form-item label="Struct名称" prop="structName">
           <el-input
             v-model="form.structName"
             placeholder="首字母自动转换大写"
           />
         </el-form-item>
-        <el-form-item
-          label="TableName"
-          prop="tableName"
-        >
-          <el-input
-            v-model="form.tableName"
-            placeholder="指定表名（非必填）"
-          />
+        <el-form-item label="TableName" prop="tableName">
+          <el-input v-model="form.tableName" placeholder="指定表名（非必填）" />
         </el-form-item>
-        <el-form-item
-          prop="abbreviation"
-        >
+        <el-form-item prop="abbreviation">
           <template #label>
             <el-tooltip
               content="简称会作为入参对象名和路由group"
               placement="bottom"
               effect="light"
             >
-              <div> Struct简称 <el-icon><QuestionFilled /></el-icon> </div>
+              <div>
+                Struct简称 <el-icon><QuestionFilled /></el-icon>
+              </div>
             </el-tooltip>
           </template>
           <el-input
@@ -160,31 +143,28 @@
             placeholder="请输入Struct简称"
           />
         </el-form-item>
-        <el-form-item
-          label="Struct中文名称"
-          prop="description"
-        >
+        <el-form-item label="Struct中文名称" prop="description">
           <el-input
             v-model="form.description"
             placeholder="中文描述作为自动api描述"
           />
         </el-form-item>
-        <el-form-item
-          prop="packageName"
-        >
+        <el-form-item prop="packageName">
           <template #label>
             <el-tooltip
               content="生成文件的默认名称(建议为驼峰格式,首字母小写,如sysXxxXxxx)"
               placement="bottom"
               effect="light"
             >
-              <div> 文件名称 <el-icon><QuestionFilled /></el-icon> </div>
+              <div>
+                文件名称 <el-icon><QuestionFilled /></el-icon>
+              </div>
             </el-tooltip>
           </template>
           <el-input
             v-model="form.packageName"
             placeholder="请输入文件名称"
-            @blur="toLowerCaseFunc(form,'packageName')"
+            @blur="toLowerCaseFunc(form, 'packageName')"
           />
         </el-form-item>
         <el-form-item
@@ -201,26 +181,23 @@
               :label="item.packageName"
             />
           </el-select>
-          <el-icon
-            class="cursor-pointer ml-2 text-gray-600"
-            @click="getPkgs"
-          ><refresh /></el-icon>
-          <el-icon
-            class="cursor-pointer ml-2 text-gray-600"
-            @click="goPkgs"
-          ><document-add /></el-icon>
+          <el-icon class="ml-2 text-gray-600 cursor-pointer" @click="getPkgs"
+            ><refresh
+          /></el-icon>
+          <el-icon class="ml-2 text-gray-600 cursor-pointer" @click="goPkgs"
+            ><document-add
+          /></el-icon>
         </el-form-item>
-        <el-form-item
-          label="业务库"
-          prop="businessDB"
-        >
+        <el-form-item label="业务库" prop="businessDB">
           <template #label>
             <el-tooltip
               content="注：需要提前到db-list自行配置多数据库，此项为空则会使用gva本库创建自动化代码(global.GVA_DB),填写后则会创建指定库的代码(global.MustGetGlobalDBByDBName(dbname))"
               placement="bottom"
               effect="light"
             >
-              <div> 业务库 <el-icon><QuestionFilled /></el-icon> </div>
+              <div>
+                业务库 <el-icon><QuestionFilled /></el-icon>
+              </div>
             </el-tooltip>
           </template>
           <el-select
@@ -236,7 +213,9 @@
             >
               <div>
                 <span>{{ item.aliasName }}</span>
-                <span style="float:right;color:#8492a6;font-size:13px">{{ item.dbName }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{
+                  item.dbName
+                }}</span>
               </div>
             </el-option>
           </el-select>
@@ -300,10 +279,9 @@
     <!-- 组件列表 -->
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button
-          type="primary"
-          @click="editAndAddField()"
-        >新增字段</el-button>
+        <el-button type="primary" @click="editAndAddField()"
+          >新增字段</el-button
+        >
       </div>
       <div class="draggable">
         <el-table
@@ -504,15 +482,9 @@
         </el-table>
       </div>
       <!-- 组件列表 -->
-      <div class="gva-btn-list justify-end mt-4">
-        <el-button
-          type="primary"
-          @click="enterForm(true)"
-        >预览代码</el-button>
-        <el-button
-          type="primary"
-          @click="enterForm(false)"
-        >生成代码</el-button>
+      <div class="justify-end mt-4 gva-btn-list">
+        <el-button type="primary" @click="enterForm(true)">预览代码</el-button>
+        <el-button type="primary" @click="enterForm(false)">生成代码</el-button>
       </div>
     </div>
     <!-- 组件弹窗 -->
@@ -575,11 +547,18 @@
 </template>
 
 <script setup>
-
 import FieldDialog from '@/view/systemTools/autoCode/component/fieldDialog.vue'
 import PreviewCodeDialog from '@/view/systemTools/autoCode/component/previewCodeDialg.vue'
 import { toUpperCase, toHump, toSQLLine, toLowerCase } from '@/utils/stringFun'
-import { createTemp, getDB, getTable, getColumn, preview, getMeta, getPackageApi } from '@/api/autoCode'
+import {
+  createTemp,
+  getDB,
+  getTable,
+  getColumn,
+  preview,
+  getMeta,
+  getPackageApi
+} from '@/api/autoCode'
 import { getDict } from '@/utils/dictionary'
 import { ref, reactive, watch, toRaw, onMounted, nextTick } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -645,15 +624,15 @@ const typeOptions = ref([
   },
   {
     label: '单图片（字符串）',
-    value: 'picture',
+    value: 'picture'
   },
   {
     label: '多图片（json字符串）',
-    value: 'pictures',
+    value: 'pictures'
   },
   {
     label: '视频（字符串）',
-    value: 'video',
+    value: 'video'
   },
   {
     label: '文件（json字符串）',
@@ -768,9 +747,7 @@ const rules = ref({
       trigger: 'blur'
     }
   ],
-  package: [
-    { required: true, message: '请选择package', trigger: 'blur' }
-  ]
+  package: [{ required: true, message: '请选择package', trigger: 'blur' }]
 })
 const dialogMiddle = ref({})
 const bk = ref({})
@@ -785,11 +762,13 @@ const useGva = (e) => {
       {
         confirmButtonText: '继续',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }
     )
       .then(() => {
-        form.value.fields = form.value.fields.filter(item => !gormModelList.some(gormfd => gormfd === item.columnName))
+        form.value.fields = form.value.fields.filter(
+          (item) => !gormModelList.some((gormfd) => gormfd === item.columnName)
+        )
       })
       .catch(() => {
         form.value.gvaModel = false
@@ -829,11 +808,9 @@ const editAndAddField = (item) => {
 
 const fieldDialogNode = ref(null)
 const enterDialog = () => {
-  fieldDialogNode.value.fieldDialogFrom.validate(valid => {
+  fieldDialogNode.value.fieldDialogFrom.validate((valid) => {
     if (valid) {
-      dialogMiddle.value.fieldName = toUpperCase(
-        dialogMiddle.value.fieldName
-      )
+      dialogMiddle.value.fieldName = toUpperCase(dialogMiddle.value.fieldName)
       if (addFlag.value === 'add') {
         form.value.fields.push(dialogMiddle.value)
       }
@@ -859,7 +836,7 @@ const deleteField = (index) => {
   })
 }
 const autoCodeForm = ref(null)
-const enterForm = async(isPreview) => {
+const enterForm = async (isPreview) => {
   if (form.value.fields.length <= 0) {
     ElMessage({
       type: 'error',
@@ -868,7 +845,10 @@ const enterForm = async(isPreview) => {
     return false
   }
 
-  if (!form.value.gvaModel && form.value.fields.every(item => !item.primaryKey)) {
+  if (
+    !form.value.gvaModel &&
+    form.value.fields.every((item) => !item.primaryKey)
+  ) {
     ElMessage({
       type: 'error',
       message: '您至少需要创建一个主键才能保证自动化代码的可行性'
@@ -877,7 +857,7 @@ const enterForm = async(isPreview) => {
   }
 
   if (
-    form.value.fields.some(item => item.fieldName === form.value.structName)
+    form.value.fields.some((item) => item.fieldName === form.value.structName)
   ) {
     ElMessage({
       type: 'error',
@@ -894,7 +874,7 @@ const enterForm = async(isPreview) => {
     return false
   }
 
-  autoCodeForm.value.validate(async valid => {
+  autoCodeForm.value.validate(async (valid) => {
     if (valid) {
       for (const key in form.value) {
         if (typeof form.value[key] === 'string') {
@@ -936,7 +916,7 @@ const enterForm = async(isPreview) => {
 const dbList = ref([])
 const dbOptions = ref([])
 
-const getDbFunc = async() => {
+const getDbFunc = async () => {
   dbform.value.dbName = ''
   dbform.value.tableName = ''
   const res = await getDB({ businessDB: dbform.value.businessDB })
@@ -945,20 +925,25 @@ const getDbFunc = async() => {
     dbList.value = res.data.dbList
   }
 }
-const getTableFunc = async() => {
-  const res = await getTable({ businessDB: dbform.value.businessDB, dbName: dbform.value.dbName })
+const getTableFunc = async () => {
+  const res = await getTable({
+    businessDB: dbform.value.businessDB,
+    dbName: dbform.value.dbName
+  })
   if (res.code === 0) {
     tableOptions.value = res.data.tables
   }
   dbform.value.tableName = ''
 }
 
-const getColumnFunc = async() => {
+const getColumnFunc = async () => {
   const res = await getColumn(dbform.value)
   if (res.code === 0) {
     let dbtype = ''
     if (dbform.value.businessDB !== '') {
-      const dbtmp = dbList.value.find(item => item.aliasName === dbform.value.businessDB)
+      const dbtmp = dbList.value.find(
+        (item) => item.aliasName === dbform.value.businessDB
+      )
       const dbraw = toRaw(dbtmp)
       dbtype = dbraw.dbtype
     }
@@ -999,6 +984,8 @@ const getColumnFunc = async() => {
               })
             }
           })
+        }
+      })
   }
 }
 
@@ -1015,14 +1002,15 @@ const needAppend = (item) => {
 
 const setFdMap = async() => {
   const fdTypes = ['string', 'int', 'bool', 'float64', 'time.Time']
-  fdTypes.forEach(async fdtype => {
+  fdTypes.forEach(async (fdtype) => {
     const res = await getDict(fdtype)
-    res && res.forEach(item => {
-      fdMap.value[item.label] = fdtype
-    })
+    res &&
+      res.forEach((item) => {
+        fdMap.value[item.label] = fdtype
+      })
   })
 }
-const getAutoCodeJson = async(id) => {
+const getAutoCodeJson = async (id) => {
   const res = await getMeta({ id: Number(id) })
   if (res.code === 0) {
     form.value = JSON.parse(res.data.meta)
@@ -1030,7 +1018,7 @@ const getAutoCodeJson = async(id) => {
 }
 
 const pkgs = ref([])
-const getPkgs = async() => {
+const getPkgs = async () => {
   const res = await getPackageApi()
   if (res.code === 0) {
     pkgs.value = res.data.pkgs
@@ -1052,9 +1040,12 @@ const init = () => {
 }
 init()
 
-watch(() => route.params.id, () => {
-  if (route.name === 'autoCodeEdit') {
-    init()
+watch(
+  () => route.params.id,
+  () => {
+    if (route.name === 'autoCodeEdit') {
+      init()
+    }
   }
 })
 

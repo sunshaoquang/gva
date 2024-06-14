@@ -15,27 +15,27 @@
 </template>
 
 <script setup>
-import { marked } from 'marked'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/atom-one-dark.css'
-import { ElMessage } from 'element-plus'
-import { onMounted, ref } from 'vue'
+import { marked } from "marked";
+import hljs from "highlight.js";
+import "highlight.js/styles/atom-one-dark.css";
+import { ElMessage } from "element-plus";
+import { onMounted, ref } from "vue";
 
 const props = defineProps({
   previewCode: {
     type: Object,
     default() {
-      return {}
-    }
-  }
-})
+      return {};
+    },
+  },
+});
 
-const activeName = ref('')
+const activeName = ref("");
 onMounted(() => {
   marked.setOptions({
     renderer: new marked.Renderer(),
-    highlight: function(code) {
-      return hljs.highlightAuto(code).value
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
     },
     pedantic: false,
     gfm: true,
@@ -45,38 +45,37 @@ onMounted(() => {
     smartLists: true,
     smartypants: false,
     xhtml: false,
-    langPrefix: 'hljs language-'
-  })
+    langPrefix: "hljs language-",
+  });
   for (const key in props.previewCode) {
-    if (activeName.value === '') {
-      activeName.value = key
+    if (activeName.value === "") {
+      activeName.value = key;
     }
-    document.getElementById(key).innerHTML = marked(props.previewCode[key])
+    document.getElementById(key).innerHTML = marked(props.previewCode[key]);
   }
-})
+});
 
 const selectText = () => {
-  const element = document.getElementById(activeName.value)
+  const element = document.getElementById(activeName.value);
   if (document.body.createTextRange) {
-    const range = document.body.createTextRange()
-    range.moveToElementText(element)
-    range.select()
+    const range = document.body.createTextRange();
+    range.moveToElementText(element);
+    range.select();
   } else if (window.getSelection) {
-    const selection = window.getSelection()
-    const range = document.createRange()
-    range.selectNodeContents(element)
-    selection.removeAllRanges()
-    selection.addRange(range)
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    selection.removeAllRanges();
+    selection.addRange(range);
   } else {
-    alert('none')
+    alert("none");
   }
-}
+};
 const copy = () => {
-  selectText()
-  document.execCommand('copy')
-  ElMessage.success('复制成功')
-}
+  selectText();
+  document.execCommand("copy");
+  ElMessage.success("复制成功");
+};
 
-defineExpose({ copy })
-
+defineExpose({ copy });
 </script>

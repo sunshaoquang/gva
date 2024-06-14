@@ -4,7 +4,7 @@
       <div class="oblique h-[130%] w-3/5 bg-white dark:bg-slate-900 transform -rotate-12 absolute -ml-80" />
       <div
         v-if="!page.showForm"
-        :class="[page.showReadme ?'slide-out-right' :'slide-in-fwd-top' ]"
+        :class="[page.showReadme ? 'slide-out-right' : 'slide-in-fwd-top']"
       >
         <div class=" text-lg">
           <div class="font-sans text-4xl font-bold text-center mb-4 dark:text-white">GIN-VUE-ADMIN</div>
@@ -28,21 +28,36 @@
               size="large"
               @click="goDoc"
             >
+            <a
+              class="font-bold text-blue-600"
+              href="https://www.bilibili.com/video/BV1kv4y1g7nT?p=2"
+              target="_blank"
+              >初始化视频</a
+            >
+          </p>
+          <p class="mb-2 text-gray-600">3.请您确认是否了解后续的配置流程</p>
+          <p class="mb-2 text-gray-600">
+            4.如果您使用mysql数据库，请确认数据库引擎为<span
+              class="ml-2 text-3xl font-bold text-red-600"
+              >innoDB</span
+            >
+          </p>
+          <p class="mb-2 text-gray-600">
+            注：开发组不为文档中书写过的内容提供无偿服务
+          </p>
+          <p class="flex items-center justify-between mt-8">
+            <el-button type="primary" size="large" @click="goDoc">
               阅读文档
             </el-button>
-            <el-button
-              type="primary"
-              size="large"
-              @click="showNext"
-            >
+            <el-button type="primary" size="large" @click="showNext">
               我已确认
             </el-button>
           </p>
         </div>
       </div>
       <div
-        v-if="page.showForm "
-        :class="[ page.showForm ? 'slide-in-left' : 'slide-out-right' ]"
+        v-if="page.showForm"
+        :class="[page.showForm ? 'slide-in-left' : 'slide-out-right']"
         class="w-96"
       >
         <el-form
@@ -61,79 +76,35 @@
               class="w-full"
               @change="changeDB"
             >
-              <el-option
-                key="mysql"
-                label="mysql"
-                value="mysql"
-              />
-              <el-option
-                key="pgsql"
-                label="pgsql"
-                value="pgsql"
-              />
-              <el-option
-                key="oracle"
-                label="oracle"
-                value="oracle"
-              />
-              <el-option
-                key="mssql"
-                label="mssql"
-                value="mssql"
-              />
-              <el-option
-                key="sqlite"
-                label="sqlite"
-                value="sqlite"
-              />
+              <el-option key="mysql" label="mysql" value="mysql" />
+              <el-option key="pgsql" label="pgsql" value="pgsql" />
+              <el-option key="oracle" label="oracle" value="oracle" />
+              <el-option key="mssql" label="mssql" value="mssql" />
+              <el-option key="sqlite" label="sqlite" value="sqlite" />
             </el-select>
           </el-form-item>
-          <el-form-item
-            v-if="form.dbType !== 'sqlite'"
-            label="host"
-          >
-            <el-input
-              v-model="form.host"
-              placeholder="请输入数据库链接"
-            />
+          <el-form-item v-if="form.dbType !== 'sqlite'" label="host">
+            <el-input v-model="form.host" placeholder="请输入数据库链接" />
           </el-form-item>
-          <el-form-item
-            v-if="form.dbType !== 'sqlite'"
-            label="port"
-          >
-            <el-input
-              v-model="form.port"
-              placeholder="请输入数据库端口"
-            />
+          <el-form-item v-if="form.dbType !== 'sqlite'" label="port">
+            <el-input v-model="form.port" placeholder="请输入数据库端口" />
           </el-form-item>
-          <el-form-item
-            v-if="form.dbType !== 'sqlite'"
-            label="userName"
-          >
+          <el-form-item v-if="form.dbType !== 'sqlite'" label="userName">
             <el-input
               v-model="form.userName"
               placeholder="请输入数据库用户名"
             />
           </el-form-item>
-          <el-form-item
-            v-if="form.dbType !== 'sqlite'"
-            label="password"
-          >
+          <el-form-item v-if="form.dbType !== 'sqlite'" label="password">
             <el-input
               v-model="form.password"
               placeholder="请输入数据库密码（没有则为空）"
             />
           </el-form-item>
           <el-form-item label="dbName">
-            <el-input
-              v-model="form.dbName"
-              placeholder="请输入数据库名称"
-            />
+            <el-input v-model="form.dbName" placeholder="请输入数据库名称" />
           </el-form-item>
-          <el-form-item
-            v-if="form.dbType === 'sqlite'"
-            label="dbPath"
-          >
+          <el-form-item v-if="form.dbType === 'sqlite'" label="dbPath">
             <el-input
               v-model="form.dbPath"
               placeholder="请输入sqlite数据库文件存放路径"
@@ -141,68 +112,63 @@
           </el-form-item>
           <el-form-item>
             <div style="text-align: right">
-              <el-button
-                type="primary"
-                @click="onSubmit"
-              >立即初始化</el-button>
+              <el-button type="primary" @click="onSubmit">立即初始化</el-button>
             </div>
           </el-form-item>
         </el-form>
       </div>
     </div>
 
-    <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]"><img
-      class="h-full"
-      src="@/assets/login_right_banner.jpg"
-      alt="banner"
-    ></div>
+    <div class="hidden md:block w-1/2 h-full float-right bg-[#194bfb]">
+      <img class="h-full" src="@/assets/login_right_banner.jpg" alt="banner" />
+    </div>
   </div>
 </template>
 
 <script setup>
 // @ts-ignore
-import { initDB } from '@/api/initdb'
-import { reactive, ref } from 'vue'
-import { ElLoading, ElMessage } from 'element-plus'
-import { useRouter } from 'vue-router'
+import { initDB } from "@/api/initdb";
+import { reactive, ref } from "vue";
+import { ElLoading, ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
 
 defineOptions({
-  name: 'Init',
-})
+  name: "Init",
+});
 
-const router = useRouter()
+const router = useRouter();
 
 const page = reactive({
   showReadme: false,
-  showForm: false
-})
+  showForm: false,
+});
 
 const showNext = () => {
-  page.showReadme = false
+  page.showReadme = false;
   setTimeout(() => {
-    page.showForm = true
-  }, 20)
-}
+    page.showForm = true;
+  }, 20);
+};
 
 const goDoc = () => {
-  window.open('https://www.gin-vue-admin.com/guide/start-quickly/env.html')
-}
+  window.open("https://www.gin-vue-admin.com/guide/start-quickly/env.html");
+};
 
-const out = ref(false)
+const out = ref(false);
 
 const form = reactive({
-  dbType: 'mysql',
-  host: '127.0.0.1',
-  port: '3306',
-  userName: 'root',
-  password: '',
-  dbName: 'gva',
-  dbPath: ''
-})
+  dbType: "mysql",
+  host: "127.0.0.1",
+  port: "3306",
+  userName: "root",
+  password: "",
+  dbName: "gva",
+  dbPath: "",
+});
 
 const changeDB = (val) => {
   switch (val) {
-    case 'mysql':
+    case "mysql":
       Object.assign(form, {
         adminPassword:'',
         reAdminPassword:'',
@@ -292,29 +258,28 @@ const onSubmit = async() => {
 
   const loading = ElLoading.service({
     lock: true,
-    text: '正在初始化数据库，请稍候',
-    spinner: 'loading',
-    background: 'rgba(0, 0, 0, 0.7)',
-  })
+    text: "正在初始化数据库，请稍候",
+    spinner: "loading",
+    background: "rgba(0, 0, 0, 0.7)",
+  });
   try {
-    const res = await initDB(form)
+    const res = await initDB(form);
     if (res.code === 0) {
-      out.value = true
+      out.value = true;
       ElMessage({
-        type: 'success',
+        type: "success",
         message: res.msg,
-      })
-      router.push({ name: 'Login' })
+      });
+      router.push({ name: "Login" });
     }
-    loading.close()
+    loading.close();
   } catch (err) {
-    loading.close()
+    loading.close();
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
-
 .slide-in-fwd-top {
   -webkit-animation: slide-in-fwd-top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)
     both;

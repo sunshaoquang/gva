@@ -23,5 +23,5 @@ export default {
        ** 版权持有公司：北京翻转极光科技有限责任公司 **
        ** 剔除授权标识需购买商用授权：https://gin-vue-admin.com/empower/index.html **
     `)
-  }
+  },
 }

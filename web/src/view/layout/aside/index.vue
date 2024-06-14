@@ -112,5 +112,4 @@ const toggleCollapse = () => {
 </script>
 
 <style lang="scss">
-
 </style>

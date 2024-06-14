@@ -63,7 +63,7 @@ import { useUserStore } from '@/pinia/modules/user'
 import { fmtTitle } from '@/utils/fmtRouterTitle'
 
 defineOptions({
-  name: 'HistoryComponent',
+  name: 'HistoryComponent'
 })
 
 const route = useRoute()
@@ -111,11 +111,11 @@ const closeAll = () => {
     {
       name: defaultRouter.value,
       meta: {
-        title: '首页',
+        title: '首页'
       },
       query: {},
-      params: {},
-    },
+      params: {}
+    }
   ]
   router.push({ name: defaultRouter.value })
   contextMenuVisible.value = false
@@ -170,7 +170,10 @@ const isSame = (route1, route2) => {
   if (route1.name !== route2.name) {
     return false
   }
-  if (Object.keys(route1.query).length !== Object.keys(route2.query).length || Object.keys(route1.params).length !== Object.keys(route2.params).length) {
+  if (
+    Object.keys(route1.query).length !== Object.keys(route2.query).length ||
+    Object.keys(route1.params).length !== Object.keys(route2.params).length
+  ) {
     return false
   }
   for (const key in route1.query) {
@@ -207,7 +210,7 @@ const changeTab = (TabsPaneContext) => {
   router.push({
     name: tab.name,
     query: tab.query,
-    params: tab.params,
+    params: tab.params
   })
 }
 const removeTab = (tab) => {
@@ -222,13 +225,13 @@ const removeTab = (tab) => {
         router.push({
           name: historys.value[index + 1].name,
           query: historys.value[index + 1].query,
-          params: historys.value[index + 1].params,
+          params: historys.value[index + 1].params
         })
       } else {
         router.push({
           name: historys.value[index - 1].name,
           query: historys.value[index - 1].query,
-          params: historys.value[index - 1].params,
+          params: historys.value[index - 1].params
         })
       }
     }
@@ -236,38 +239,49 @@ const removeTab = (tab) => {
   historys.value.splice(index, 1)
 }
 
-watch(() => contextMenuVisible.value, () => {
-  if (contextMenuVisible.value) {
-    document.body.addEventListener('click', () => {
-      contextMenuVisible.value = false
-    })
-  } else {
-    document.body.removeEventListener('click', () => {
-      contextMenuVisible.value = false
-    })
+watch(
+  () => contextMenuVisible.value,
+  () => {
+    if (contextMenuVisible.value) {
+      document.body.addEventListener('click', () => {
+        contextMenuVisible.value = false
+      })
+    } else {
+      document.body.removeEventListener('click', () => {
+        contextMenuVisible.value = false
+      })
+    }
   }
-})
+)
 
-watch(() => route, (to, now) => {
-  if (to.name === 'Login' || to.name === 'Reload') {
-    return
+watch(
+  () => route,
+  (to, now) => {
+    if (to.name === 'Login' || to.name === 'Reload') {
+      return
+    }
+    historys.value = historys.value.filter((item) => !item.meta.closeTab)
+    setTab(to)
+    sessionStorage.setItem('historys', JSON.stringify(historys.value))
+    activeValue.value = window.sessionStorage.getItem('activeValue')
+  },
+  { deep: true }
+)
+
+watch(
+  () => historys.value,
+  () => {
+    sessionStorage.setItem('historys', JSON.stringify(historys.value))
+    historyMap.value = {}
+    historys.value.forEach((item) => {
+      historyMap.value[getFmtString(item)] = item
+    })
+    emitter.emit('setKeepAlive', historys.value)
+  },
+  {
+    deep: true
   }
-  historys.value = historys.value.filter((item) => !item.meta.closeTab)
-  setTab(to)
-  sessionStorage.setItem('historys', JSON.stringify(historys.value))
-  activeValue.value = window.sessionStorage.getItem('activeValue')
-}, { deep: true })
-
-watch(() => historys.value, () => {
-  sessionStorage.setItem('historys', JSON.stringify(historys.value))
-  historyMap.value = {}
-  historys.value.forEach((item) => {
-    historyMap.value[getFmtString(item)] = item
-  })
-  emitter.emit('setKeepAlive', historys.value)
-}, {
-  deep: true
-})
+)
 
 const initPage = () => {
   // 全局监听 关闭当前页面函数
@@ -318,15 +332,15 @@ const initPage = () => {
     {
       name: defaultRouter.value,
       meta: {
-        title: '首页',
+        title: '首页'
       },
       query: {},
-      params: {},
-    },
+      params: {}
+    }
   ]
   setTab(route)
   historys.value =
-      JSON.parse(sessionStorage.getItem('historys')) || initHistorys
+    JSON.parse(sessionStorage.getItem('historys')) || initHistorys
   if (!window.sessionStorage.getItem('activeValue')) {
     activeValue.value = getFmtString(route)
   } else {

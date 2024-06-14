@@ -36,15 +36,15 @@ const appStore = useAppStore()
 const { config } = storeToRefs(appStore)
 
 defineOptions({
-  name: 'AsyncSubmenu',
-})
+  name: "AsyncSubmenu",
+});
 
  defineProps({
   routerInfo: {
-    default: function() {
-      return null
+    default: function () {
+      return null;
     },
-    type: Object
+    type: Object,
   },
 })
 

@@ -6,7 +6,7 @@ import { ElLoading } from 'element-plus'
 
 const service = axios.create({
   baseURL: import.meta.env.VITE_BASE_API,
-  timeout: 99999
+  timeout: 99999,
 })
 let activeAxios = 0
 let timer
@@ -36,7 +36,7 @@ const closeLoading = () => {
 }
 // http request 拦截器
 service.interceptors.request.use(
-  config => {
+  (config) => {
     if (!config.donNotShowLoading) {
       showLoading(config.loadingOption)
     }
@@ -45,18 +45,18 @@ service.interceptors.request.use(
       'Content-Type': 'application/json',
       'x-token': userStore.token,
       'x-user-id': userStore.userInfo.ID,
-      ...config.headers
+      ...config.headers,
     }
     return config
   },
-  error => {
+  (error) => {
     if (!error.config.donNotShowLoading) {
       closeLoading()
     }
     ElMessage({
       showClose: true,
       message: error,
-      type: 'error'
+      type: 'error',
     })
     return error
   }
@@ -64,7 +64,7 @@ service.interceptors.request.use(
 
 // http response 拦截器
 service.interceptors.response.use(
-  response => {
+  (response) => {
     const userStore = useUserStore()
     if (!response.config.donNotShowLoading) {
       closeLoading()
@@ -81,56 +81,67 @@ service.interceptors.response.use(
       ElMessage({
         showClose: true,
         message: response.data.msg || decodeURI(response.headers.msg),
-        type: 'error'
+        type: 'error',
       })
       return response.data.msg ? response.data : response
     }
   },
-  error => {
+  (error) => {
     if (!error.config.donNotShowLoading) {
       closeLoading()
     }
 
     if (!error.response) {
-      ElMessageBox.confirm(`
+      ElMessageBox.confirm(
+        `
         <p>检测到请求错误</p>
         <p>${error}</p>
-        `, '请求报错', {
-        dangerouslyUseHTMLString: true,
-        distinguishCancelAndClose: true,
-        confirmButtonText: '稍后重试',
-        cancelButtonText: '取消'
-      })
+        `,
+        '请求报错',
+        {
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          confirmButtonText: '稍后重试',
+          cancelButtonText: '取消',
+        }
+      )
       return
     }
 
     switch (error.response.status) {
       case 500:
-        ElMessageBox.confirm(`
+        ElMessageBox.confirm(
+          `
         <p>检测到接口错误${error}</p>
         <p>错误码<span style="color:red"> 500 </span>：此类错误内容常见于后台panic，请先查看后台日志，如果影响您正常使用可强制登出清理缓存</p>
-        `, '接口报错', {
-          dangerouslyUseHTMLString: true,
-          distinguishCancelAndClose: true,
-          confirmButtonText: '清理缓存',
-          cancelButtonText: '取消'
+        `,
+          '接口报错',
+          {
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '清理缓存',
+            cancelButtonText: '取消',
+          }
+        ).then(() => {
+          const userStore = useUserStore()
+          userStore.ClearStorage()
+          router.push({ name: 'Login', replace: true })
         })
-          .then(() => {
-            const userStore = useUserStore()
-            userStore.ClearStorage()
-            router.push({ name: 'Login', replace: true })
-          })
         break
       case 404:
-        ElMessageBox.confirm(`
+        ElMessageBox.confirm(
+          `
           <p>检测到接口错误${error}</p>
           <p>错误码<span style="color:red"> 404 </span>：此类错误多为接口未注册（或未重启）或者请求路径（方法）与api路径（方法）不符--如果为自动化代码请检查是否存在空格</p>
-          `, '接口报错', {
-          dangerouslyUseHTMLString: true,
-          distinguishCancelAndClose: true,
-          confirmButtonText: '我知道了',
-          cancelButtonText: '取消'
-        })
+          `,
+          '接口报错',
+          {
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '我知道了',
+            cancelButtonText: '取消',
+          }
+        )
         break
       case 401:
         ElMessageBox.confirm(`

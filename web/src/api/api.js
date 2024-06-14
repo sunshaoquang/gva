@@ -16,7 +16,7 @@ export const getApiList = (data) => {
   return service({
     url: '/api/getApiList',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -32,7 +32,7 @@ export const createApi = (data) => {
   return service({
     url: '/api/createApi',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -48,7 +48,7 @@ export const getApiById = (data) => {
   return service({
     url: '/api/getApiById',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -64,7 +64,7 @@ export const updateApi = (data) => {
   return service({
     url: '/api/updateApi',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -80,7 +80,7 @@ export const setAuthApi = (data) => {
   return service({
     url: '/api/setAuthApi',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -95,7 +95,7 @@ export const getAllApis = (data) => {
   return service({
     url: '/api/getAllApis',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -111,7 +111,7 @@ export const deleteApi = (data) => {
   return service({
     url: '/api/deleteApi',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -127,7 +127,7 @@ export const deleteApisByIds = (data) => {
   return service({
     url: '/api/deleteApisByIds',
     method: 'delete',
-    data
+    data,
   })
 }
 
@@ -141,6 +141,6 @@ export const deleteApisByIds = (data) => {
 export const freshCasbin = () => {
   return service({
     url: '/api/freshCasbin',
-    method: 'get'
+    method: 'get',
   })
 }

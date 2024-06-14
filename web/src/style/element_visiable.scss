@@ -5,23 +5,23 @@
 @import "@/style/reset";
 
 .el-button {
-    font-weight: 400;
-    border-radius: 2px;
+  font-weight: 400;
+  border-radius: 2px;
 }
 
 .gva-pagination {
-    @apply flex justify-end;
-    .el-pagination__editor {
-        .el-input__inner {
-            @apply h-8;
-        }
+  @apply flex justify-end;
+  .el-pagination__editor {
+    .el-input__inner {
+      @apply h-8;
     }
+  }
 
-    .is-active {
-        @apply rounded text-white;
-        background: var(--el-color-primary);
-        color: #ffffff !important;
-    }
+  .is-active {
+    @apply rounded text-white;
+    background: var(--el-color-primary);
+    color: #ffffff !important;
+  }
 }
 
 

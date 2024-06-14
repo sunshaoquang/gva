@@ -1,10 +1,6 @@
 <template>
   <div class="system">
-    <el-form
-      ref="form"
-      :model="config"
-      label-width="240px"
-    >
+    <el-form ref="form" :model="config" label-width="240px">
       <!--  System start  -->
       <el-collapse v-model="activeNames">
         <el-collapse-item
@@ -15,19 +11,13 @@
             <el-input v-model.number="config.system.addr" />
           </el-form-item>
           <el-form-item label="数据库类型">
-            <el-select
-              v-model="config.system['db-type']"
-              style="width:100%"
-            >
+            <el-select v-model="config.system['db-type']" style="width: 100%">
               <el-option value="mysql" />
               <el-option value="pgsql" />
             </el-select>
           </el-form-item>
           <el-form-item label="Oss类型">
-            <el-select
-              v-model="config.system['oss-type']"
-              style="width:100%"
-            >
+            <el-select v-model="config.system['oss-type']" style="width: 100%">
               <el-option value="local" />
               <el-option value="qiniu" />
               <el-option value="tencent-cos" />
@@ -36,7 +26,9 @@
             </el-select>
           </el-form-item>
           <el-form-item label="多点登录拦截">
-            <el-checkbox v-model="config.system['use-multipoint']">开启</el-checkbox>
+            <el-checkbox v-model="config.system['use-multipoint']"
+              >开启</el-checkbox
+            >
           </el-form-item>
           <el-form-item label="开启redis">
             <el-checkbox v-model="config.system['use-redis']">开启</el-checkbox>
@@ -56,10 +48,7 @@
             </el-form-item>
           </el-tooltip>
         </el-collapse-item>
-        <el-collapse-item
-          title="jwt签名"
-          name="2"
-        >
+        <el-collapse-item title="jwt签名" name="2">
           <el-form-item label="jwt签名">
             <el-input v-model="config.jwt['signing-key']" />
           </el-form-item>
@@ -73,10 +62,7 @@
             <el-input v-model="config.jwt.issuer" />
           </el-form-item>
         </el-collapse-item>
-        <el-collapse-item
-          title="Zap日志配置"
-          name="3"
-        >
+        <el-collapse-item title="Zap日志配置" name="3">
           <el-form-item label="级别">
             <el-input v-model.number="config.zap.level" />
           </el-form-item>
@@ -105,10 +91,7 @@
             <el-checkbox v-model="config.zap['log-in-console']" />
           </el-form-item>
         </el-collapse-item>
-        <el-collapse-item
-          title="Redis admin数据库配置"
-          name="4"
-        >
+        <el-collapse-item title="Redis admin数据库配置" name="4">
           <el-form-item label="库">
             <el-input v-model.number="config.redis.db" />
           </el-form-item>
@@ -120,10 +103,7 @@
           </el-form-item>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="Mongo 数据库配置"
-          name="14"
-        >
+        <el-collapse-item title="Mongo 数据库配置" name="14">
           <el-form-item label="collection name(表名,一般不写)">
             <el-input v-model="config.mongo.coll" />
           </el-form-item>
@@ -155,26 +135,17 @@
             <el-checkbox v-model="config.mongo['is-zap']" />
           </el-form-item>
           <el-form-item label="hosts">
-            <template v-for="(item,k) in config.mongo.hosts">
-            <div
-              v-for="(_,k2) in item"
-              :key="k2"
-            >
-              <el-form-item
-                :key="k+k2"
-                :label="k2"
-              >
-                <el-input v-model="item[k2]" />
-              </el-form-item>
-            </div>
-          </template>
+            <template v-for="(item, k) in config.mongo.hosts">
+              <div v-for="(_, k2) in item" :key="k2">
+                <el-form-item :key="k + k2" :label="k2">
+                  <el-input v-model="item[k2]" />
+                </el-form-item>
+              </div>
+            </template>
           </el-form-item>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="邮箱配置"
-          name="5"
-        >
+        <el-collapse-item title="邮箱配置" name="5">
           <el-form-item label="接收者邮箱">
             <el-input
               v-model="config.email.to"
@@ -200,10 +171,7 @@
             <el-button @click="email">测试邮件</el-button>
           </el-form-item>
         </el-collapse-item>
-        <el-collapse-item
-          title="验证码配置"
-          name="7"
-        >
+        <el-collapse-item title="验证码配置" name="7">
           <el-form-item label="字符长度">
             <el-input v-model.number="config.captcha['key-long']" />
           </el-form-item>
@@ -214,10 +182,7 @@
             <el-input v-model.number="config.captcha['img-height']" />
           </el-form-item>
         </el-collapse-item>
-        <el-collapse-item
-          title="数据库配置"
-          name="9"
-        >
+        <el-collapse-item title="数据库配置" name="9">
           <template v-if="config.system['db-type'] === 'mysql'">
             <el-form-item label="用户名">
               <el-input v-model="config.mysql.username" />
@@ -290,10 +255,7 @@
           </template>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="oss配置"
-          name="10"
-        >
+        <el-collapse-item title="oss配置" name="10">
           <template v-if="config.system['oss-type'] === 'local'">
             <h2>本地文件配置</h2>
             <el-form-item label="本地文件访问路径">
@@ -315,7 +277,9 @@
               <el-input v-model="config.qiniu['img-path']" />
             </el-form-item>
             <el-form-item label="是否使用https">
-              <el-checkbox v-model="config.qiniu['use-https']">开启</el-checkbox>
+              <el-checkbox v-model="config.qiniu['use-https']"
+                >开启</el-checkbox
+              >
             </el-form-item>
             <el-form-item label="accessKey">
               <el-input v-model="config.qiniu['access-key']" />
@@ -324,7 +288,9 @@
               <el-input v-model="config.qiniu['secret-key']" />
             </el-form-item>
             <el-form-item label="上传是否使用CDN上传加速">
-              <el-checkbox v-model="config.qiniu['use-cdn-domains']">开启</el-checkbox>
+              <el-checkbox v-model="config.qiniu['use-cdn-domains']"
+                >开启</el-checkbox
+              >
             </el-form-item>
           </template>
           <template v-if="config.system['oss-type'] === 'tencent-cos'">
@@ -384,30 +350,20 @@
               <el-input v-model="config['hua-wei-obs']['secret-key']" />
             </el-form-item>
           </template>
-
         </el-collapse-item>
 
-        <el-collapse-item
-          title="Excel上传配置"
-          name="11"
-        >
+        <el-collapse-item title="Excel上传配置" name="11">
           <el-form-item label="合成目标地址">
             <el-input v-model="config.excel.dir" />
           </el-form-item>
         </el-collapse-item>
 
-        <el-collapse-item
-          title="自动化代码配置"
-          name="12"
-        >
+        <el-collapse-item title="自动化代码配置" name="12">
           <el-form-item label="是否自动重启(linux)">
             <el-checkbox v-model="config.autocode['transfer-restart']" />
           </el-form-item>
           <el-form-item label="root(项目根路径)">
-            <el-input
-              v-model="config.autocode.root"
-              disabled
-            />
+            <el-input v-model="config.autocode.root" disabled />
           </el-form-item>
           <el-form-item label="Server(后端代码地址)">
             <el-input v-model="config.autocode['transfer-restart']" />
@@ -446,33 +402,27 @@
       </el-collapse>
     </el-form>
     <div class="mt-4">
-      <el-button
-        type="primary"
-        @click="update"
-      >立即更新</el-button>
-      <el-button
-        type="primary"
-        @click="reload"
-      >重启服务（开发中）</el-button>
+      <el-button type="primary" @click="update">立即更新</el-button>
+      <el-button type="primary" @click="reload">重启服务（开发中）</el-button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { getSystemConfig, setSystemConfig } from '@/api/system'
-import { emailTest } from '@/api/email'
-import { ref, reactive } from 'vue'
-import { ElMessage } from 'element-plus'
+import { getSystemConfig, setSystemConfig } from "@/api/system";
+import { emailTest } from "@/api/email";
+import { ref, reactive } from "vue";
+import { ElMessage } from "element-plus";
 
 defineOptions({
-  name: 'Config'
-})
+  name: "Config",
+});
 
-const activeNames = reactive([])
+const activeNames = reactive([]);
 const config = ref({
   system: {
-    'iplimit-count': 0,
-    'iplimit-time': 0
+    "iplimit-count": 0,
+    "iplimit-time": 0,
   },
   jwt: {},
   mysql: {},
@@ -481,70 +431,69 @@ const config = ref({
   autocode: {},
   redis: {},
   mongo: {
-    coll: '',
-    options: '',
-    database: '',
-    username: '',
-    password: '',
-    'min-pool-size': '',
-    'max-pool-size': '',
-    'socket-timeout-ms': '',
-    'connect-timeout-ms': '',
-    'is-zap': '',
+    coll: "",
+    options: "",
+    database: "",
+    username: "",
+    password: "",
+    "min-pool-size": "",
+    "max-pool-size": "",
+    "socket-timeout-ms": "",
+    "connect-timeout-ms": "",
+    "is-zap": "",
     hosts: [
       {
-        host: '',
-        port: ''
-      }
-    ]
+        host: "",
+        port: "",
+      },
+    ],
   },
   qiniu: {},
-  'tencent-cos': {},
-  'aliyun-oss': {},
-  'hua-wei-obs': {},
+  "tencent-cos": {},
+  "aliyun-oss": {},
+  "hua-wei-obs": {},
   captcha: {},
   zap: {},
   local: {},
   email: {},
   timer: {
-    detail: {}
-  }
-})
+    detail: {},
+  },
+});
 
-const initForm = async() => {
-  const res = await getSystemConfig()
+const initForm = async () => {
+  const res = await getSystemConfig();
   if (res.code === 0) {
-    config.value = res.data.config
+    config.value = res.data.config;
   }
-}
-initForm()
-const reload = () => {}
-const update = async() => {
-  const res = await setSystemConfig({ config: config.value })
+};
+initForm();
+const reload = () => {};
+const update = async () => {
+  const res = await setSystemConfig({ config: config.value });
   if (res.code === 0) {
     ElMessage({
-      type: 'success',
-      message: '配置文件设置成功'
-    })
-    await initForm()
+      type: "success",
+      message: "配置文件设置成功",
+    });
+    await initForm();
   }
-}
-const email = async() => {
-  const res = await emailTest()
+};
+const email = async () => {
+  const res = await emailTest();
   if (res.code === 0) {
     ElMessage({
-      type: 'success',
-      message: '邮件发送成功'
-    })
-    await initForm()
+      type: "success",
+      message: "邮件发送成功",
+    });
+    await initForm();
   } else {
     ElMessage({
-      type: 'error',
-      message: '邮件发送失败'
-    })
+      type: "error",
+      message: "邮件发送失败",
+    });
   }
-}
-
+};
 </script>
 
 <style lang="scss">

@@ -13,13 +13,13 @@ const getRouter = async(userStore) => {
   await routerStore.SetAsyncRouter()
   await userStore.GetUserInfo()
   const asyncRouters = routerStore.asyncRouters
-  asyncRouters.forEach(asyncRouter => {
+  asyncRouters.forEach((asyncRouter) => {
     router.addRoute(asyncRouter)
   })
 }
 
 async function handleKeepAlive(to) {
-  if (to.matched.some(item => item.meta.keepAlive)) {
+  if (to.matched.some((item) => item.meta.keepAlive)) {
     if (to.matched && to.matched.length > 2) {
       for (let i = 1; i < to.matched.length; i++) {
         const element = to.matched[i - 1]
@@ -44,9 +44,9 @@ router.beforeEach(async(to, from) => {
   to.meta.matched = [...to.matched]
   handleKeepAlive(to)
   const token = userStore.token
-  // 在白名单中的判断情况
+  // TODO 在白名单中的判断情况
   document.title = getPageTitle(to.meta.title, to)
-  if(to.meta.client) {
+  if (to.meta.client) {
     return true
   }
   if (whiteList.indexOf(to.name) > -1) {
@@ -67,8 +67,8 @@ router.beforeEach(async(to, from) => {
         return {
           name: 'Login',
           query: {
-            redirect: document.location.hash
-          }
+            redirect: document.location.hash,
+          },
         }
       }
     } else {
@@ -94,7 +94,7 @@ router.beforeEach(async(to, from) => {
         } else {
           return {
             name: 'Login',
-            query: { redirect: to.href }
+            query: { redirect: to.href },
           }
         }
       } else {
@@ -110,8 +110,8 @@ router.beforeEach(async(to, from) => {
       return {
         name: 'Login',
         query: {
-          redirect: document.location.hash
-        }
+          redirect: document.location.hash,
+        },
       }
     }
   }

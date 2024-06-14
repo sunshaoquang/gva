@@ -15,7 +15,6 @@
   </el-menu-item>
 </template>
 
-
 <script setup>
 import { computed, inject } from 'vue'
 import { useAppStore } from '@/pinia'
@@ -24,15 +23,15 @@ const appStore = useAppStore()
 const { config } = storeToRefs(appStore)
 
 defineOptions({
-  name: 'MenuItem',
-})
+  name: "MenuItem",
+});
 
 defineProps({
   routerInfo: {
-    default: function() {
-      return null
+    default: function () {
+      return null;
     },
-    type: Object
+    type: Object,
   },
 })
 

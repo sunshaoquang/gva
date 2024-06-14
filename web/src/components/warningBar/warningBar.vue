@@ -13,21 +13,21 @@
   </div>
 </template>
 <script setup>
-import { WarningFilled } from '@element-plus/icons-vue'
+import { WarningFilled } from "@element-plus/icons-vue";
 const prop = defineProps({
   title: {
     type: String,
-    default: ''
+    default: "",
   },
   href: {
     type: String,
-    default: ''
-  }
-})
+    default: "",
+  },
+});
 
 const open = () => {
   if (prop.href) {
-    window.open(prop.href)
+    window.open(prop.href);
   }
-}
+};
 </script>

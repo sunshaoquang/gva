@@ -2,6 +2,7 @@ package system
 
 import (
 	"context"
+
 	sysModel "github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
@@ -39,6 +40,7 @@ func (i initUser) InitializerName() string {
 	return sysModel.SysUser{}.TableName()
 }
 
+// TODO 默认自动加用户账号权限
 func (i *initUser) InitializeData(ctx context.Context) (next context.Context, err error) {
 	db, ok := ctx.Value("db").(*gorm.DB)
 	if !ok {

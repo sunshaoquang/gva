@@ -18,7 +18,9 @@ export const useUserStore = defineStore('user', () => {
     sideMode: 'dark',
     baseColor: '#fff'
   })
-  const token = ref(window.localStorage.getItem('token') || cookie.get('x-token') || '')
+  const token = ref(
+    window.localStorage.getItem('token') || cookie.get('x-token') || ''
+  )
   const setUserInfo = (val) => {
     userInfo.value = val
   }
@@ -51,7 +53,7 @@ export const useUserStore = defineStore('user', () => {
   const LoginIn = async(loginInfo) => {
     loadingInstance.value = ElLoading.service({
       fullscreen: true,
-      text: '登录中，请稍候...',
+      text: '登录中，请稍候...'
     })
 
     const res = await login(loginInfo)
@@ -147,9 +149,12 @@ export const useUserStore = defineStore('user', () => {
     }
   })
 
-  watch(() => token.value, () => {
-    window.localStorage.setItem('token', token.value)
-  })
+  watch(
+    () => token.value,
+    () => {
+      window.localStorage.setItem('token', token.value)
+    }
+  )
 
   return {
     userInfo,

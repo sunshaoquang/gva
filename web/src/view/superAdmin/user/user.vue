@@ -3,34 +3,17 @@
     <warning-bar title="注：右上角头像下拉可切换角色" />
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button
-          type="primary"
-          icon="plus"
-          @click="addUser"
-        >新增用户</el-button>
-      </div>
-      <el-table
-        :data="tableData"
-        row-key="ID"
-      >
-        <el-table-column
-          align="left"
-          label="头像"
-          min-width="75"
+        <el-button type="primary" icon="plus" @click="addUser"
+          >新增用户</el-button
         >
+      </div>
+      <el-table :data="tableData" row-key="ID">
+        <el-table-column align="left" label="头像" min-width="75">
           <template #default="scope">
-            <CustomPic
-              style="margin-top:8px"
-              :pic-src="scope.row.headerImg"
-            />
+            <CustomPic style="margin-top: 8px" :pic-src="scope.row.headerImg" />
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="ID"
-          min-width="50"
-          prop="ID"
-        />
+        <el-table-column align="left" label="ID" min-width="50" prop="ID" />
         <el-table-column
           align="left"
           label="用户名"
@@ -55,45 +38,52 @@
           min-width="180"
           prop="email"
         />
-        <el-table-column
-          align="left"
-          label="用户角色"
-          min-width="200"
-        >
+        <el-table-column align="left" label="用户角色" min-width="200">
           <template #default="scope">
             <el-cascader
               v-model="scope.row.authorityIds"
               :options="authOptions"
               :show-all-levels="false"
               collapse-tags
-              :props="{ multiple:true,checkStrictly: true,label:'authorityName',value:'authorityId',disabled:'disabled',emitPath:false}"
+              :props="{
+                multiple: true,
+                checkStrictly: true,
+                label: 'authorityName',
+                value: 'authorityId',
+                disabled: 'disabled',
+                emitPath: false
+              }"
               :clearable="false"
-              @visible-change="(flag)=>{changeAuthority(scope.row,flag,0)}"
-              @remove-tag="(removeAuth)=>{changeAuthority(scope.row,false,removeAuth)}"
+              @visible-change="
+                (flag) => {
+                  changeAuthority(scope.row, flag, 0)
+                }
+              "
+              @remove-tag="
+                (removeAuth) => {
+                  changeAuthority(scope.row, false, removeAuth)
+                }
+              "
             />
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="启用"
-          min-width="150"
-        >
+        <el-table-column align="left" label="启用" min-width="150">
           <template #default="scope">
             <el-switch
               v-model="scope.row.enable"
               inline-prompt
               :active-value="1"
               :inactive-value="2"
-              @change="()=>{switchEnable(scope.row)}"
+              @change="
+                () => {
+                  switchEnable(scope.row)
+                }
+              "
             />
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="操作"
-          min-width="250"
-          fixed="right"
-        >
+        <el-table-column label="操作" min-width="250" fixed="right">
           <template #default="scope">
             <el-button
               type="primary"
@@ -106,16 +96,17 @@
               link
               icon="edit"
               @click="openEdit(scope.row)"
-            >编辑</el-button>
+              >编辑</el-button
+            >
             <el-button
               type="primary"
               link
               icon="magic-stick"
               @click="resetPasswordFunc(scope.row)"
-            >重置密码</el-button>
+              >重置密码</el-button
+            >
           </template>
         </el-table-column>
-
       </el-table>
       <div class="gva-pagination">
         <el-pagination
@@ -225,7 +216,6 @@
 </template>
 
 <script setup>
-
 import {
   getUserList,
   setUserAuthorities,
@@ -243,30 +233,30 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import SelectImage from '@/components/selectImage/selectImage.vue'
 
 defineOptions({
-  name: 'User',
+  name: 'User'
 })
 
 const path = ref(import.meta.env.VITE_BASE_API + '/')
 // 初始化相关
 const setAuthorityOptions = (AuthorityData, optionsData) => {
   AuthorityData &&
-        AuthorityData.forEach(item => {
-          if (item.children && item.children.length) {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName,
-              children: []
-            }
-            setAuthorityOptions(item.children, option.children)
-            optionsData.push(option)
-          } else {
-            const option = {
-              authorityId: item.authorityId,
-              authorityName: item.authorityName
-            }
-            optionsData.push(option)
-          }
-        })
+    AuthorityData.forEach((item) => {
+      if (item.children && item.children.length) {
+        const option = {
+          authorityId: item.authorityId,
+          authorityName: item.authorityName,
+          children: []
+        }
+        setAuthorityOptions(item.children, option.children)
+        optionsData.push(option)
+      } else {
+        const option = {
+          authorityId: item.authorityId,
+          authorityName: item.authorityName
+        }
+        optionsData.push(option)
+      }
+    })
 }
 
 const page = ref(1)
@@ -285,8 +275,11 @@ const handleCurrentChange = (val) => {
 }
 
 // 查询
-const getTableData = async() => {
-  const table = await getUserList({ page: page.value, pageSize: pageSize.value })
+const getTableData = async () => {
+  const table = await getUserList({
+    page: page.value,
+    pageSize: pageSize.value
+  })
   if (table.code === 0) {
     tableData.value = table.data.list
     total.value = table.data.total
@@ -295,11 +288,14 @@ const getTableData = async() => {
   }
 }
 
-watch(() => tableData.value, () => {
-  setAuthorityIds()
-})
+watch(
+  () => tableData.value,
+  () => {
+    setAuthorityIds()
+  }
+)
 
-const initPage = async() => {
+const initPage = async () => {
   getTableData()
   const res = await getAuthorityList({ page: 1, pageSize: 999 })
   setOptions(res.data.list)
@@ -308,37 +304,36 @@ const initPage = async() => {
 initPage()
 
 const resetPasswordFunc = (row) => {
-  ElMessageBox.confirm(
-    '是否将此用户密码重置为123456?',
-    '警告',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    }
-  ).then(async() => {
+  ElMessageBox.confirm('是否将此用户密码重置为123456?', '警告', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(async () => {
     const res = await resetPassword({
-      ID: row.ID,
+      ID: row.ID
     })
     if (res.code === 0) {
       ElMessage({
         type: 'success',
-        message: res.msg,
+        message: res.msg
       })
     } else {
       ElMessage({
         type: 'error',
-        message: res.msg,
+        message: res.msg
       })
     }
   })
 }
 const setAuthorityIds = () => {
-  tableData.value && tableData.value.forEach((user) => {
-    user.authorityIds = user.authorities && user.authorities.map(i => {
-      return i.authorityId
+  tableData.value &&
+    tableData.value.forEach((user) => {
+      user.authorityIds =
+        user.authorities &&
+        user.authorities.map((i) => {
+          return i.authorityId
+        })
     })
-  })
 }
 
 const chooseImg = ref(null)
@@ -374,7 +369,7 @@ const userInfo = ref({
   headerImg: '',
   authorityId: '',
   authorityIds: [],
-  enable: 1,
+  enable: 1
 })
 
 const rules = ref({
@@ -386,23 +381,27 @@ const rules = ref({
     { required: true, message: '请输入用户密码', trigger: 'blur' },
     { min: 6, message: '最低6位字符', trigger: 'blur' }
   ],
-  nickName: [
-    { required: true, message: '请输入用户昵称', trigger: 'blur' }
-  ],
+  nickName: [{ required: true, message: '请输入用户昵称', trigger: 'blur' }],
   phone: [
-    { pattern: /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/, message: '请输入合法手机号', trigger: 'blur' },
+    {
+      pattern: /^1([38][0-9]|4[014-9]|[59][0-35-9]|6[2567]|7[0-8])\d{8}$/,
+      message: '请输入合法手机号',
+      trigger: 'blur'
+    }
   ],
   email: [
-    { pattern: /^([0-9A-Za-z\-_.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g, message: '请输入正确的邮箱', trigger: 'blur' },
+    {
+      pattern: /^([0-9A-Za-z\-_.]+)@([0-9a-z]+\.[a-z]{2,3}(\.[a-z]{2})?)$/g,
+      message: '请输入正确的邮箱',
+      trigger: 'blur'
+    }
   ],
-  authorityId: [
-    { required: true, message: '请选择用户角色', trigger: 'blur' }
-  ]
+  authorityId: [{ required: true, message: '请选择用户角色', trigger: 'blur' }]
 })
 const userForm = ref(null)
-const enterAddUserDialog = async() => {
+const enterAddUserDialog = async () => {
   userInfo.value.authorityId = userInfo.value.authorityIds[0]
-  userForm.value.validate(async valid => {
+  userForm.value.validate(async (valid) => {
     if (valid) {
       const req = {
         ...userInfo.value
@@ -443,7 +442,7 @@ const addUser = () => {
 }
 
 const tempAuth = {}
-const changeAuthority = async(row, flag, removeAuth) => {
+const changeAuthority = async (row, flag, removeAuth) => {
   if (flag) {
     if (!removeAuth) {
       tempAuth[row.ID] = [...row.authorityIds]
@@ -473,7 +472,7 @@ const openEdit = (row) => {
   addUserDialog.value = true
 }
 
-const switchEnable = async(row) => {
+const switchEnable = async (row) => {
   userInfo.value = JSON.parse(JSON.stringify(row))
   await nextTick()
   const req = {
@@ -481,17 +480,19 @@ const switchEnable = async(row) => {
   }
   const res = await setUserInfo(req)
   if (res.code === 0) {
-    ElMessage({ type: 'success', message: `${req.enable === 2 ? '禁用' : '启用'}成功` })
+    ElMessage({
+      type: 'success',
+      message: `${req.enable === 2 ? '禁用' : '启用'}成功`
+    })
     await getTableData()
     userInfo.value.headerImg = ''
     userInfo.value.authorityIds = []
   }
 }
-
 </script>
 
 <style lang="scss">
-  .header-img-box {
-    @apply w-52 h-52 border border-solid border-gray-300 rounded-xl flex justify-center items-center cursor-pointer;
- }
+.header-img-box {
+  @apply w-52 h-52 border border-solid border-gray-300 rounded-xl flex justify-center items-center cursor-pointer;
+}
 </style>

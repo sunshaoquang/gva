@@ -23,6 +23,7 @@ type Login struct {
 	Password  string `json:"password"`  // 密码
 	Captcha   string `json:"captcha"`   // 验证码
 	CaptchaId string `json:"captchaId"` // 验证码ID
+	OpenId    string `json:"OpenId"'`   //小程序OpenId
 }
 
 // Modify password structure

@@ -1,38 +1,21 @@
 <template>
   <div>
     <div class="gva-search-box">
-      <el-form
-        :inline="true"
-        :model="searchInfo"
-      >
+      <el-form :inline="true" :model="searchInfo">
         <el-form-item label="请求方法">
-          <el-input
-            v-model="searchInfo.method"
-            placeholder="搜索条件"
-          />
+          <el-input v-model="searchInfo.method" placeholder="搜索条件" />
         </el-form-item>
         <el-form-item label="请求路径">
-          <el-input
-            v-model="searchInfo.path"
-            placeholder="搜索条件"
-          />
+          <el-input v-model="searchInfo.path" placeholder="搜索条件" />
         </el-form-item>
         <el-form-item label="结果状态码">
-          <el-input
-            v-model="searchInfo.status"
-            placeholder="搜索条件"
-          />
+          <el-input v-model="searchInfo.status" placeholder="搜索条件" />
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            icon="search"
-            @click="onSubmit"
-          >查询</el-button>
-          <el-button
-            icon="refresh"
-            @click="onReset"
-          >重置</el-button>
+          <el-button type="primary" icon="search" @click="onSubmit"
+            >查询</el-button
+          >
+          <el-button icon="refresh" @click="onReset">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -52,45 +35,27 @@
         row-key="ID"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column
-          align="left"
-          type="selection"
-          width="55"
-        />
-        <el-table-column
-          align="left"
-          label="操作人"
-          width="140"
-        >
+        <el-table-column align="left" type="selection" width="55" />
+        <el-table-column align="left" label="操作人" width="140">
           <template #default="scope">
-            <div>{{ scope.row.user.userName }}({{ scope.row.user.nickName }})</div>
+            <div>
+              {{ scope.row.user.userName }}({{ scope.row.user.nickName }})
+            </div>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="日期"
-          width="180"
-        >
-          <template #default="scope">{{ formatDate(scope.row.CreatedAt) }}</template>
+        <el-table-column align="left" label="日期" width="180">
+          <template #default="scope">{{
+            formatDate(scope.row.CreatedAt)
+          }}</template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="状态码"
-          prop="status"
-          width="120"
-        >
+        <el-table-column align="left" label="状态码" prop="status" width="120">
           <template #default="scope">
             <div>
               <el-tag type="success">{{ scope.row.status }}</el-tag>
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="请求IP"
-          prop="ip"
-          width="120"
-        />
+        <el-table-column align="left" label="请求IP" prop="ip" width="120" />
         <el-table-column
           align="left"
           label="请求方法"
@@ -103,12 +68,7 @@
           prop="path"
           width="240"
         />
-        <el-table-column
-          align="left"
-          label="请求"
-          prop="path"
-          width="80"
-        >
+        <el-table-column align="left" label="请求" prop="path" width="80">
           <template #default="scope">
             <div>
               <el-popover
@@ -119,7 +79,7 @@
                   <pre>{{ fmtBody(scope.row.body) }}</pre>
                 </div>
                 <template #reference>
-                  <el-icon style="cursor: pointer;"><warning /></el-icon>
+                  <el-icon style="cursor: pointer"><warning /></el-icon>
                 </template>
               </el-popover>
 
@@ -127,12 +87,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="响应"
-          prop="path"
-          width="80"
-        >
+        <el-table-column align="left" label="响应" prop="path" width="80">
           <template #default="scope">
             <div>
               <el-popover
@@ -143,17 +98,14 @@
                   <pre>{{ fmtBody(scope.row.resp) }}</pre>
                 </div>
                 <template #reference>
-                  <el-icon style="cursor: pointer;"><warning /></el-icon>
+                  <el-icon style="cursor: pointer"><warning /></el-icon>
                 </template>
               </el-popover>
               <span v-else>无</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="操作"
-        >
+        <el-table-column align="left" label="操作">
           <template #default="scope">
             <el-button
               icon="delete"
@@ -190,54 +142,54 @@ import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 defineOptions({
-  name: 'SysOperationRecord'
-})
+  name: "SysOperationRecord",
+});
 
-const page = ref(1)
-const total = ref(0)
-const pageSize = ref(10)
-const tableData = ref([])
-const searchInfo = ref({})
+const page = ref(1);
+const total = ref(0);
+const pageSize = ref(10);
+const tableData = ref([]);
+const searchInfo = ref({});
 const onReset = () => {
-  searchInfo.value = {}
-}
+  searchInfo.value = {};
+};
 // 条件搜索前端看此方法
 const onSubmit = () => {
-  page.value = 1
-  pageSize.value = 10
-  if (searchInfo.value.status === '') {
-    searchInfo.value.status = null
+  page.value = 1;
+  pageSize.value = 10;
+  if (searchInfo.value.status === "") {
+    searchInfo.value.status = null;
   }
-  getTableData()
-}
+  getTableData();
+};
 
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val
-  getTableData()
-}
+  pageSize.value = val;
+  getTableData();
+};
 
 const handleCurrentChange = (val) => {
-  page.value = val
-  getTableData()
-}
+  page.value = val;
+  getTableData();
+};
 
 // 查询
-const getTableData = async() => {
+const getTableData = async () => {
   const table = await getSysOperationRecordList({
     page: page.value,
     pageSize: pageSize.value,
     ...searchInfo.value,
-  })
+  });
   if (table.code === 0) {
-    tableData.value = table.data.list
-    total.value = table.data.total
-    page.value = table.data.page
-    pageSize.value = table.data.pageSize
+    tableData.value = table.data.list;
+    total.value = table.data.total;
+    page.value = table.data.page;
+    pageSize.value = table.data.pageSize;
   }
-}
+};
 
-getTableData()
+getTableData();
 
 const multipleSelection = ref([])
 const handleSelectionChange = (val) => {
@@ -288,12 +240,11 @@ const deleteSysOperationRecordFunc = async(row) => {
 }
 const fmtBody = (value) => {
   try {
-    return JSON.parse(value)
+    return JSON.parse(value);
   } catch (err) {
-    return value
+    return value;
   }
-}
-
+};
 </script>
 
 <style lang="scss">

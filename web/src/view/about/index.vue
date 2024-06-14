@@ -8,16 +8,13 @@
           </template>
           <div>
             <el-row>
-              <el-col
-                :span="8"
-                :offset="8"
-              >
+              <el-col :span="8" :offset="8">
                 <a href="https://github.com/flipped-aurora/gin-vue-admin">
                   <img
                     class="org-img dom-center"
                     src="@/assets/logo.png"
                     alt="gin-vue-admin"
-                  >
+                  />
                 </a>
               </el-col>
             </el-row>
@@ -28,7 +25,7 @@
                     class="dom-center"
                     src="https://img.shields.io/github/watchers/flipped-aurora/gin-vue-admin.svg?label=Watch"
                     alt=""
-                  >
+                  />
                 </a>
               </el-col>
               <el-col :span="8">
@@ -37,7 +34,7 @@
                     class="dom-center"
                     src="https://img.shields.io/github/stars/flipped-aurora/gin-vue-admin.svg?style=social"
                     alt=""
-                  >
+                  />
                 </a>
               </el-col>
               <el-col :span="8">
@@ -46,7 +43,7 @@
                     class="dom-center"
                     src="https://img.shields.io/github/forks/flipped-aurora/gin-vue-admin.svg?label=Fork"
                     alt=""
-                  >
+                  />
                 </a>
               </el-col>
             </el-row>
@@ -58,16 +55,13 @@
           </template>
           <div>
             <el-row>
-              <el-col
-                :span="8"
-                :offset="8"
-              >
+              <el-col :span="8" :offset="8">
                 <a href="https://github.com/flipped-aurora">
                   <img
                     class="org-img dom-center"
                     src="@/assets/flipped-aurora.png"
                     alt="flipped-aurora"
-                  >
+                  />
                 </a>
               </el-col>
             </el-row>
@@ -100,7 +94,7 @@
           <div>
             <el-timeline>
               <el-timeline-item
-                v-for="(item,index) in dataTimeline"
+                v-for="(item, index) in dataTimeline"
                 :key="index"
                 :timestamp="item.from"
                 placement="top"
@@ -127,47 +121,46 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { Commits, Members } from '@/api/github'
-import { formatTimeToStr } from '@/utils/date'
-const page = ref(0)
+import { ref } from "vue";
+import { Commits, Members } from "@/api/github";
+import { formatTimeToStr } from "@/utils/date";
+const page = ref(0);
 
 defineOptions({
-  name: 'About'
-})
+  name: "About",
+});
 
 const loadMore = () => {
-  page.value++
-  loadCommits()
-}
+  page.value++;
+  loadCommits();
+};
 
-const dataTimeline = ref([])
+const dataTimeline = ref([]);
 const loadCommits = () => {
   Commits(page.value).then(({ data }) => {
     data.forEach((element) => {
       if (element.commit.message) {
         dataTimeline.value.push({
-          from: formatTimeToStr(element.commit.author.date, 'yyyy-MM-dd'),
+          from: formatTimeToStr(element.commit.author.date, "yyyy-MM-dd"),
           title: element.commit.author.name,
           showDayAndMonth: true,
           message: element.commit.message,
-        })
+        });
       }
-    })
-  })
-}
+    });
+  });
+};
 
-const members = ref([])
+const members = ref([]);
 const loadMembers = () => {
   Members().then(({ data }) => {
-    members.value = data
-    members.value.sort()
-  })
-}
+    members.value = data;
+    members.value.sort();
+  });
+};
 
-loadCommits()
-loadMembers()
-
+loadCommits();
+loadMembers();
 </script>
 
 <style scoped>

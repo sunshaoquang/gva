@@ -1,0 +1,4 @@
+2024-06-14 18:54:35.106	info	register table success
+2024-06-14 18:54:35.121	info	register swagger handler
+2024-06-14 18:54:35.214	info	router register success
+2024-06-14 18:54:35.216	info	server run success on 	{"address": ":8888"}

@@ -41,12 +41,12 @@ watchEffect(() =>{
 })
 const reload = ref(false)
 const handleReload = () => {
-  reload.value = true
-  emitter.emit('reload')
+  reload.value = true;
+  emitter.emit("reload");
   setTimeout(() => {
-    reload.value = false
-  }, 500)
-}
+    reload.value = false;
+  }, 500);
+};
 const toService = () => {
   window.open('https://support.qq.com/product/371961')
 }
@@ -57,7 +57,6 @@ const handleDarkSwitch = (e) =>{
 
 </script>
 <style scoped lang="scss">
-
 .search-component {
   @apply inline-flex overflow-hidden text-center gap-5 mr-5 text-black dark:text-gray-100;
   div{
@@ -75,8 +74,8 @@ const handleDarkSwitch = (e) =>{
   font-size: 18px;
 }
 
-.reloading{
-  animation:turn 0.5s linear infinite;
+.reloading {
+  animation: turn 0.5s linear infinite;
 }
 
 @keyframes turn {
@@ -100,5 +99,4 @@ const handleDarkSwitch = (e) =>{
     transform: rotate(360deg);
   }
 }
-
 </style>
