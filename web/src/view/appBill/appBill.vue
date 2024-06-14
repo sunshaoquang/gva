@@ -21,43 +21,29 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button
-            size="small"
-            type="primary"
-            icon="search"
-            @click="onSubmit"
-          >
+          <el-button type="primary" icon="search" @click="onSubmit">
             查询</el-button
           >
-          <el-button size="small" icon="refresh" @click="onReset"
-            >重置
-          </el-button>
+          <el-button icon="refresh" @click="onReset">重置 </el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button size="small" type="primary" icon="plus" @click="openDialog"
+        <el-button type="primary" icon="plus" @click="openDialog"
           >新增</el-button
         >
         <el-popover v-model:visible="deleteVisible" placement="top" width="160">
           <p>确定要删除吗？</p>
           <div style="text-align: right; margin-top: 8px">
-            <el-button
-              size="small"
-              type="primary"
-              link
-              @click="deleteVisible = false"
+            <el-button type="primary" link @click="deleteVisible = false"
               >取消</el-button
             >
-            <el-button size="small" type="primary" @click="onDelete"
-              >确定</el-button
-            >
+            <el-button type="primary" @click="onDelete">确定</el-button>
           </div>
           <template #reference>
             <el-button
               icon="delete"
-              size="small"
               style="margin-left: 10px"
               :disabled="!multipleSelection.length"
               @click="deleteVisible = true"
@@ -80,24 +66,37 @@
             formatDate(scope.row.CreatedAt)
           }}</template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="选中分类图标"
-          prop="icon"
-          width="120"
-        />
-        <el-table-column
-          align="left"
-          label="选中分类名称"
-          prop="name"
-          width="120"
-        />
-        <el-table-column
-          align="left"
-          label="交付方式"
-          prop="deliveryMethod"
-          width="120"
-        />
+        <el-table-column align="left" label="分类标题" width="120">
+          <template #default="scope">
+            <div class="flex">
+              <div
+                :class="`ssqIcon ssqIcon-${showDictLabel(
+                  iconOptions,
+                  scope.row.name,
+                  'value',
+                  'extend'
+                )}`"
+              />
+              <div class="ml-1">
+                {{
+                  showDictLabel(iconOptions, scope.row.name, 'value', 'label')
+                }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="交付方式" width="120">
+          <template #default="scope">
+            <div class="flex">
+              <div :class="`ssqIcon ssqIcon-${scope.row.icon}`" />
+              <div class="ml-1">
+                {{
+                  showDictLabel(iconOptions, scope.row.icon, 'extend', 'label')
+                }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column
           align="left"
           label="账单金额"
@@ -107,7 +106,7 @@
         <el-table-column align="left" label="备注" prop="tag" width="120" />
         <el-table-column
           align="left"
-          label="某个用户创建的id"
+          label="用户ID"
           prop="userId"
           width="120"
         />
@@ -117,7 +116,6 @@
               type="primary"
               link
               icon="edit"
-              size="small"
               class="table-button"
               @click="updateAppBillFunc(scope.row)"
               >变更</el-button
@@ -126,7 +124,6 @@
               type="primary"
               link
               icon="delete"
-              size="small"
               @click="deleteRow(scope.row)"
               >删除</el-button
             >
@@ -157,26 +154,22 @@
         :rules="rule"
         label-width="80px"
       >
-        <el-form-item label="选中分类图标:" prop="icon">
-          <el-input
-            v-model="formData.icon"
-            :clearable="true"
-            placeholder="请输入"
-          />
-        </el-form-item>
-        <el-form-item label="选中分类名称:" prop="name">
-          <el-input
-            v-model="formData.name"
-            :clearable="true"
-            placeholder="请输入"
-          />
+        <el-form-item label="分类标题">
+          <icon v-model:meta="formData" style="width: 100%" />
         </el-form-item>
         <el-form-item label="交付方式:" prop="deliveryMethod">
-          <el-input
+          <el-select
             v-model="formData.deliveryMethod"
             :clearable="true"
             placeholder="请输入"
-          />
+          >
+            <el-option
+              v-for="item in iconOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="账单金额:" prop="money">
           <el-input-number
@@ -189,13 +182,7 @@
         <el-form-item label="备注:" prop="tag">
           <el-input
             v-model="formData.tag"
-            :clearable="true"
-            placeholder="请输入"
-          />
-        </el-form-item>
-        <el-form-item label="某个用户创建的id:" prop="userId">
-          <el-input
-            v-model.number="formData.userId"
+            type="textarea"
             :clearable="true"
             placeholder="请输入"
           />
@@ -203,10 +190,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button size="small" @click="closeDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="enterDialog"
-            >确 定</el-button
-          >
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button type="primary" @click="enterDialog">确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -215,8 +200,8 @@
 
 <script>
 export default {
-  name: "AppBill",
-};
+  name: 'AppBill'
+}
 </script>
 
 <script setup>
@@ -226,217 +211,212 @@ import {
   deleteAppBillByIds,
   updateAppBill,
   findAppBill,
-  getAppBillList,
-} from "@/api/appBill";
+  getAppBillList
+} from '@/api/appBill'
 
 // 全量引入格式化工具 请按需保留
 import {
   getDictFunc,
   formatDate,
   formatBoolean,
-  filterDict,
-} from "@/utils/format";
-import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive } from "vue";
-import { useUserStore } from "@/pinia/modules/user";
-const { userIsAdmin, userId } = useUserStore();
+  filterDict
+} from '@/utils/format'
+import { showDictLabel } from '@/utils/dictionary'
+import icon from '@/components/tallyApp/categoryIcon.vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, reactive } from 'vue'
+import { useUserStore } from '@/pinia/modules/user'
+const { userIsAdmin, userId } = useUserStore()
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
-  icon: "",
-  name: "",
-  deliveryMethod: "",
+  icon: '',
+  name: '',
+  deliveryMethod: '',
   money: 0,
-  tag: "",
-  userId: 0,
-});
+  tag: '',
+  userId: 0
+})
 
 // 验证规则
-const rule = reactive({});
+const rule = reactive({})
 
-const elFormRef = ref();
+const elFormRef = ref()
 
 // =========== 表格控制部分 ===========
-const page = ref(1);
-const total = ref(0);
-const pageSize = ref(10);
-const tableData = ref([]);
-const searchInfo = ref({});
+const page = ref(1)
+const total = ref(0)
+const pageSize = ref(10)
+const tableData = ref([])
+const searchInfo = ref({})
 
 // 重置
 const onReset = () => {
-  searchInfo.value = {};
-  getTableData();
-};
+  searchInfo.value = {}
+  getTableData()
+}
 
 // 搜索
 const onSubmit = () => {
-  page.value = 1;
-  pageSize.value = 10;
-  getTableData();
-};
+  page.value = 1
+  pageSize.value = 10
+  getTableData()
+}
 
 // 分页
 const handleSizeChange = (val) => {
-  pageSize.value = val;
-  getTableData();
-};
+  pageSize.value = val
+  getTableData()
+}
 
 // 修改页面容量
 const handleCurrentChange = (val) => {
-  page.value = val;
-  getTableData();
-};
+  page.value = val
+  getTableData()
+}
 
 // 查询
 const getTableData = async () => {
-  let options = { page: page.value, pageSize: pageSize.value };
+  let options = { page: page.value, pageSize: pageSize.value }
   if (userIsAdmin) {
-    options = { ...options, ...searchInfo.value };
+    options = { ...options, ...searchInfo.value }
   }
-  options = { ...options, ...searchInfo.value, ID: userId };
-  const table = await getAppBillList(options);
+  options = { ...options, ...searchInfo.value, ID: userId }
+  const table = await getAppBillList(options)
   if (table.code === 0) {
-    tableData.value = table.data.list;
-    total.value = table.data.total;
-    page.value = table.data.page;
-    pageSize.value = table.data.pageSize;
+    tableData.value = table.data.list
+    total.value = table.data.total
+    page.value = table.data.page
+    pageSize.value = table.data.pageSize
   }
-};
+}
 
-getTableData();
+getTableData()
 
 // ============== 表格控制部分结束 ===============
 
 // 获取需要的字典 可能为空 按需保留
-const setOptions = async () => {};
+const iconOptions = ref([])
+const setOptions = async (authData) => {
+  iconOptions.value = await getDictFunc(authData)
+}
 
 // 获取需要的字典 可能为空 按需保留
-setOptions();
+setOptions('io_icon_dict')
 
 // 多选数据
-const multipleSelection = ref([]);
+const multipleSelection = ref([])
 // 多选
 const handleSelectionChange = (val) => {
-  multipleSelection.value = val;
-};
+  multipleSelection.value = val
+}
 
 // 删除行
 const deleteRow = (row) => {
-  ElMessageBox.confirm("确定要删除吗?", "提示", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
-    type: "warning",
+  ElMessageBox.confirm('确定要删除吗?', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
   }).then(() => {
-    deleteAppBillFunc(row);
-  });
-};
+    deleteAppBillFunc(row)
+  })
+}
 
 // 批量删除控制标记
-const deleteVisible = ref(false);
+const deleteVisible = ref(false)
 
 // 多选删除
 const onDelete = async () => {
-  const ids = [];
+  const ids = []
   if (multipleSelection.value.length === 0) {
     ElMessage({
-      type: "warning",
-      message: "请选择要删除的数据",
-    });
-    return;
+      type: 'warning',
+      message: '请选择要删除的数据'
+    })
+    return
   }
   multipleSelection.value &&
     multipleSelection.value.map((item) => {
-      ids.push(item.ID);
-    });
-  const res = await deleteAppBillByIds({ ids });
+      ids.push(item.ID)
+    })
+  const res = await deleteAppBillByIds({ ids })
   if (res.code === 0) {
     ElMessage({
-      type: "success",
-      message: "删除成功",
-    });
+      type: 'success',
+      message: '删除成功'
+    })
     if (tableData.value.length === ids.length && page.value > 1) {
-      page.value--;
+      page.value--
     }
-    deleteVisible.value = false;
-    getTableData();
+    deleteVisible.value = false
+    getTableData()
   }
-};
+}
 
 // 行为控制标记（弹窗内部需要增还是改）
-const type = ref("");
-
-// 更新行
-const updateAppBillFunc = async (row) => {
-  const res = await findAppBill({ ID: row.ID });
-  type.value = "update";
-  if (res.code === 0) {
-    formData.value = res.data.reappBill;
-    dialogFormVisible.value = true;
-  }
-};
+const type = ref('')
 
 // 删除行
 const deleteAppBillFunc = async (row) => {
-  const res = await deleteAppBill({ ID: row.ID });
+  const res = await deleteAppBill({ ID: row.ID })
   if (res.code === 0) {
     ElMessage({
-      type: "success",
-      message: "删除成功",
-    });
+      type: 'success',
+      message: '删除成功'
+    })
     if (tableData.value.length === 1 && page.value > 1) {
-      page.value--;
+      page.value--
     }
-    getTableData();
+    getTableData()
   }
-};
+}
 
 // 弹窗控制标记
-const dialogFormVisible = ref(false);
+const dialogFormVisible = ref(false)
 
 // 打开弹窗
 const openDialog = () => {
-  type.value = "create";
-  dialogFormVisible.value = true;
-};
+  type.value = 'create'
+  dialogFormVisible.value = true
+}
 
 // 关闭弹窗
 const closeDialog = () => {
-  dialogFormVisible.value = false;
+  dialogFormVisible.value = false
   formData.value = {
-    icon: "",
-    name: "",
-    deliveryMethod: "",
+    icon: '',
+    name: '',
+    deliveryMethod: '',
     money: 0,
-    tag: "",
-    userId: 0,
-  };
-};
+    tag: '',
+    userId: 0
+  }
+}
 // 弹窗确定
 const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
-    if (!valid) return;
-    let res;
+    if (!valid) return
+    let res
     switch (type.value) {
-      case "create":
-        res = await createAppBill(formData.value);
-        break;
-      case "update":
-        res = await updateAppBill(formData.value);
-        break;
+      case 'create':
+        res = await createAppBill(formData.value)
+        break
+      case 'update':
+        res = await updateAppBill(formData.value)
+        break
       default:
-        res = await createAppBill(formData.value);
-        break;
+        res = await createAppBill(formData.value)
+        break
     }
     if (res.code === 0) {
       ElMessage({
-        type: "success",
-        message: "创建/更改成功",
-      });
-      closeDialog();
-      getTableData();
+        type: 'success',
+        message: '创建/更改成功'
+      })
+      closeDialog()
+      getTableData()
     }
-  });
-};
+  })
+}
 </script>
 
 <style></style>

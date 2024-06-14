@@ -21,7 +21,11 @@
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="分类标题">
-          <icon :meta="searchInfo" style="width: 100%" />
+          <icon
+            v-model:meta="searchInfo"
+            @update:meta="toMeta"
+            style="width: 100%"
+          />
         </el-form-item>
         <el-form-item label="是否启用" prop="state">
           <el-select v-model="searchInfo.state" clearable placeholder="请选择">
@@ -30,38 +34,29 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button size="small" type="primary" icon="search" @click="onSubmit"
+          <el-button type="primary" icon="search" @click="onSubmit"
             >查询</el-button
           >
-          <el-button size="small" icon="refresh" @click="onReset"
-            >重置</el-button
-          >
+          <el-button icon="refresh" @click="onReset">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button size="small" type="primary" icon="plus" @click="openDialog"
+        <el-button type="primary" icon="plus" @click="openDialog"
           >新增根类目</el-button
         >
         <el-popover v-model:visible="deleteVisible" placement="top" width="160">
           <p>确定要删除吗？</p>
           <div style="text-align: right; margin-top: 8px">
-            <el-button
-              size="small"
-              type="primary"
-              link
-              @click="deleteVisible = false"
+            <el-button type="primary" link @click="deleteVisible = false"
               >取消</el-button
             >
-            <el-button size="small" type="primary" @click="onDelete"
-              >确定</el-button
-            >
+            <el-button type="primary" @click="onDelete">确定</el-button>
           </div>
           <template #reference>
             <el-button
               icon="delete"
-              size="small"
               style="margin-left: 10px"
               :disabled="!multipleSelection.length"
               @click="deleteVisible = true"
@@ -84,24 +79,31 @@
             formatDate(scope.row.CreatedAt)
           }}</template>
         </el-table-column>
-        <el-table-column
-          align="left"
-          label="分类标题"
-          prop="name"
-          width="120"
-        />
-        <el-table-column
-          align="left"
-          label="分类图标"
-          prop="icon"
-          width="120"
-        />
-        <el-table-column
-          align="left"
-          label="父节点Id"
-          prop="categoryPar"
-          width="120"
-        />
+        <el-table-column align="left" label="分类标题" width="120">
+          <template #default="scope">
+            <div class="flex">
+              <div :class="`ssqIcon ssqIcon-${scope.row.icon}`" />
+              <div class="ml-1">{{ scope.row.name }}</div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="父分类标题" width="120">
+          <template #default="scope">
+            <div class="flex">
+              <div
+                :class="`ssqIcon ssqIcon-${showDictLabel(
+                  iconOptions,
+                  scope.row.categoryPar,
+                  'value',
+                  'extend'
+                )}`"
+              />
+              <div class="ml-1">
+                {{ filterDict(scope.row.categoryPar, iconOptions) }}
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="是否启用" prop="state" width="120">
           <template #default="scope">{{
             formatBoolean(scope.row.state)
@@ -111,9 +113,8 @@
         <el-table-column align="left" label="按钮组">
           <template #default="scope">
             <el-button
-              size="small"
               :type="scope.row.categoryPar !== 0 ? 'info' : 'primary'"
-              link="info"
+              link
               icon="plus"
               :disabled="scope.row.categoryPar !== 0"
               @click="addAppCategory(scope.row)"
@@ -123,7 +124,6 @@
               type="primary"
               link
               icon="edit"
-              size="small"
               class="table-button"
               @click="updateAppCategoryFunc(scope.row)"
               >变更</el-button
@@ -132,7 +132,6 @@
               type="primary"
               link
               icon="delete"
-              size="small"
               @click="deleteRow(scope.row)"
               >删除</el-button
             >
@@ -164,27 +163,28 @@
         label-width="80px"
       >
         <el-form-item label="分类标题:" prop="name">
-          <el-input
-            v-model="formData.name"
-            :clearable="true"
-            placeholder="请输入"
-          />
+          <icon :meta="formData" style="width: 100%" />
         </el-form-item>
-        <el-form-item label="分类图标:" prop="icon">
-          <el-input
-            v-model="formData.icon"
-            :clearable="true"
-            placeholder="请输入"
-          />
+        <el-form-item
+          v-if="formData.categoryPar !== 0"
+          label="父分类标题:"
+          label-width="90px"
+          prop="categoryPar"
+        >
+          <div class="flex">
+            <div
+              :class="`ssqIcon ssqIcon-${showDictLabel(
+                iconOptions,
+                formData.categoryPar,
+                'value',
+                'extend'
+              )}`"
+            />
+            <div class="ml-1">
+              {{ filterDict(formData.categoryPar, iconOptions) }}
+            </div>
+          </div>
         </el-form-item>
-        <!-- <el-form-item label="父节点Id:" prop="categoryPar">
-          <el-input
-            v-model.number="formData.categoryPar"
-            :clearable="true"
-            :disabled="!(type === 'update' && formData.categoryPar == 0)"
-            placeholder="请输入"
-          />
-        </el-form-item> -->
         <el-form-item label="是否启用:" prop="state">
           <el-switch
             v-model="formData.state"
@@ -205,10 +205,8 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button size="small" @click="closeDialog">取 消</el-button>
-          <el-button size="small" type="primary" @click="enterDialog"
-            >确 定</el-button
-          >
+          <el-button @click="closeDialog">取 消</el-button>
+          <el-button type="primary" @click="enterDialog">确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -238,7 +236,8 @@ import {
   formatBoolean,
   filterDict
 } from '@/utils/format'
-import icon from './components/icon.vue'
+import { showDictLabel } from '@/utils/dictionary'
+import icon from '@/components/tallyApp/categoryIcon.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ref, reactive } from 'vue'
 import { useUserStore } from '@/pinia/modules/user'
@@ -252,6 +251,19 @@ const formData = ref({
   state: true,
   remark: ''
 })
+
+const toMeta = (data) => {
+  console.log(data, '......data')
+}
+
+// 获取需要的字典 可能为空 按需保留
+const iconOptions = ref([])
+const setOptions = async (authData) => {
+  iconOptions.value = await getDictFunc(authData)
+}
+
+// 获取需要的字典 可能为空 按需保留
+setOptions('io_icon_dict')
 
 // 验证规则
 const rule = reactive({})
@@ -269,12 +281,14 @@ const searchInfo = ref({})
 const onReset = () => {
   searchInfo.value = {}
   getTableData()
+  console.log(searchInfo.value)
 }
 
 // 搜索
 const onSubmit = () => {
   page.value = 1
   pageSize.value = 10
+  console.log(searchInfo.value)
   if (searchInfo.value.state === '') {
     searchInfo.value.state = null
   }
@@ -313,12 +327,6 @@ const getTableData = async () => {
 getTableData()
 
 // ============== 表格控制部分结束 ===============
-
-// 获取需要的字典 可能为空 按需保留
-const setOptions = async () => {}
-
-// 获取需要的字典 可能为空 按需保留
-setOptions()
 
 // 多选数据
 const multipleSelection = ref([])
@@ -428,6 +436,15 @@ const enterDialog = async () => {
   elFormRef.value?.validate(async (valid) => {
     if (!valid) return
     let res
+    formData.value = {
+      ...formData.value,
+      icon: showDictLabel(
+        iconOptions.value,
+        formData.value.name,
+        'label',
+        'extend'
+      )
+    }
     switch (type.value) {
       case 'create':
         res = await createAppCategory(formData.value)
