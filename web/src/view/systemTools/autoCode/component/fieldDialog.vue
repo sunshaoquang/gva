@@ -67,7 +67,7 @@
         <el-select
           v-model="middleDate.fieldSearchType"
           :disabled="middleDate.fieldType === 'json'"
-          style="width:100%"
+          style="width: 100%"
           placeholder="请选择字段查询条件"
           clearable
         >
@@ -83,8 +83,8 @@
       <el-form-item label="关联字典" prop="dictType">
         <el-select
           v-model="middleDate.dictType"
-          style="width:100%"
-          :disabled="middleDate.fieldType!=='string'"
+          style="width: 100%"
+          :disabled="middleDate.fieldType !== 'string'"
           placeholder="请选择字典"
           clearable
         >
@@ -105,6 +105,23 @@
       <el-form-item label="主键">
         <el-checkbox v-model="middleDate.primaryKey" />
       </el-form-item>
+      <el-form-item label="索引类型" prop="fieldIndexType">
+        <el-select
+          v-model="middleDate.fieldIndexType"
+          :disabled="middleDate.fieldType === 'json'"
+          style="width: 100%"
+          placeholder="请选择字段索引类型"
+          clearable
+        >
+          <el-option
+            v-for="item in typeIndexOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+            :disabled="canSelect(item.value)"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="前端可见">
         <el-switch v-model="middleDate.front" />
       </el-form-item>
@@ -118,7 +135,10 @@
         <el-switch v-model="middleDate.clearable" />
       </el-form-item>
       <el-form-item label="隐藏查询条件">
-        <el-switch :disabled="!middleDate.fieldSearchType" v-model="middleDate.fieldSearchHide" />
+        <el-switch
+          :disabled="!middleDate.fieldSearchType"
+          v-model="middleDate.fieldSearchHide"
+        />
       </el-form-item>
       <el-form-item label="校验失败文案">
         <el-input v-model="middleDate.errorText" />
@@ -130,45 +150,30 @@
         name="1"
       >
         <el-row :gutter="8">
-          <el-col
-            :span="3"
-          >
+          <el-col :span="3">
             <el-select
               v-model="middleDate.dataSource.association"
               placeholder="关联模式"
               @change="associationChange"
             >
-              <el-option
-                label="一对一"
-                :value="1"
-              />
-              <el-option
-                label="一对多"
-                :value="2"
-              />
+              <el-option label="一对一" :value="1" />
+              <el-option label="一对多" :value="2" />
             </el-select>
           </el-col>
 
-
-          <el-col
-            :span="7"
-          >
+          <el-col :span="7">
             <el-input
               v-model="middleDate.dataSource.table"
               placeholder="数据源表"
             />
           </el-col>
-          <el-col
-            :span="7"
-          >
+          <el-col :span="7">
             <el-input
               v-model="middleDate.dataSource.label"
               placeholder="展示用字段"
             />
           </el-col>
-          <el-col
-            :span="7"
-          >
+          <el-col :span="7">
             <el-input
               v-model="middleDate.dataSource.value"
               placeholder="存储用字端"
@@ -188,84 +193,100 @@ import { ref } from 'vue'
 import { ElMessageBox } from 'element-plus'
 
 defineOptions({
-  name: "FieldDialog",
-});
+  name: 'FieldDialog'
+})
 
 const props = defineProps({
   dialogMiddle: {
     type: Object,
     default: function () {
-      return {};
-    },
+      return {}
+    }
   },
   typeOptions: {
     type: Array,
     default: function () {
-      return [];
-    },
+      return []
+    }
   },
   typeSearchOptions: {
     type: Array,
     default: function () {
-      return [];
-    },
+      return []
+    }
   },
-});
+  typeIndexOptions: {
+    type: Array,
+    default: function () {
+      return []
+    }
+  }
+})
 
 const activeNames = ref([])
 
 const middleDate = ref({})
 const dictOptions = ref([])
 
+const validateDataTypeLong = (rule, value, callback) => {
+  const regex = /^('([^']*)'(?:,'([^']+)'*)*)$/
+  if (middleDate.value.fieldType == 'enum' && !regex.test(value)) {
+    callback(new Error('枚举值校验错误'))
+  } else {
+    callback()
+  }
+}
+
 const rules = ref({
-  fieldName: [{ required: true, message: "请输入字段英文名", trigger: "blur" }],
-  fieldDesc: [{ required: true, message: "请输入字段中文名", trigger: "blur" }],
+  fieldName: [{ required: true, message: '请输入字段英文名', trigger: 'blur' }],
+  fieldDesc: [{ required: true, message: '请输入字段中文名', trigger: 'blur' }],
   fieldJson: [
-    { required: true, message: "请输入字段格式化json", trigger: "blur" },
+    { required: true, message: '请输入字段格式化json', trigger: 'blur' }
   ],
   columnName: [
-    { required: true, message: "请输入数据库字段", trigger: "blur" },
+    { required: true, message: '请输入数据库字段', trigger: 'blur' }
   ],
-  fieldType: [{ required: true, message: "请选择字段类型", trigger: "blur" }],
-});
+  fieldType: [{ required: true, message: '请选择字段类型', trigger: 'blur' }],
+  dataTypeLong: [{ validator: validateDataTypeLong, trigger: 'blur' }]
+})
 
 const init = async () => {
-  middleDate.value = props.dialogMiddle;
+  middleDate.value = props.dialogMiddle
   const dictRes = await getSysDictionaryList({
     page: 1,
-    pageSize: 999999,
-  });
+    pageSize: 999999
+  })
 
-  dictOptions.value = dictRes.data;
-};
-init();
+  dictOptions.value = dictRes.data
+}
+init()
 
 const autoFill = () => {
-  middleDate.value.fieldJson = toLowerCase(middleDate.value.fieldName);
-  middleDate.value.columnName = toSQLLine(middleDate.value.fieldJson);
-};
+  middleDate.value.fieldJson = toLowerCase(middleDate.value.fieldName)
+  middleDate.value.columnName = toSQLLine(middleDate.value.fieldJson)
+}
 
 const canSelect = (item) => {
-  const fieldType = middleDate.value.fieldType;
-  if (fieldType !== "string" && item === "LIKE") {
-    return true;
+  const fieldType = middleDate.value.fieldType
+  if (fieldType !== 'string' && item === 'LIKE') {
+    return true
   }
 
   if (
-    fieldType !== "int" &&
-    fieldType !== "time.Time" &&
-    fieldType !== "float64" &&
-    (item === "BETWEEN" || item === "NOT BETWEEN")
+    fieldType !== 'int' &&
+    fieldType !== 'time.Time' &&
+    fieldType !== 'float64' &&
+    (item === 'BETWEEN' || item === 'NOT BETWEEN')
   ) {
-    return true;
+    return true
   }
-  return false;
-};
+  return false
+}
 
 const clearOther = () => {
-  middleDate.value.fieldSearchType = "";
-  middleDate.value.dictType = "";
-};
+  middleDate.value.fieldSearchType = ''
+  middleDate.value.dictType = ''
+}
 
 const associationChange = (val) => {
   if (val === 2) {
@@ -277,11 +298,13 @@ const associationChange = (val) => {
         cancelButtonText: '取消',
         type: 'warning'
       }
-    ).then(() => {
-      middleDate.value.fieldType = 'array'
-    }).catch(() => {
-      middleDate.value.dataSource.association = 1
-    })
+    )
+      .then(() => {
+        middleDate.value.fieldType = 'array'
+      })
+      .catch(() => {
+        middleDate.value.dataSource.association = 1
+      })
   }
 }
 

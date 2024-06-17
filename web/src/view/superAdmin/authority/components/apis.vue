@@ -1,16 +1,19 @@
 <template>
   <div>
-    <div class="sticky top-0.5 z-10">
+    <div class="sticky top-0.5 z-10 flex space-x-2">
       <el-input
-        v-model="filterText"
-        class="w-3/5"
-        placeholder="筛选"
+        v-model="filterTextName"
+        class="flex-1"
+        placeholder="筛选名字"
       />
-      <el-button
-        class="float-right"
-        type="primary"
-        @click="authApiEnter"
-      >确 定</el-button>
+      <el-input
+        v-model="filterTextPath"
+        class="flex-1"
+        placeholder="筛选路径"
+      />
+      <el-button class="float-right" type="primary" @click="authApiEnter"
+        >确 定</el-button
+      >
     </div>
     <div class="tree-content">
       <el-scrollbar>
@@ -25,7 +28,19 @@
           show-checkbox
           :filter-node-method="filterNode"
           @check="nodeChange"
-        />
+        >
+          <template #default="{ node, data }">
+            <div class="flex items-center justify-between w-full pr-1">
+              <span>{{ data.description }} </span>
+              <el-tooltip :content="data.path">
+                <span
+                  class="max-w-[240px] break-all overflow-ellipsis overflow-hidden"
+                  >{{ data.path }}</span
+                >
+              </el-tooltip>
+            </div>
+          </template>
+        </el-tree>
       </el-scrollbar>
     </div>
   </div>
@@ -51,16 +66,17 @@ const props = defineProps({
 });
 
 const apiDefaultProps = ref({
-  children: "children",
-  label: "description",
-});
-const filterText = ref("");
-const apiTreeData = ref([]);
-const apiTreeIds = ref([]);
-const activeUserId = ref("");
-const init = async () => {
-  const res2 = await getAllApis();
-  const apis = res2.data.apis;
+  children: 'children',
+  label: 'description'
+})
+const filterTextName = ref('')
+const filterTextPath = ref('')
+const apiTreeData = ref([])
+const apiTreeIds = ref([])
+const activeUserId = ref('')
+const init = async() => {
+  const res2 = await getAllApis()
+  const apis = res2.data.apis
 
   apiTreeData.value = buildApiTree(apis);
   const res = await getPolicyPathByAuthorityId({
@@ -137,10 +153,13 @@ defineExpose({
 });
 
 const filterNode = (value, data) => {
-  if (!value) return true;
-  return data.description.indexOf(value) !== -1;
-};
-watch(filterText, (val) => {
-  apiTree.value.filter(val);
-});
+  if (!filterTextName.value && !filterTextPath.value) return true
+  let matchesName,matchesPath;
+  if (!filterTextName.value){
+    matchesName = true
+  }else {
+}
+watch([filterTextName, filterTextPath], () => {
+  apiTree.value.filter('')
+})
 </script>
