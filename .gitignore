@@ -26,6 +26,10 @@ yarn-error.log*
 /server/gva
 /server/latest_log
 /server/config.yaml
+/server/config.docker.yaml
+
+*.bat
+*.sh
 
 *.iml
 web/.pnpm-debug.log
