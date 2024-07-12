@@ -25,19 +25,19 @@ redis:
 
 # mongo configuration
 mongo:
-  coll: ''
-  options: ''
-  database: ''
-  username: ''
-  password: ''
+  coll: ""
+  options: ""
+  database: ""
+  username: ""
+  password: ""
   min-pool-size: 0
   max-pool-size: 100
   socket-timeout-ms: 0
   connect-timeout-ms: 0
   is-zap: false
   hosts:
-    - host: ''
-      port: ''
+    - host: ""
+      port: ""
 
 # email configuration
 email:
@@ -51,12 +51,12 @@ email:
 
 # system configuration
 system:
-  env: public  # Change to "develop" to skip authentication for development mode
+  env: public # Change to "develop" to skip authentication for development mode
   addr: 8888
   db-type: mysql
-  oss-type: local    # 控制oss选择走本地还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
-  use-redis: false     # 使用redis
-  use-mongo: false     # 使用mongo
+  oss-type: local # 控制oss选择走本地还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
+  use-redis: false # 使用redis
+  use-mongo: false # 使用mongo
   use-multipoint: false
   # IP限制次数 一个小时15000次
   iplimit-count: 15000
@@ -74,15 +74,18 @@ captcha:
 # mysql connect configuration
 # 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
 mysql:
-  path: ""
-  port: ""
-  config: ""
-  db-name: ""
-  username: ""
-  password: ""
+  prefix: ""
+  port: "3306"
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db-name: gva
+  username: root
+  password: "q4956225"
+  path: 47.106.160.34
+  engine: ""
+  log-mode: error
   max-idle-conns: 10
   max-open-conns: 100
-  log-mode: ""
+  singular: false
   log-zap: false
 
 # pgsql connect configuration
@@ -113,7 +116,6 @@ db-list:
     max-open-conns: 100
     log-mode: ""
     log-zap: false
-
 
 # local configuration
 local:
@@ -194,7 +196,7 @@ excel:
 # timer task db clear table
 Timer:
   start: true
-  spec: "@daily"  # 定时任务详细配置参考 https://pkg.go.dev/github.com/robfig/cron/v3
+  spec: "@daily" # 定时任务详细配置参考 https://pkg.go.dev/github.com/robfig/cron/v3
   detail:
     - tableName: sys_operation_records
       compareField: created_at
@@ -206,7 +208,7 @@ Timer:
 # 跨域配置
 # 需要配合 server/initialize/router.go -> `Router.Use(middleware.CorsByRules())` 使用
 cors:
-  mode: whitelist # 放行模式: allow-all, 放行全部; whitelist, 白名单模式, 来自白名单内域名的请求添加 cors 头; strict-whitelist 严格白名单模式, 白名单外的请求一律拒绝
+  mode: allow-all # 放行模式: allow-all, 放行全部; whitelist, 白名单模式, 来自白名单内域名的请求添加 cors 头; strict-whitelist 严格白名单模式, 白名单外的请求一律拒绝
   whitelist:
     - allow-origin: example1.com
       allow-headers: content-type
