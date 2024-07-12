@@ -31,4 +31,6 @@ type Server struct {
 
 	// 跨域配置
 	Cors CORS `mapstructure:"cors" json:"cors" yaml:"cors"`
+	//微信配置Wx
+	Wx WX `mapstructure:"wx" json:"wx" yaml:"cors"`
 }

@@ -83,6 +83,7 @@ func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
 		NickName:    user.NickName,
 		Username:    user.Username,
 		AuthorityId: user.AuthorityId,
+		OpenID:      user.OpenID,
 	})
 	token, err := j.CreateToken(claims)
 	if err != nil {
@@ -132,6 +133,64 @@ func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
 			Token:     token,
 			ExpiresAt: claims.RegisteredClaims.ExpiresAt.Unix() * 1000,
 		}, "登录成功", c)
+	}
+}
+func TokenNext(c *gin.Context, user system.SysUser) (systemRes.LoginResponse, error) {
+	j := &utils.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
+	claims := j.CreateClaims(systemReq.BaseClaims{
+		UUID:        user.UUID,
+		ID:          user.ID,
+		NickName:    user.NickName,
+		Username:    user.Username,
+		AuthorityId: user.AuthorityId,
+		OpenID:      user.OpenID,
+	})
+	token, err := j.CreateToken(claims)
+	if err != nil {
+		global.GVA_LOG.Error("获取token失败!", zap.Error(err))
+		return systemRes.LoginResponse{}, err
+	}
+	if !global.GVA_CONFIG.System.UseMultipoint {
+		utils.SetToken(c, token, int(claims.RegisteredClaims.ExpiresAt.Unix()-time.Now().Unix()))
+		return systemRes.LoginResponse{
+			User:      user,
+			Token:     token,
+			ExpiresAt: claims.RegisteredClaims.ExpiresAt.Unix() * 1000,
+		}, nil
+	}
+
+	if jwtStr, err := jwtService.GetRedisJWT(user.Username); err == redis.Nil {
+		if err := jwtService.SetRedisJWT(token, user.Username); err != nil {
+			return systemRes.LoginResponse{}, err
+
+		}
+		utils.SetToken(c, token, int(claims.RegisteredClaims.ExpiresAt.Unix()-time.Now().Unix()))
+		return systemRes.LoginResponse{
+			User:      user,
+			Token:     token,
+			ExpiresAt: claims.RegisteredClaims.ExpiresAt.Unix() * 1000,
+		}, nil
+	} else if err != nil {
+		global.GVA_LOG.Error("设置登录状态失败!", zap.Error(err))
+		return systemRes.LoginResponse{}, err
+
+	} else {
+		var blackJWT system.JwtBlacklist
+		blackJWT.Jwt = jwtStr
+		if err := jwtService.JsonInBlacklist(blackJWT); err != nil {
+			return systemRes.LoginResponse{}, err
+
+		}
+		if err := jwtService.SetRedisJWT(token, user.Username); err != nil {
+			return systemRes.LoginResponse{}, err
+
+		}
+		utils.SetToken(c, token, int(claims.RegisteredClaims.ExpiresAt.Unix()-time.Now().Unix()))
+		return systemRes.LoginResponse{
+			User:      user,
+			Token:     token,
+			ExpiresAt: claims.RegisteredClaims.ExpiresAt.Unix() * 1000,
+		}, nil
 	}
 }
 

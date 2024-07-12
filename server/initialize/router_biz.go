@@ -14,6 +14,10 @@ func holder(routers ...*gin.RouterGroup) {
 func initBizRouter(routers ...*gin.RouterGroup) {
 	privateGroup := routers[0]
 	publicGroup := routers[1]
+	{
+		tallyRouter := router.RouterGroupApp.Tally
+		tallyRouter.InitTallyBillRouter(privateGroup, publicGroup)
+	}
 
 	holder(publicGroup, privateGroup)
 }

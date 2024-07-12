@@ -183,7 +183,7 @@ autocode:
   web-api: /api
   web-form: /view
   web-table: /view
-  ai-path: ""  # AI服务路径
+  ai-path: "" # AI服务路径
 
 # qiniu configuration (请自行七牛申请对应的 公钥 私钥 bucket 和 域名地址)
 qiniu:
@@ -257,3 +257,6 @@ cors:
       allow-methods: GET, POST
       expose-headers: Content-Length, Access-Control-Allow-Origin, Access-Control-Allow-Headers, Content-Type
       allow-credentials: true # 布尔值
+wx:
+  appid: "wx42c31f892d61bdd3"
+  appsecret: "0158ffb4c6b01fdc6172a350e7bb34ed"
