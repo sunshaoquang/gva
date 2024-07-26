@@ -2,6 +2,9 @@
   <div>
     <div class="gva-form-box">
       <el-form :model="formData" ref="elFormRef" label-position="right" :rules="rule" label-width="80px">
+        <el-form-item label="ID:" prop="id">
+          <el-input v-model.number="formData.id" :clearable="true" placeholder="请输入" />
+       </el-form-item>
         <el-form-item label="分类图标:" prop="icon">
           <el-input v-model="formData.icon" :clearable="true"  placeholder="请输入分类图标" />
        </el-form-item>
@@ -15,6 +18,8 @@
        </el-form-item>
         <el-form-item label="账单金额:" prop="money">
           <el-input-number v-model="formData.money" :precision="2" :clearable="true"></el-input-number>
+       </el-form-item>
+        <el-form-item label="标签:" prop="tag">
        </el-form-item>
         <el-form-item label="备注:" prop="tag">
           <el-input v-model="formData.tag" :clearable="true"  placeholder="请输入备注" />
@@ -50,9 +55,11 @@ const router = useRouter()
 
 const type = ref('')
 const formData = ref({
+            id: undefined,
             icon: '',
             name: '',
             money: 0,
+            tag: [],
             tag: '',
         })
 // 验证规则

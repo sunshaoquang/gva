@@ -6,5 +6,5 @@ import (
 )
 
 func bizModel(db *gorm.DB) error {
-	return db.AutoMigrate(tally.TallyBill{})
+	return db.AutoMigrate(tally.TallyCategory{}, tally.TallyBill{})
 }
