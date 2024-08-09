@@ -18,6 +18,7 @@ func initBizRouter(routers ...*gin.RouterGroup) {
 
 		tallyRouter.InitTallyCategoryRouter(privateGroup, publicGroup)
 		tallyRouter.InitTallyBillRouter(privateGroup, publicGroup)
+		tallyRouter.InitTallyTagsRouter(privateGroup, publicGroup)
 
 	}
 

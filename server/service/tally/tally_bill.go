@@ -77,7 +77,6 @@ func (tallyBillService *TallyBillService) GetTallyBillInfoList(info tallyReq.Tal
 	if limit != 0 {
 		db = db.Limit(limit).Offset(offset)
 	}
-
 	err = db.Find(&tallyBills).Error
 	return tallyBills, total, err
 }

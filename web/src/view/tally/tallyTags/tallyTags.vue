@@ -12,31 +12,7 @@
         <template v-if="showAllQuery">
           <!-- 将需要控制显示状态的查询条件添加到此范围内 -->
         </template>
-        <el-form-item label="创建时间">
-          <el-date-picker
-            v-model="searchInfo.startCreatedAt"
-            type="datetime"
-            placeholder="开始时间"
-          ></el-date-picker>
-          —
-          <el-date-picker
-            v-model="searchInfo.endCreatedAt"
-            type="datetime"
-            placeholder="结束时间"
-          ></el-date-picker>
-        </el-form-item>
-        <el-form-item label="分类标题">
-          <el-input v-model="searchInfo.name" placeholder="搜索条件" />
-        </el-form-item>
-        <el-form-item label="分类图标">
-          <icon :meta="searchInfo.icon" style="width: 100%" />
-        </el-form-item>
-        <el-form-item label="是否启用" prop="state">
-          <el-select v-model="searchInfo.state" clearable placeholder="请选择">
-            <el-option key="true" label="是" value="true"> </el-option>
-            <el-option key="false" label="否" value="false"> </el-option>
-          </el-select>
-        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" icon="search" @click="onSubmit"
             >查询</el-button
@@ -64,26 +40,15 @@
     <div class="gva-table-box">
       <div class="gva-btn-list">
         <el-button type="primary" icon="plus" @click="openDialog"
-          >新增根类目</el-button
+          >新增</el-button
         >
-        <el-popover v-model:visible="deleteVisible" placement="top" width="160">
-          <p>确定要删除吗？</p>
-          <div style="text-align: right; margin-top: 8px">
-            <el-button type="primary" link @click="deleteVisible = false"
-              >取消</el-button
-            >
-            <el-button type="primary" @click="onDelete">确定</el-button>
-          </div>
-          <template #reference>
-            <el-button
-              icon="delete"
-              style="margin-left: 10px"
-              :disabled="!multipleSelection.length"
-              @click="deleteVisible = true"
-              >删除</el-button
-            >
-          </template>
-        </el-popover>
+        <el-button
+          icon="delete"
+          style="margin-left: 10px"
+          :disabled="!multipleSelection.length"
+          @click="onDelete"
+          >删除</el-button
+        >
       </div>
       <el-table
         ref="multipleTable"
@@ -95,35 +60,29 @@
       >
         <el-table-column type="selection" width="55" />
 
-        <el-table-column align="left" label="日期" width="180">
-          <template #default="scope">{{
-            formatDate(scope.row.createdAt)
-          }}</template>
-        </el-table-column>
+        <el-table-column align="left" label="标签id" prop="id" width="120" />
         <el-table-column
           align="left"
-          label="分类标题"
-          prop="name"
+          label="标签名"
+          prop="tagName"
           width="120"
         />
         <el-table-column
           align="left"
-          label="分类图标"
-          prop="icon"
+          label="标签颜色"
+          prop="tagColor"
           width="120"
-        />
-        <el-table-column align="left" label="类目等级" prop="parId" width="120">
+        >
           <template #default="scope">
-            {{ ["根", "子"]?.[scope.row.parId] + "类目" }}
+            <el-tag
+              :key="item"
+              class="text-gray-100"
+              :color="scope.row.tagColor"
+            >
+              {{ scope.row.tagColor }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column align="left" label="是否启用" prop="state" width="120">
-          <template #default="scope">
-            {{ formatBoolean(scope.row.state) }}
-          </template>
-        </el-table-column>
-        <el-table-column align="left" label="备注" prop="remark" width="120" />
-
         <el-table-column
           align="left"
           label="操作"
@@ -132,28 +91,22 @@
         >
           <template #default="scope">
             <el-button
-              :type="scope.row.parId !== 0 ? 'info' : 'primary'"
-              link="info"
-              icon="plus"
-              :disabled="scope.row.parId !== 0"
-              @click="addTallyCategory(scope.row)"
-              >添加子类目</el-button
-            >
-            <el-button
               type="primary"
               link
               icon="edit"
               class="table-button"
-              @click="updateTallyCategoryFunc(scope.row)"
-              >变更</el-button
+              @click="updateTallyTagsFunc(scope.row)"
             >
+              变更
+            </el-button>
             <el-button
               type="primary"
               link
               icon="delete"
               @click="deleteRow(scope.row)"
-              >删除</el-button
             >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -188,49 +141,34 @@
 
       <el-form
         :model="formData"
-        label-position="right"
+        label-position="top"
         ref="elFormRef"
         :rules="rule"
         label-width="80px"
       >
-        <el-form-item label="分类标题:" prop="name">
+        <el-form-item label="标签id:" prop="id">
           <el-input
-            v-model="formData.name"
+            v-model.number="formData.id"
             :clearable="true"
-            placeholder="请输入"
+            placeholder="请输入标签id"
           />
         </el-form-item>
-        <el-form-item label="分类图标:" prop="icon">
+        <el-form-item label="标签名:" prop="tagName">
           <el-input
-            v-model="formData.icon"
+            v-model="formData.tagName"
             :clearable="true"
-            placeholder="请输入"
+            placeholder="请输入标签名"
           />
         </el-form-item>
-        <!-- <el-form-item label="父节点Id:" prop="parId">
-          <el-input
-            v-model.number="formData.parId"
-            :clearable="true"
-            :disabled="!(type === 'update' && formData.parId == 0)"
-            placeholder="请输入"
-          />
-        </el-form-item> -->
-        <el-form-item label="是否启用:" prop="state">
-          <el-switch
-            v-model="formData.state"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            active-text="是"
-            inactive-text="否"
-            clearable
-          ></el-switch>
-        </el-form-item>
-        <el-form-item label="备注:" prop="remark">
-          <el-input
-            v-model="formData.remark"
-            :clearable="true"
-            placeholder="请输入"
-          />
+        <el-form-item label="标签颜色:" prop="tagColor">
+          <div class="flex">
+            <el-input
+              v-model="formData.tagColor"
+              :clearable="true"
+              placeholder="请输入标签颜色"
+            />
+            <el-color-picker v-model="formData.tagColor" />
+          </div>
         </el-form-item>
       </el-form>
     </el-drawer>
@@ -239,13 +177,13 @@
 
 <script setup>
 import {
-  createTallyCategory,
-  deleteTallyCategory,
-  deleteTallyCategoryByIds,
-  updateTallyCategory,
-  findTallyCategory,
-  getTallyCategoryList,
-} from "@/api/tally/tallyCategory";
+  createTallyTags,
+  deleteTallyTags,
+  deleteTallyTagsByIds,
+  updateTallyTags,
+  findTallyTags,
+  getTallyTagsList,
+} from "@/api/tally/tallyTags";
 
 // 全量引入格式化工具 请按需保留
 import {
@@ -257,14 +195,11 @@ import {
   ReturnArrImg,
   onDownloadFile,
 } from "@/utils/format";
-import icon from "@/view/superAdmin/menu/icon.vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { ref, reactive } from "vue";
-import { useUserStore } from "@/pinia/modules/user";
-const { userIsAdmin, userId } = useUserStore();
 
 defineOptions({
-  name: "TallyCategory",
+  name: "TallyTags",
 });
 
 // 控制更多查询条件显示/隐藏状态
@@ -273,14 +208,8 @@ const showAllQuery = ref(false);
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
   id: undefined,
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  deletedAt: new Date(),
-  name: "",
-  icon: "",
-  parId: undefined,
-  state: false,
-  remark: "",
+  tagName: "",
+  tagColor: "",
 });
 
 // 验证规则
@@ -337,9 +266,6 @@ const onSubmit = () => {
     if (!valid) return;
     page.value = 1;
     pageSize.value = 10;
-    if (searchInfo.value.state === "") {
-      searchInfo.value.state = null;
-    }
     getTableData();
   });
 };
@@ -358,7 +284,7 @@ const handleCurrentChange = (val) => {
 
 // 查询
 const getTableData = async () => {
-  const table = await getTallyCategoryList({
+  const table = await getTallyTagsList({
     page: page.value,
     pageSize: pageSize.value,
     ...searchInfo.value,
@@ -395,7 +321,7 @@ const deleteRow = (row) => {
     cancelButtonText: "取消",
     type: "warning",
   }).then(() => {
-    deleteTallyCategoryFunc(row);
+    deleteTallyTagsFunc(row);
   });
 };
 
@@ -418,7 +344,7 @@ const onDelete = async () => {
       multipleSelection.value.map((item) => {
         ids.push(item.id);
       });
-    const res = await deleteTallyCategoryByIds({ ids });
+    const res = await deleteTallyTagsByIds({ ids });
     if (res.code === 0) {
       ElMessage({
         type: "success",
@@ -435,16 +361,9 @@ const onDelete = async () => {
 // 行为控制标记（弹窗内部需要增还是改）
 const type = ref("");
 
-// 添加子类目
-const addTallyCategory = async (row) => {
-  type.value = "create";
-  formData.value.parId = row.id;
-  dialogFormVisible.value = true;
-};
-
 // 更新行
-const updateTallyCategoryFunc = async (row) => {
-  const res = await findTallyCategory({ id: row.id });
+const updateTallyTagsFunc = async (row) => {
+  const res = await findTallyTags({ id: row.id });
   type.value = "update";
   if (res.code === 0) {
     formData.value = res.data;
@@ -453,8 +372,8 @@ const updateTallyCategoryFunc = async (row) => {
 };
 
 // 删除行
-const deleteTallyCategoryFunc = async (row) => {
-  const res = await deleteTallyCategory({ id: row.id });
+const deleteTallyTagsFunc = async (row) => {
+  const res = await deleteTallyTags({ id: row.id });
   if (res.code === 0) {
     ElMessage({
       type: "success",
@@ -481,14 +400,8 @@ const closeDialog = () => {
   dialogFormVisible.value = false;
   formData.value = {
     id: undefined,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: new Date(),
-    name: "",
-    icon: "",
-    parId: undefined,
-    state: false,
-    remark: "",
+    tagName: "",
+    tagColor: "",
   };
 };
 // 弹窗确定
@@ -498,13 +411,13 @@ const enterDialog = async () => {
     let res;
     switch (type.value) {
       case "create":
-        res = await createTallyCategory(formData.value);
+        res = await createTallyTags(formData.value);
         break;
       case "update":
-        res = await updateTallyCategory(formData.value);
+        res = await updateTallyTags(formData.value);
         break;
       default:
-        res = await createTallyCategory(formData.value);
+        res = await createTallyTags(formData.value);
         break;
     }
     if (res.code === 0) {

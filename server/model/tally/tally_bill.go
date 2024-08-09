@@ -9,7 +9,7 @@ import (
 
 // 记账账单表 结构体  TallyBill
 type TallyBill struct {
-	Id               *int           `json:"id" form:"id" gorm:"index;primarykey;column:id;comment:ID;"`                              //ID
+	Id               *int           `json:"id" form:"id" gorm:"primarykey;column:id;comment:;size:20;"`                              //id字段
 	CreatedAt        *time.Time     `json:"createdAt" form:"createdAt" gorm:"column:created_at;comment:;"`                           //createdAt字段
 	UpdatedAt        *time.Time     `json:"updatedAt" form:"updatedAt" gorm:"column:updated_at;comment:;"`                           //updatedAt字段
 	DeletedAt        *time.Time     `json:"deletedAt" form:"deletedAt" gorm:"column:deleted_at;comment:;"`                           //分类名称

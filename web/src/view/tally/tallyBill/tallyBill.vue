@@ -66,28 +66,57 @@
             formatDate(scope.row.createdAt)
           }}</template>
         </el-table-column>
-        <el-table-column align="left" label="交付方式" width="120"
-          ><template #default="scope">{{
-            showDictLabel(
-              categoryListData,
-              scope.row.deliveryMethodId,
-              "id",
-              "name"
-            )
-          }}</template></el-table-column
-        >
-        <el-table-column align="left" label="分类类别" width="120"
-          ><template #default="scope">{{
-            showDictLabel(categoryListData, scope.row.categoryId, "id", "name")
-          }}</template></el-table-column
-        >
+        <el-table-column align="left" label="交付方式" width="120">
+          <template #default="scope">
+            <el-tag
+              :type="
+                ['primary', 'success', 'danger'][scope.row.deliveryMethodId]
+              "
+            >
+              {{
+                showDictLabel(
+                  categoryListData,
+                  scope.row.deliveryMethodId,
+                  "id",
+                  "name"
+                )
+              }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column align="left" label="分类类别" width="120">
+          <template #default="scope">
+            {{
+              showDictLabel(
+                categoryListData,
+                scope.row.categoryId,
+                "id",
+                "name"
+              )
+            }}
+          </template>
+        </el-table-column>
         <el-table-column
           align="left"
           label="账单金额"
           prop="money"
           width="120"
         />
-        <el-table-column align="left" label="标签" prop="tag" width="120" />
+        <el-table-column align="left" label="标签" prop="tag" width="120">
+          <template #default="scope">
+            <div class="flex gap-2">
+              <div v-for="item in scope.row.tag" :key="item">
+                <el-tag
+                  :key="item"
+                  class="text-gray-100"
+                  :color="showDictLabel(tagList, item, 'id', 'tagColor')"
+                >
+                  {{ showDictLabel(tagList, item, "id", "tagName") }}
+                </el-tag>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column align="left" label="备注" prop="remark" width="120" />
         <el-table-column align="left" label="按钮组">
           <template #default="scope">
@@ -97,15 +126,17 @@
               icon="edit"
               class="table-button"
               @click="updateTallyBillFunc(scope.row)"
-              >变更</el-button
             >
+              变更
+            </el-button>
             <el-button
               type="primary"
               link
               icon="delete"
               @click="deleteRow(scope.row)"
-              >删除</el-button
             >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -203,11 +234,17 @@
           />
         </el-form-item>
         <el-form-item label="标签:" prop="tag">
-          <el-input
+          <el-select
             v-model="formData.tag"
             :clearable="true"
-            placeholder="请输入"
-          />
+            :multiple="true"
+            value-key="id"
+            placeholder="请选择"
+          >
+            <div v-for="item in tagList" :key="item.id">
+              <el-option :label="item.tagName" :value="item.id"> </el-option>
+            </div>
+          </el-select>
         </el-form-item>
         <el-form-item label="备注:" prop="remark">
           <el-input
@@ -236,6 +273,7 @@ import {
   findTallyBill,
   getTallyBillList,
 } from "@/api/tally/tallyBill";
+import { getTagsByUser } from "@/api/tally/tallyTags";
 
 import { getTallyCategoryList } from "@/api/tally/tallyCategory";
 
@@ -248,20 +286,28 @@ import {
 } from "@/utils/format";
 import { showDictLabel } from "@/utils/dictionary";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 // 自动化生成的字典（可能为空）以及字段
 const formData = ref({
   categoryId: void 0,
   deliveryMethodId: void 0,
   money: 0,
-  tag: "",
+  tag: [],
   remark: "",
 });
 
+// 用户标签列表
+const tagList = ref([]);
 // 验证规则
 const rule = reactive({});
 
 const elFormRef = ref();
+onMounted(async () => {
+  const res = await getTagsByUser();
+  if (res.code === 0) {
+    tagList.value = res.data.list;
+  }
+});
 
 // =========== 表格控制部分 ===========
 const page = ref(1);
@@ -431,7 +477,7 @@ const closeDialog = () => {
     categoryId: void 0,
     deliveryMethodId: void 0,
     money: 0,
-    tag: "",
+    tag: [],
     remark: "",
   };
 };
