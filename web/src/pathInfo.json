@@ -42,6 +42,12 @@
   "/src/view/systemTools/formCreate/index.vue": "FormGenerator",
   "/src/view/systemTools/index.vue": "System",
   "/src/view/systemTools/system/system.vue": "Config",
+  "/src/view/tally/tallyBill/tallyBill.vue": "TallyBill",
+  "/src/view/tally/tallyBill/tallyBillForm.vue": "TallyBillForm",
+  "/src/view/tally/tallyCategory/tallyCategory.vue": "TallyCategory",
+  "/src/view/tally/tallyCategory/tallyCategoryForm.vue": "TallyCategoryForm",
+  "/src/view/tally/tallyTags/tallyTags.vue": "TallyTags",
+  "/src/view/tally/tallyTags/tallyTagsForm.vue": "TallyTagsForm",
   "/src/plugin/announcement/form/info.vue": "InfoForm",
   "/src/plugin/announcement/view/info.vue": "Info",
   "/src/plugin/email/view/index.vue": "Email"
