@@ -33,3 +33,10 @@ server/uploads/
 *.iml
 web/.pnpm-debug.log
 web/pnpm-lock.yaml
+
+# 自定义配置
+/server/*.sh
+/server/*.yaml
+/server/server
+/web/*.sh
+/web/*.bat
