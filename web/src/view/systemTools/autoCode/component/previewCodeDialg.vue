@@ -1,5 +1,9 @@
 <template>
-  <el-tabs v-model="activeName" tab-position="left" class="h-[calc(100vh-110px)]">
+  <el-tabs
+    v-model="activeName"
+    tab-position="left"
+    class="h-[calc(100vh-110px)]"
+  >
     <el-tab-pane
       v-for="(item, key) in previewCode"
       :key="key"
@@ -26,15 +30,15 @@ const props = defineProps({
     type: Object,
     default() {
       return {}
-    }
-  }
+    },
+  },
 })
 
 const activeName = ref('')
 onMounted(() => {
   marked.setOptions({
     renderer: new marked.Renderer(),
-    highlight: function(code) {
+    highlight: function (code) {
       return hljs.highlightAuto(code).value
     },
     pedantic: false,
@@ -45,7 +49,7 @@ onMounted(() => {
     smartLists: true,
     smartypants: false,
     xhtml: false,
-    langPrefix: 'hljs language-'
+    langPrefix: 'hljs language-',
   })
   for (const key in props.previewCode) {
     if (activeName.value === '') {
@@ -78,5 +82,4 @@ const copy = () => {
 }
 
 defineExpose({ copy })
-
 </script>

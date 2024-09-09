@@ -213,7 +213,7 @@ func (userService *UserService) DeleteUser(id int) (err error) {
 
 func (userService *UserService) SetUserInfo(req system.SysUser) error {
 	return global.GVA_DB.Model(&system.SysUser{}).
-		Select("updated_at", "nick_name", "header_img", "phone", "email", "sideMode", "enable").
+		Select("updated_at", "nick_name", "header_img", "phone", "email", "sideMode", "enable","openid").
 		Where("id=?", req.ID).
 		Updates(map[string]interface{}{
 			"updated_at": time.Now(),
@@ -223,6 +223,7 @@ func (userService *UserService) SetUserInfo(req system.SysUser) error {
 			"email":      req.Email,
 			"side_mode":  req.SideMode,
 			"enable":     req.Enable,
+			"openid":     req.OpenID,
 		}).Error
 }
 
@@ -276,6 +277,20 @@ func (userService *UserService) FindUserById(id int) (user *system.SysUser, err 
 func (userService *UserService) FindUserByUuid(uuid string) (user *system.SysUser, err error) {
 	var u system.SysUser
 	if err = global.GVA_DB.Where("uuid = ?", uuid).First(&u).Error; err != nil {
+		return &u, errors.New("用户不存在")
+	}
+	return &u, nil
+}
+
+//@author: [SliverHorn](https://github.com/SliverHorn)
+//@function: FindUserByOpenid
+//@description: 通过openid获取用户信息
+//@param: openId string
+//@return: err error, user *model.SysUser
+
+func (userService *UserService) FindUserByOpenid(openId string) (user *system.SysUser, err error) {
+	var u system.SysUser
+	if err = global.GVA_DB.Where("openid = ?", openId).First(&u).Error; err != nil {
 		return &u, errors.New("用户不存在")
 	}
 	return &u, nil

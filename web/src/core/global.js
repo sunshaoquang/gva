@@ -15,10 +15,13 @@ const createIconComponent = (name) => ({
   },
 })
 
-const registerIcons = async(app) => {
+const registerIcons = async (app) => {
   const iconModules = import.meta.glob('@/assets/icons/**/*.svg')
   for (const path in iconModules) {
-    const iconName = path.split('/').pop().replace(/\.svg$/, '')
+    const iconName = path
+      .split('/')
+      .pop()
+      .replace(/\.svg$/, '')
     // 如果iconName带空格则不加入到图标库中并且提示名称不合法
     if (iconName.indexOf(' ') !== -1) {
       console.error(`icon ${iconName}.svg includes whitespace`)
@@ -26,8 +29,8 @@ const registerIcons = async(app) => {
     }
     const iconComponent = createIconComponent(iconName)
     config.logs.push({
-      'key': iconName,
-      'label': iconName,
+      key: iconName,
+      label: iconName,
     })
     app.component(iconName, iconComponent)
   }

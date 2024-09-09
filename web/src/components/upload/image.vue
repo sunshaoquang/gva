@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <el-upload
@@ -26,16 +25,16 @@ const emit = defineEmits(['on-success'])
 const props = defineProps({
   imageUrl: {
     type: String,
-    default: ''
+    default: '',
   },
   fileSize: {
     type: Number,
-    default: 2048 // 2M 超出后执行压缩
+    default: 2048, // 2M 超出后执行压缩
   },
   maxWH: {
     type: Number,
-    default: 1920 // 图片长宽上限
-  }
+    default: 1920, // 图片长宽上限
+  },
 })
 
 const beforeImageUpload = (file) => {
@@ -61,7 +60,6 @@ const handleImageSuccess = (res) => {
     emit('on-success', data.file.url)
   }
 }
-
 </script>
 
 <style lang="scss" scoped>

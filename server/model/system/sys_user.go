@@ -7,6 +7,7 @@ import (
 
 type Login interface {
 	GetUsername() string
+	GetOpenID() string
 	GetNickname() string
 	GetUUID() uuid.UUID
 	GetUserId() uint
@@ -18,12 +19,13 @@ var _ Login = new(SysUser)
 
 type SysUser struct {
 	global.GVA_MODEL
-	UUID        uuid.UUID      `json:"uuid" gorm:"index;comment:用户UUID"`                                                     // 用户UUID
+	UUID        uuid.UUID      `json:"uuid" gorm:"column:uuid;index;comment:用户UUID;size:191;"`                               // 用户UUID
 	Username    string         `json:"userName" gorm:"index;comment:用户登录名"`                                                  // 用户登录名
 	Password    string         `json:"-"  gorm:"comment:用户登录密码"`                                                             // 用户登录密码
 	NickName    string         `json:"nickName" gorm:"default:系统用户;comment:用户昵称"`                                            // 用户昵称
 	SideMode    string         `json:"sideMode" gorm:"default:dark;comment:用户侧边主题"`                                          // 用户侧边主题
 	HeaderImg   string         `json:"headerImg" gorm:"default:https://qmplusimg.henrongyi.top/gva_header.jpg;comment:用户头像"` // 用户头像
+	Avatar      string         `json:"avatar" gorm:"default:https://qmplusimg.henrongyi.top/avatar.jpg;comment:微信用户头像"`      // 微信用户头像
 	BaseColor   string         `json:"baseColor" gorm:"default:#fff;comment:基础颜色"`                                           // 基础颜色
 	AuthorityId uint           `json:"authorityId" gorm:"default:888;comment:用户角色ID"`                                        // 用户角色ID
 	Authority   SysAuthority   `json:"authority" gorm:"foreignKey:AuthorityId;references:AuthorityId;comment:用户角色"`
@@ -31,6 +33,7 @@ type SysUser struct {
 	Phone       string         `json:"phone"  gorm:"comment:用户手机号"`                     // 用户手机号
 	Email       string         `json:"email"  gorm:"comment:用户邮箱"`                      // 用户邮箱
 	Enable      int            `json:"enable" gorm:"default:1;comment:用户是否被冻结 1正常 2冻结"` //用户是否被冻结 1正常 2冻结
+	OpenID      string         `json:"openID" gorm:"column:openid;comment:微信用户唯一标识"`    // 微信用户唯一标识
 }
 
 func (SysUser) TableName() string {
@@ -39,6 +42,10 @@ func (SysUser) TableName() string {
 
 func (s *SysUser) GetUsername() string {
 	return s.Username
+}
+
+func (s *SysUser) GetOpenID() string {
+	return s.OpenID
 }
 
 func (s *SysUser) GetNickname() string {

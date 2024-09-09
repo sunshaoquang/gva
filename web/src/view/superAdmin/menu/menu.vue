@@ -2,26 +2,14 @@
   <div>
     <div class="gva-table-box">
       <div class="gva-btn-list">
-        <el-button
-          type="primary"
-          icon="plus"
-          @click="addMenu(0)"
-        >
+        <el-button type="primary" icon="plus" @click="addMenu(0)">
           新增根菜单
         </el-button>
       </div>
 
       <!-- 由于此处菜单跟左侧列表一一对应所以不需要分页 pageSize默认999 -->
-      <el-table
-        :data="tableData"
-        row-key="ID"
-      >
-        <el-table-column
-          align="left"
-          label="ID"
-          min-width="100"
-          prop="ID"
-        />
+      <el-table :data="tableData" row-key="ID">
+        <el-table-column align="left" label="ID" min-width="100" prop="ID" />
         <el-table-column
           align="left"
           label="展示名称"
@@ -39,10 +27,7 @@
           prop="authorityName"
         >
           <template #default="scope">
-            <div
-              v-if="scope.row.meta.icon"
-              class="icon-column"
-            >
+            <div v-if="scope.row.meta.icon" class="icon-column">
               <el-icon>
                 <component :is="scope.row.meta.icon" />
               </el-icon>
@@ -71,7 +56,7 @@
           prop="hidden"
         >
           <template #default="scope">
-            <span>{{ scope.row.hidden ? "隐藏" : "显示" }}</span>
+            <span>{{ scope.row.hidden ? '隐藏' : '显示' }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -80,24 +65,14 @@
           min-width="90"
           prop="parentId"
         />
-        <el-table-column
-          align="left"
-          label="排序"
-          min-width="70"
-          prop="sort"
-        />
+        <el-table-column align="left" label="排序" min-width="70" prop="sort" />
         <el-table-column
           align="left"
           label="文件路径"
           min-width="360"
           prop="component"
         />
-        <el-table-column
-          align="left"
-          fixed="right"
-          label="操作"
-          width="300"
-        >
+        <el-table-column align="left" fixed="right" label="操作" width="300">
           <template #default="scope">
             <el-button
               type="primary"
@@ -137,15 +112,8 @@
         <div class="flex justify-between items-center">
           <span class="text-lg">{{ dialogTitle }}</span>
           <div>
-            <el-button @click="closeDialog">
-              取 消
-            </el-button>
-            <el-button
-              type="primary"
-              @click="enterDialog"
-            >
-              确 定
-            </el-button>
+            <el-button @click="closeDialog"> 取 消 </el-button>
+            <el-button type="primary" @click="enterDialog"> 确 定 </el-button>
           </div>
         </div>
       </template>
@@ -161,10 +129,7 @@
       >
         <el-row class="w-full">
           <el-col :span="16">
-            <el-form-item
-              label="文件路径"
-              prop="component"
-            >
+            <el-form-item label="文件路径" prop="component">
               <el-select
                 v-model="form.component"
                 filterable
@@ -176,13 +141,15 @@
                 @change="fmtComponent"
               >
                 <el-option
-                  v-for="(item,path) in pathOptions"
+                  v-for="(item, path) in pathOptions"
                   :key="path"
                   :label="path"
                   :value="path"
                 />
               </el-select>
-              <span style="font-size: 12px; margin-right: 12px">如果菜单包含子菜单，请创建router-view二级路由页面或者</span><el-button
+              <span style="font-size: 12px; margin-right: 12px"
+                >如果菜单包含子菜单，请创建router-view二级路由页面或者</span
+              ><el-button
                 style="margin-top: 4px"
                 @click="form.component = 'view/routerHolder.vue'"
               >
@@ -191,23 +158,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="展示名称"
-              prop="meta.title"
-            >
-              <el-input
-                v-model="form.meta.title"
-                autocomplete="off"
-              />
+            <el-form-item label="展示名称" prop="meta.title">
+              <el-input v-model="form.meta.title" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row class="w-full">
           <el-col :span="8">
-            <el-form-item
-              label="路由Name"
-              prop="path"
-            >
+            <el-form-item label="路由Name" prop="path">
               <el-input
                 v-model="form.name"
                 autocomplete="off"
@@ -217,16 +175,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              prop="path"
-            >
+            <el-form-item prop="path">
               <template #label>
                 <span style="display: inline-flex; align-items: center">
                   <span>路由Path</span>
                   <el-checkbox
                     v-model="checkFlag"
                     style="margin-left: 12px; height: auto"
-                  >添加参数</el-checkbox>
+                    >添加参数</el-checkbox
+                  >
                 </span>
               </template>
 
@@ -239,31 +196,21 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="是否隐藏"
-            >
+            <el-form-item label="是否隐藏">
               <el-select
                 v-model="form.hidden"
                 style="width: 100%"
                 placeholder="是否在列表隐藏"
               >
-                <el-option
-                  :value="false"
-                  label="否"
-                />
-                <el-option
-                  :value="true"
-                  label="是"
-                />
+                <el-option :value="false" label="否" />
+                <el-option :value="true" label="是" />
               </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row class="w-full">
           <el-col :span="8">
-            <el-form-item
-              label="父节点ID"
-            >
+            <el-form-item label="父节点ID">
               <el-cascader
                 v-model="form.parentId"
                 style="width: 100%"
@@ -282,32 +229,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="图标"
-              prop="meta.icon"
-            >
-              <icon
-                :meta="form.meta"
-              />
+            <el-form-item label="图标" prop="meta.icon">
+              <icon :meta="form.meta" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="排序标记"
-              prop="sort"
-            >
-              <el-input
-                v-model.number="form.sort"
-                autocomplete="off"
-              />
+            <el-form-item label="排序标记" prop="sort">
+              <el-input v-model.number="form.sort" autocomplete="off" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row class="w-full">
           <el-col :span="8">
-            <el-form-item
-              prop="meta.activeName"
-            >
+            <el-form-item prop="meta.activeName">
               <template #label>
                 <div>
                   <span> 高亮菜单 </span>
@@ -328,44 +262,26 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="KeepAlive"
-              prop="meta.keepAlive"
-            >
+            <el-form-item label="KeepAlive" prop="meta.keepAlive">
               <el-select
                 v-model="form.meta.keepAlive"
                 style="width: 100%"
                 placeholder="是否keepAlive缓存页面"
               >
-                <el-option
-                  :value="false"
-                  label="否"
-                />
-                <el-option
-                  :value="true"
-                  label="是"
-                />
+                <el-option :value="false" label="否" />
+                <el-option :value="true" label="是" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item
-              label="CloseTab"
-              prop="meta.closeTab"
-            >
+            <el-form-item label="CloseTab" prop="meta.closeTab">
               <el-select
                 v-model="form.meta.closeTab"
                 style="width: 100%"
                 placeholder="是否自动关闭tab"
               >
-                <el-option
-                  :value="false"
-                  label="否"
-                />
-                <el-option
-                  :value="true"
-                  label="是"
-                />
+                <el-option :value="false" label="否" />
+                <el-option :value="true" label="是" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -391,14 +307,8 @@
                 style="width: 100%"
                 placeholder="是否为基础页面"
               >
-                <el-option
-                  :value="false"
-                  label="否"
-                />
-                <el-option
-                  :value="true"
-                  label="是"
-                />
+                <el-option :value="false" label="否" />
+                <el-option :value="true" label="是" />
               </el-select>
             </el-form-item>
           </el-col>
@@ -406,18 +316,11 @@
       </el-form>
       <div>
         <div class="flex items-center gap-2">
-          <el-button
-            type="primary"
-            icon="edit"
-            @click="addParameter(form)"
-          >
+          <el-button type="primary" icon="edit" @click="addParameter(form)">
             新增菜单参数
           </el-button>
         </div>
-        <el-table
-          :data="form.parameters"
-          style="width: 100%; margin-top: 12px"
-        >
+        <el-table :data="form.parameters" style="width: 100%; margin-top: 12px">
           <el-table-column
             align="left"
             prop="type"
@@ -425,40 +328,20 @@
             width="180"
           >
             <template #default="scope">
-              <el-select
-                v-model="scope.row.type"
-                placeholder="请选择"
-              >
-                <el-option
-                  key="query"
-                  value="query"
-                  label="query"
-                />
-                <el-option
-                  key="params"
-                  value="params"
-                  label="params"
-                />
+              <el-select v-model="scope.row.type" placeholder="请选择">
+                <el-option key="query" value="query" label="query" />
+                <el-option key="params" value="params" label="params" />
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column
-            align="left"
-            prop="key"
-            label="参数key"
-            width="180"
-          >
+          <el-table-column align="left" prop="key" label="参数key" width="180">
             <template #default="scope">
               <div>
                 <el-input v-model="scope.row.key" />
               </div>
             </template>
           </el-table-column>
-          <el-table-column
-            align="left"
-            prop="value"
-            label="参数值"
-          >
+          <el-table-column align="left" prop="value" label="参数值">
             <template #default="scope">
               <div>
                 <el-input v-model="scope.row.value" />
@@ -481,11 +364,7 @@
         </el-table>
 
         <div class="flex items-center gap-2 mt-3">
-          <el-button
-            type="primary"
-            icon="edit"
-            @click="addBtn(form)"
-          >
+          <el-button type="primary" icon="edit" @click="addBtn(form)">
             新增可控按钮
           </el-button>
           <el-icon
@@ -498,10 +377,7 @@
           </el-icon>
         </div>
 
-        <el-table
-          :data="form.menuBtn"
-          style="width: 100%; margin-top: 12px"
-        >
+        <el-table :data="form.menuBtn" style="width: 100%; margin-top: 12px">
           <el-table-column
             align="left"
             prop="name"
@@ -514,12 +390,7 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column
-            align="left"
-            prop="name"
-            label="备注"
-            width="180"
-          >
+          <el-table-column align="left" prop="name" label="备注" width="180">
             <template #default="scope">
               <div>
                 <el-input v-model="scope.row.desc" />
@@ -570,7 +441,7 @@ defineOptions({
 
 const pathOptions = reactive({})
 
-onMounted(()=>{
+onMounted(() => {
   for (let pathInfoKey in pathInfo) {
     // 取消掉最前面的 /src/
     pathOptions[pathInfoKey.replace(/^\/src\//, '')] = pathInfo[pathInfoKey]
@@ -587,7 +458,7 @@ const rules = reactive({
 
 const tableData = ref([])
 // 查询
-const getTableData = async() => {
+const getTableData = async () => {
   const table = await getMenuList()
   if (table.code === 0) {
     tableData.value = table.data
@@ -630,7 +501,7 @@ const addBtn = (form) => {
   })
 }
 // 删除可控按钮
-const deleteBtn = async(btns, index) => {
+const deleteBtn = async (btns, index) => {
   const btn = btns[index]
   if (btn.ID === 0) {
     btns.splice(index, 1)
@@ -675,7 +546,7 @@ const deleteMenu = (ID) => {
     cancelButtonText: '取消',
     type: 'warning',
   })
-    .then(async() => {
+    .then(async () => {
       const res = await deleteBaseMenu({ ID })
       if (res.code === 0) {
         ElMessage({
@@ -723,8 +594,8 @@ const closeDialog = () => {
   dialogFormVisible.value = false
 }
 // 添加menu
-const enterDialog = async() => {
-  menuForm.value.validate(async(valid) => {
+const enterDialog = async () => {
+  menuForm.value.validate(async (valid) => {
     if (valid) {
       let res
       if (isEdit.value) {
@@ -798,7 +669,7 @@ const addMenu = (id) => {
   dialogFormVisible.value = true
 }
 // 修改菜单方法
-const editMenu = async(id) => {
+const editMenu = async (id) => {
   dialogTitle.value = '编辑菜单'
   const res = await getBaseMenuById({ id })
   form.value = res.data.menu

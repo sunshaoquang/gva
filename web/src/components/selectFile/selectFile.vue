@@ -11,15 +11,12 @@
       :accept="accept"
       class="upload-btn"
     >
-      <el-button type="primary">
-        上传文件
-      </el-button>
+      <el-button type="primary"> 上传文件 </el-button>
     </el-upload>
   </div>
 </template>
 
 <script setup>
-
 import { ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getBaseUrl } from '@/utils/format'
@@ -31,15 +28,15 @@ defineOptions({
 const props = defineProps({
   modelValue: {
     type: Array,
-    default: () => []
+    default: () => [],
   },
   limit: {
     type: Number,
-    default: 3
+    default: 3,
   },
   accept: {
     type: String,
-    default: ''
+    default: '',
   },
 })
 
@@ -55,17 +52,17 @@ watch(fileList.value, (val) => {
 
 watch(
   () => props.modelValue,
-  value => {
+  (value) => {
     fileList.value = value
   },
   { immediate: true }
 )
 const uploadSuccess = (res) => {
-  const { data,code } = res
-  if(code !== 0){
+  const { data, code } = res
+  if (code !== 0) {
     ElMessage({
       type: 'error',
-      message: '上传失败'+res.msg
+      message: '上传失败' + res.msg,
     })
     fileList.value.pop()
     return
@@ -73,7 +70,7 @@ const uploadSuccess = (res) => {
   if (data.file) {
     fileList.value.push({
       name: data.file.name,
-      url: data.file.url
+      url: data.file.url,
     })
     fullscreenLoading.value = false
   }
@@ -83,11 +80,9 @@ const uploadSuccess = (res) => {
 const uploadError = (err) => {
   ElMessage({
     type: 'error',
-    message: '上传失败'
+    message: '上传失败',
   })
   fullscreenLoading.value = false
-  emits('on-error',err)
+  emits('on-error', err)
 }
-
 </script>
-

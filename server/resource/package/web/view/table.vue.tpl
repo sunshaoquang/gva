@@ -283,7 +283,7 @@
     </div>
     <el-drawer destroy-on-close size="800" v-model="dialogFormVisible" :show-close="false" :before-close="closeDialog">
        <template #header>
-              <div class="flex justify-between items-center">
+              <div class="flex items-center justify-between">
                 <span class="text-lg">{{"{{"}}type==='create'?'添加':'修改'{{"}}"}}</span>
                 <div>
                   <el-button type="primary" @click="enterDialog">确 定</el-button>

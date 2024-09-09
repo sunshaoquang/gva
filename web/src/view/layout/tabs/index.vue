@@ -8,7 +8,7 @@
       v-model="activeValue"
       :closable="!(historys.length === 1 && $route.name === defaultRouter)"
       type="card"
-      class=" bg-white text-slate-700 dark:text-slate-500  dark:bg-slate-900"
+      class="bg-white text-slate-700 dark:text-slate-500 dark:bg-slate-900"
       @contextmenu.prevent="openContextMenu($event)"
       @tab-click="changeTab"
       @tab-remove="removeTab"
@@ -20,16 +20,25 @@
         :label="item.meta.title"
         :name="getFmtString(item)"
         :tab="item"
-        class="border-none "
+        class="border-none"
       >
         <template #label>
           <span
             :tab="item"
-            :class="activeValue === getFmtString(item) ? 'text-active' : 'text-gray-600 dark:text-slate-400 '"
-          ><i
-             :class="activeValue === getFmtString(item) ? 'text-active' : 'text-gray-600 dark:text-slate-400'"
-           />
-            {{ fmtTitle(item.meta.title,item) }}</span>
+            :class="
+              activeValue === getFmtString(item)
+                ? 'text-active'
+                : 'text-gray-600 dark:text-slate-400 '
+            "
+            ><i
+              :class="
+                activeValue === getFmtString(item)
+                  ? 'text-active'
+                  : 'text-gray-600 dark:text-slate-400'
+              "
+            />
+            {{ fmtTitle(item.meta.title, item) }}</span
+          >
         </template>
       </el-tab-pane>
     </el-tabs>
@@ -40,18 +49,10 @@
       :style="{ left: left + 'px', top: top + 'px' }"
       class="contextmenu"
     >
-      <li @click="closeAll">
-        关闭所有
-      </li>
-      <li @click="closeLeft">
-        关闭左侧
-      </li>
-      <li @click="closeRight">
-        关闭右侧
-      </li>
-      <li @click="closeOther">
-        关闭其他
-      </li>
+      <li @click="closeAll">关闭所有</li>
+      <li @click="closeLeft">关闭左侧</li>
+      <li @click="closeRight">关闭右侧</li>
+      <li @click="closeOther">关闭其他</li>
     </ul>
   </div>
 </template>
@@ -87,10 +88,7 @@ const isMobile = ref(false)
 const rightActive = ref('')
 const defaultRouter = computed(() => userStore.userInfo.authority.defaultRouter)
 const openContextMenu = (e) => {
-  if (
-      historys.value.length === 1 &&
-      route.name === defaultRouter.value
-  ) {
+  if (historys.value.length === 1 && route.name === defaultRouter.value) {
     return false
   }
   let id = ''
@@ -131,7 +129,7 @@ const closeLeft = () => {
     return getFmtString(item) === rightActive.value
   })
   const activeIndex = historys.value.findIndex(
-      (item) => getFmtString(item) === activeValue.value
+    (item) => getFmtString(item) === activeValue.value
   )
   historys.value.splice(0, rightIndex)
   if (rightIndex > activeIndex) {
@@ -148,7 +146,7 @@ const closeRight = () => {
     return getFmtString(item) === rightActive.value
   })
   const activeIndex = historys.value.findIndex(
-      (item) => getFmtString(item) === activeValue.value
+    (item) => getFmtString(item) === activeValue.value
   )
   historys.value.splice(leftIndex + 1, historys.value.length)
   if (leftIndex < activeIndex) {
@@ -171,7 +169,10 @@ const isSame = (route1, route2) => {
   if (route1.name !== route2.name) {
     return false
   }
-  if (Object.keys(route1.query).length !== Object.keys(route2.query).length || Object.keys(route1.params).length !== Object.keys(route2.params).length) {
+  if (
+    Object.keys(route1.query).length !== Object.keys(route2.query).length ||
+    Object.keys(route1.params).length !== Object.keys(route2.params).length
+  ) {
     return false
   }
   for (const key in route1.query) {
@@ -212,9 +213,7 @@ const changeTab = (TabsPaneContext) => {
   })
 }
 const removeTab = (tab) => {
-  const index = historys.value.findIndex(
-      (item) => getFmtString(item) === tab
-  )
+  const index = historys.value.findIndex((item) => getFmtString(item) === tab)
   if (getFmtString(route) === tab) {
     if (historys.value.length === 1) {
       router.push({ name: defaultRouter.value })
@@ -237,38 +236,49 @@ const removeTab = (tab) => {
   historys.value.splice(index, 1)
 }
 
-watch(() => contextMenuVisible.value, () => {
-  if (contextMenuVisible.value) {
-    document.body.addEventListener('click', () => {
-      contextMenuVisible.value = false
-    })
-  } else {
-    document.body.removeEventListener('click', () => {
-      contextMenuVisible.value = false
-    })
+watch(
+  () => contextMenuVisible.value,
+  () => {
+    if (contextMenuVisible.value) {
+      document.body.addEventListener('click', () => {
+        contextMenuVisible.value = false
+      })
+    } else {
+      document.body.removeEventListener('click', () => {
+        contextMenuVisible.value = false
+      })
+    }
   }
-})
+)
 
-watch(() => route, (to, now) => {
-  if (to.name === 'Login' || to.name === 'Reload') {
-    return
+watch(
+  () => route,
+  (to, now) => {
+    if (to.name === 'Login' || to.name === 'Reload') {
+      return
+    }
+    historys.value = historys.value.filter((item) => !item.meta.closeTab)
+    setTab(to)
+    sessionStorage.setItem('historys', JSON.stringify(historys.value))
+    activeValue.value = window.sessionStorage.getItem('activeValue')
+  },
+  { deep: true }
+)
+
+watch(
+  () => historys.value,
+  () => {
+    sessionStorage.setItem('historys', JSON.stringify(historys.value))
+    historyMap.value = {}
+    historys.value.forEach((item) => {
+      historyMap.value[getFmtString(item)] = item
+    })
+    emitter.emit('setKeepAlive', historys.value)
+  },
+  {
+    deep: true,
   }
-  historys.value = historys.value.filter((item) => !item.meta.closeTab)
-  setTab(to)
-  sessionStorage.setItem('historys', JSON.stringify(historys.value))
-  activeValue.value = window.sessionStorage.getItem('activeValue')
-}, { deep: true })
-
-watch(() => historys.value, () => {
-  sessionStorage.setItem('historys', JSON.stringify(historys.value))
-  historyMap.value = {}
-  historys.value.forEach((item) => {
-    historyMap.value[getFmtString(item)] = item
-  })
-  emitter.emit('setKeepAlive', historys.value)
-}, {
-  deep: true
-})
+)
 
 const initPage = () => {
   // 全局监听 关闭当前页面函数
@@ -288,7 +298,7 @@ const initPage = () => {
 
   emitter.on('setQuery', (data) => {
     const index = historys.value.findIndex(
-        (item) => getFmtString(item) === activeValue.value
+      (item) => getFmtString(item) === activeValue.value
     )
     historys.value[index].query = data
     activeValue.value = getFmtString(historys.value[index])
@@ -298,7 +308,7 @@ const initPage = () => {
     sessionStorage.setItem('historys', JSON.stringify(historys.value))
   })
 
-  emitter.on('switchTab', async(data) => {
+  emitter.on('switchTab', async (data) => {
     const index = historys.value.findIndex((item) => item.name === data.name)
     if (index < 0) {
       return
@@ -327,7 +337,7 @@ const initPage = () => {
   ]
   setTab(route)
   historys.value =
-      JSON.parse(sessionStorage.getItem('historys')) || initHistorys
+    JSON.parse(sessionStorage.getItem('historys')) || initHistorys
   if (!window.sessionStorage.getItem('activeValue')) {
     activeValue.value = getFmtString(route)
   } else {
@@ -362,7 +372,6 @@ const middleCloseTab = (e) => {
 </script>
 
 <style lang="scss" scoped>
-
 .contextmenu {
   @apply bg-white dark:bg-slate-900 w-28 m-0 py-2.5 px-0 border border-gray-200 text-sm shadow-md rounded absolute z-50 border-solid dark:border-slate-800;
 }
@@ -371,11 +380,11 @@ const middleCloseTab = (e) => {
   @apply text-slate-700 dark:text-slate-200 text-base list-none px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer;
 }
 
-$base-tag-item-height : 4rem;
+$base-tag-item-height: 4rem;
 
 .gva-tabs {
-  ::v-deep(.el-tabs--card > .el-tabs__header){
-    border:none;
+  ::v-deep(.el-tabs--card > .el-tabs__header) {
+    border: none;
   }
   ::v-deep(.el-tabs__nav-scroll) {
     padding: 4px 4px;
@@ -388,7 +397,7 @@ $base-tag-item-height : 4rem;
   ::v-deep(.el-tabs__header) {
     border-bottom: 0;
   }
-  ::v-deep(.el-tabs__item){
+  ::v-deep(.el-tabs__item) {
     box-sizing: border-box;
     border: 1px solid var(--el-border-color-darker);
     border-radius: 2px;
@@ -400,14 +409,11 @@ $base-tag-item-height : 4rem;
       border: 1px solid var(--el-color-primary);
     }
   }
-  ::v-deep(.el-tabs__item):first-child{
+  ::v-deep(.el-tabs__item):first-child {
     border: 1px solid var(--el-border-color-darker);
     &.is-active {
       border: 1px solid var(--el-color-primary);
     }
   }
-
 }
-
-
 </style>

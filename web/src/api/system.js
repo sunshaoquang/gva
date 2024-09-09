@@ -8,7 +8,7 @@ import service from '@/utils/request'
 export const getSystemConfig = () => {
   return service({
     url: '/system/getSystemConfig',
-    method: 'post'
+    method: 'post',
   })
 }
 
@@ -23,7 +23,7 @@ export const setSystemConfig = (data) => {
   return service({
     url: '/system/setSystemConfig',
     method: 'post',
-    data
+    data,
   })
 }
 
@@ -37,7 +37,7 @@ export const getSystemState = () => {
   return service({
     url: '/system/getServerInfo',
     method: 'post',
-    donNotShowLoading: true
+    donNotShowLoading: true,
   })
 }
 
@@ -50,7 +50,6 @@ export const reloadSystem = (data) => {
   return service({
     url: '/system/reloadSystem',
     method: 'post',
-    data
+    data,
   })
 }
-
