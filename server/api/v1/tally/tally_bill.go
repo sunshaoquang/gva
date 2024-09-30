@@ -5,6 +5,7 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/tally"
 	tallyReq "github.com/flipped-aurora/gin-vue-admin/server/model/tally/request"
+	tallyRes "github.com/flipped-aurora/gin-vue-admin/server/model/tally/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/service"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
 	"github.com/gin-gonic/gin"
@@ -151,6 +152,32 @@ func (tallyBillApi *TallyBillApi) GetTallyBillList(c *gin.Context) {
 			Total:    total,
 			Page:     pageInfo.Page,
 			PageSize: pageInfo.PageSize,
+		}, "获取成功", c)
+	}
+}
+
+// GetTallyBillDetailDataList 获取记账账单表详细列表接口
+// @Tags TallyBill
+// @Summary 获取记账账单表详细列表接口
+// @accept application/json
+// @Produce application/json
+// @Param data query tallyReq.TallyBillDetailSearch true "获取记账账单表详细列表接口"
+// @Success 200 {object} tallyRes.TallyBillDetailResult{data=object,msg=string} "获取成功"
+// @Router /tallyBill/getTallyBillDetailDataList [get]
+func (tallyBillApi *TallyBillApi) GetTallyBillDetailDataList(c *gin.Context) {
+	var pageInfo tallyReq.TallyBillDetailSearch
+	UserId := utils.GetUserID(c)
+	err := c.ShouldBindQuery(&pageInfo)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	if list, err := tallyBillService.GetTallyBillDetailDataInfoList(UserId, pageInfo); err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Error(err))
+		response.FailWithMessage("获取失败", c)
+	} else {
+		response.OkWithDetailed(tallyRes.TallyBillDetailResult{
+			List: list,
 		}, "获取成功", c)
 	}
 }

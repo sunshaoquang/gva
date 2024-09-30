@@ -451,6 +451,7 @@ func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 		},
 		NickName:  user.NickName,
 		HeaderImg: user.HeaderImg,
+		Avatar:    user.Avatar,
 		Phone:     user.Phone,
 		Email:     user.Email,
 		SideMode:  user.SideMode,
@@ -481,6 +482,25 @@ func (b *BaseApi) GetUserInfo(c *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(gin.H{"userInfo": ReqUser}, "获取成功", c)
+}
+
+// GetUserInfo
+// @Tags      SysUser
+// @Summary   检查用户的openid是否存在
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Success   200  {object}  response.Response{data=map[string]interface{},msg=string}  "检查用户是否存在"
+// @Router    /user/CheckUserOpenById [get]
+func (b *BaseApi) CheckUserOpenById(c *gin.Context) {
+	openid := utils.GetUserOpenId(c)
+	_, err := userService.FindUserByOpenid(openid)
+	if err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Error(c.Error(err)))
+		response.FailWithMessage("获取失败", c)
+		return
+	}
+	response.OkWithDetailed(gin.H{"state": true}, "获取成功", c)
 }
 
 // ResetPassword

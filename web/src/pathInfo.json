@@ -42,7 +42,6 @@
   "/src/view/systemTools/formCreate/index.vue": "FormGenerator",
   "/src/view/systemTools/index.vue": "System",
   "/src/view/systemTools/system/system.vue": "Config",
-  "/src/view/tally/tallyBill/tallyBill.vue": "TallyBill",
   "/src/view/tally/tallyBill/tallyBillForm.vue": "TallyBillForm",
   "/src/view/tally/tallyCategory/tallyCategory.vue": "TallyCategory",
   "/src/view/tally/tallyCategory/tallyCategoryForm.vue": "TallyCategoryForm",

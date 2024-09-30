@@ -1,13 +1,14 @@
 package utils
 
 import (
+	"net"
+	"time"
+
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid/v5"
-	"net"
-	"time"
 )
 
 func ClearToken(c *gin.Context) {
@@ -91,6 +92,20 @@ func GetUserUuid(c *gin.Context) uuid.UUID {
 	}
 }
 
+// GetUserOpenId 从Gin的Context中获取从jwt解析出来的用户OpenId
+func GetUserOpenId(c *gin.Context) string {
+	if claims, exists := c.Get("claims"); !exists {
+		if cl, err := GetClaims(c); err != nil {
+			return ""
+		} else {
+			return cl.OpenID
+		}
+	} else {
+		waitUse := claims.(*systemReq.CustomClaims)
+		return waitUse.OpenID
+	}
+}
+
 // GetUserAuthorityId 从Gin的Context中获取从jwt解析出来的用户角色id
 func GetUserAuthorityId(c *gin.Context) uint {
 	if claims, exists := c.Get("claims"); !exists {
@@ -140,6 +155,7 @@ func LoginToken(user system.Login) (token string, claims systemReq.CustomClaims,
 		ID:          user.GetUserId(),
 		NickName:    user.GetNickname(),
 		Username:    user.GetUsername(),
+		OpenID:      user.GetOpenID(),
 		AuthorityId: user.GetAuthorityId(),
 	})
 	token, err = j.CreateToken(claims)

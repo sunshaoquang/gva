@@ -2,6 +2,7 @@ package system
 
 import (
 	"context"
+
 	sysModel "github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
 	"github.com/pkg/errors"
@@ -56,6 +57,7 @@ func (i *initApiIgnore) InitializeData(ctx context.Context) (context.Context, er
 		{Method: "POST", Path: "/init/checkdb"},
 		{Method: "GET", Path: "/info/getInfoDataSource"},
 		{Method: "GET", Path: "/info/getInfoPublic"},
+		{Method: "POST", Path: "/wx/login"},
 	}
 	if err := db.Create(&entities).Error; err != nil {
 		return ctx, errors.Wrap(err, sysModel.SysIgnoreApi{}.TableName()+"表数据初始化失败!")

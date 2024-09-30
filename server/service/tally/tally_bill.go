@@ -1,9 +1,12 @@
 package tally
 
 import (
+	"time"
+
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/tally"
 	tallyReq "github.com/flipped-aurora/gin-vue-admin/server/model/tally/request"
+	tallyRes "github.com/flipped-aurora/gin-vue-admin/server/model/tally/response"
 	"gorm.io/gorm"
 )
 
@@ -79,4 +82,29 @@ func (tallyBillService *TallyBillService) GetTallyBillInfoList(info tallyReq.Tal
 	}
 	err = db.Find(&tallyBills).Error
 	return tallyBills, total, err
+}
+
+// GetTallyBillInfoList 根据用户Id获取用户记账账单表详细列表接口
+// Author [piexlmax](https://github.com/piexlmax)
+func (tallyBillService *TallyBillService) GetTallyBillDetailDataInfoList(id uint, info tallyReq.TallyBillDetailSearch) (list []tallyRes.TallyBillDetailDataList, err error) {
+	// 创建db
+	db := global.GVA_DB.Model(&tally.TallyBill{})
+	var tallyBills []tallyRes.TallyBillDetailDataList
+	if id != 0 {
+		db = db.Where("user_id = ? AND tally_bill.deleted_at is null", id)
+	}
+	// 根据 info.TimeType 来判断当前需要过滤的info.queryTime 时间是开始年 周 月 日 到结束 时间
+	switch info.TimeType {
+	case "year":
+		db = db.Where("tally_bill.created_at BETWEEN ? AND ?", time.Date(info.QueryTime.Year(), 1, 1, 0, 0, 0, 0, time.Local), time.Date(info.QueryTime.Year()+1, 1, 1, 0, 0, 0, 0, time.Local))
+	case "month":
+		db = db.Where("tally_bill.created_at BETWEEN ? AND ?", time.Date(info.QueryTime.Year(), info.QueryTime.Month(), 1, 0, 0, 0, 0, time.Local), time.Date(info.QueryTime.Year(), info.QueryTime.Month()+1, 1, 0, 0, 0, 0, time.Local))
+	case "day":
+		db = db.Where("tally_bill.created_at BETWEEN ? AND ?", time.Date(info.QueryTime.Year(), info.QueryTime.Month(), info.QueryTime.Day(), 0, 0, 0, 0, time.Local), time.Date(info.QueryTime.Year(), info.QueryTime.Month(), info.QueryTime.Day()+1, 0, 0, 0, 0, time.Local))
+	}
+	err = db.Debug().Joins("JOIN tally_category as c ON tally_bill.delivery_method_id = c.id").Select("tally_bill.*", "c.name", "c.icon").Order("tally_bill.created_at desc").Find(&tallyBills).Error
+	if err != nil {
+		return
+	}
+	return tallyBills, err
 }

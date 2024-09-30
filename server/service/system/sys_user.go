@@ -213,7 +213,7 @@ func (userService *UserService) DeleteUser(id int) (err error) {
 
 func (userService *UserService) SetUserInfo(req system.SysUser) error {
 	return global.GVA_DB.Model(&system.SysUser{}).
-		Select("updated_at", "nick_name", "header_img", "phone", "email", "sideMode", "enable","openid").
+		Select("updated_at", "nick_name", "header_img", "phone", "email", "sideMode", "enable", "openid").
 		Where("id=?", req.ID).
 		Updates(map[string]interface{}{
 			"updated_at": time.Now(),
@@ -291,7 +291,7 @@ func (userService *UserService) FindUserByUuid(uuid string) (user *system.SysUse
 func (userService *UserService) FindUserByOpenid(openId string) (user *system.SysUser, err error) {
 	var u system.SysUser
 	if err = global.GVA_DB.Where("openid = ?", openId).First(&u).Error; err != nil {
-		return &u, errors.New("用户不存在")
+		return &u, errors.New("用户OpenId不存在")
 	}
 	return &u, nil
 }
