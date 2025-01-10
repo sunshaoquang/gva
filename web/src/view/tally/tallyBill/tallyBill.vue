@@ -176,6 +176,14 @@
         :rules="rule"
         label-width="80px"
       >
+        <el-form-item label="账单时间">
+          <el-date-picker
+            v-model="formData.createdAt"
+            :clearable="true"
+            type="datetime"
+            placeholder="请选择账单时间"
+          ></el-date-picker>
+        </el-form-item>
         <el-form-item label="交付方式:" prop="deliveryMethodId">
           <el-select
             v-model="formData.deliveryMethodId"

@@ -53,8 +53,9 @@ func (tallyBillApi *TallyBillApi) CreateTallyBill(c *gin.Context) {
 // @Success 200 {object} response.Response{msg=string} "删除成功"
 // @Router /tallyBill/deleteTallyBill [delete]
 func (tallyBillApi *TallyBillApi) DeleteTallyBill(c *gin.Context) {
-	Id := c.Query("Id")
+	Id := c.Query("id")
 	userID := utils.GetUserID(c)
+
 	if err := tallyBillService.DeleteTallyBill(Id, userID); err != nil {
 		global.GVA_LOG.Error("删除失败!", zap.Error(err))
 		response.FailWithMessage("删除失败", c)

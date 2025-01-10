@@ -91,7 +91,7 @@ func (tallyBillService *TallyBillService) GetTallyBillDetailDataInfoList(id uint
 	db := global.GVA_DB.Model(&tally.TallyBill{})
 	var tallyBills []tallyRes.TallyBillDetailDataList
 	if id != 0 {
-		db = db.Where("user_id = ? AND tally_bill.deleted_at is null", id)
+		db = db.Where("user_id = ?", id)
 	}
 	// 根据 info.TimeType 来判断当前需要过滤的info.queryTime 时间是开始年 周 月 日 到结束 时间
 	switch info.TimeType {
