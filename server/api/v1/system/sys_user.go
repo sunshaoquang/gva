@@ -450,12 +450,14 @@ func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 			ID: user.ID,
 		},
 		NickName:  user.NickName,
+		Username:  user.Username,
 		HeaderImg: user.HeaderImg,
 		Avatar:    user.Avatar,
 		Phone:     user.Phone,
 		Email:     user.Email,
 		SideMode:  user.SideMode,
 		Enable:    user.Enable,
+		OpenID:    user.OpenID,
 	})
 	if err != nil {
 		global.GVA_LOG.Error("设置失败!", zap.Error(err))

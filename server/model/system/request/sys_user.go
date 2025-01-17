@@ -45,14 +45,16 @@ type SetUserAuthorities struct {
 }
 
 type ChangeUserInfo struct {
-	ID           uint                  `gorm:"primarykey"`                                                                           // 主键ID
-	NickName     string                `json:"nickName" gorm:"default:系统用户;comment:用户昵称"`                                            // 用户昵称
+	ID           uint                  `gorm:"primarykey"`                                // 主键ID
+	NickName     string                `json:"nickName" gorm:"default:系统用户;comment:用户昵称"` // 用户昵称
+	Username     string                `json:"userName" example:"用户名"`
 	Phone        string                `json:"phone"  gorm:"comment:用户手机号"`                                                          // 用户手机号
 	AuthorityIds []uint                `json:"authorityIds" gorm:"-"`                                                                // 角色ID
 	Email        string                `json:"email"  gorm:"comment:用户邮箱"`                                                           // 用户邮箱
 	HeaderImg    string                `json:"headerImg" gorm:"default:https://qmplusimg.henrongyi.top/gva_header.jpg;comment:用户头像"` // 用户头像
 	Avatar       string                `json:"avatar" gorm:"default:https://qmplusimg.henrongyi.top/gva_header.jpg;comment:用户微信头像"`  // 用户头像
 	SideMode     string                `json:"sideMode"  gorm:"comment:用户侧边主题"`                                                      // 用户侧边主题
-	Enable       int                   `json:"enable" gorm:"comment:冻结用户"`                                                           //冻结用户
+	Enable       int                   `json:"enable" gorm:"comment:冻结用户"`
+	OpenID       string                `json:"openID" gorm:"column:openid;comment:微信用户唯一标识"` // 微信用户唯一标识                                                    //冻结用户
 	Authorities  []system.SysAuthority `json:"-" gorm:"many2many:sys_user_authority;"`
 }

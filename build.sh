@@ -31,7 +31,7 @@ cd $BACKEND_DIR
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://goproxy.cn,direct
 go env -w CGO_ENABLED=0
-go env -w GOARCH=x86_64
+go env -w GOARCH=amd64
 go mod tidy
 go build -o $BACKEND_DIR .
 cd ..

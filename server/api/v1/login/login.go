@@ -229,13 +229,13 @@ func handleWxLogin(request WxLoginRequest) (system.SysUser, WxLoginResponse, err
 	global.GVA_LOG.Debug("得到结果,开始验证是否成功获取数据")
 	if err != nil {
 		global.GVA_LOG.Error("微信一键登录向微信获取数据失败", zap.Error(err))
-		return system.SysUser{}, WxLoginResponse{}, errors.New("Failed to get response from Weixin")
+		return system.SysUser{}, WxLoginResponse{}, errors.New(fmt.Sprintf("Failed to get response from Weixin Error:%s", err))
 	}
 	global.GVA_LOG.Debug("请求获取数据成功...")
 
 	var wxResp WxLoginResponse
 	if err := json.Unmarshal(resp.Bytes(), &wxResp); err != nil {
-		return system.SysUser{}, WxLoginResponse{}, errors.New("Failed to parse response from Weixin")
+		return system.SysUser{}, WxLoginResponse{}, errors.New(fmt.Sprintf("Failed to parse response from Weixin Error:%s", err))
 	}
 	global.GVA_LOG.Debug("解析数据")
 
@@ -247,7 +247,7 @@ func handleWxLogin(request WxLoginRequest) (system.SysUser, WxLoginResponse, err
 	userInfo, err := decryptUserInfo(request.EncryptedData, request.IV, wxResp.SessionKey)
 
 	if err != nil {
-		return system.SysUser{}, WxLoginResponse{}, errors.New("Failed to decrypt user info")
+		return system.SysUser{}, WxLoginResponse{}, errors.New(fmt.Sprintf("Failed to decrypt user info Error:%s", err))
 	}
 	global.GVA_LOG.Debug("转化为明文成功,微信自动登录完成")
 
@@ -259,6 +259,7 @@ func handleWxLogin(request WxLoginRequest) (system.SysUser, WxLoginResponse, err
 			UUID:        uuid.Must(uuid.NewV4()),
 			OpenID:      wxResp.OpenID,
 			NickName:    userInfo.NickName,
+			Username:    fmt.Sprintf("xy_%s", uuid.Must(uuid.NewV4())),
 			Avatar:      userInfo.AvatarURL,
 			AuthorityId: 8881,
 			Authorities: []system.SysAuthority{
@@ -268,16 +269,16 @@ func handleWxLogin(request WxLoginRequest) (system.SysUser, WxLoginResponse, err
 			},
 		}
 		if err := global.GVA_DB.Create(&user).Error; err != nil {
-			return system.SysUser{}, WxLoginResponse{}, errors.New("Failed to create user")
+			return system.SysUser{}, WxLoginResponse{}, errors.New(fmt.Sprintf("Failed to create user Error:%s", err))
 		}
 	} else if err != nil {
-		return system.SysUser{}, WxLoginResponse{}, errors.New("Failed to query user")
+		return system.SysUser{}, WxLoginResponse{}, errors.New(fmt.Sprintf("Failed to query user Error:%s", err))
 	} else {
 		// 用户存在，但 `openid` 不存在
 		if user.OpenID == "" {
 			user.OpenID = wxResp.OpenID
 			if err := global.GVA_DB.Save(&user).Error; err != nil {
-				return system.SysUser{}, WxLoginResponse{}, errors.New("Failed to update user with new OpenID")
+				return system.SysUser{}, WxLoginResponse{}, errors.New(fmt.Sprintf("Failed to update user with new OpenID Error:%s", err))
 			}
 		}
 	}

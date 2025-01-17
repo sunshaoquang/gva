@@ -103,6 +103,17 @@
             >
               <ul>
                 <li class="borderd">
+                  <p class="pb-2.5 text-xl text-gray-600">密保用户名</p>
+                  <p class="pb-2.5 text-lg text-gray-400">
+                    已绑定用户名:{{ userStore.userInfo.userName }}
+                    <a
+                      href="javascript:void(0)"
+                      class="float-right text-blue-400"
+                      @click="changeUserNameFlag = true"
+                    >立即修改</a>
+                  </p>
+                </li>
+                <li class="borderd">
                   <p class="pb-2.5 text-xl text-gray-600">密保手机</p>
                   <p class="pb-2.5 text-lg text-gray-400">
                     已绑定手机:{{ userStore.userInfo.phone }}
@@ -121,6 +132,17 @@
                       href="javascript:void(0)"
                       class="float-right text-blue-400"
                       @click="changeEmailFlag = true"
+                    >立即修改</a>
+                  </p>
+                </li>
+                <li class="borderd pt-2.5">
+                  <p class="pb-2.5 text-xl text-gray-600">密保记账小程序</p>
+                  <p class="pb-2.5 text-lg text-gray-400">
+                    已绑定小程序：{{ userStore.userInfo.openID }}
+                    <a
+                      href="javascript:void(0)"
+                      class="float-right text-blue-400"
+                      @click="changeTallyFlag = true"
                     >立即修改</a>
                   </p>
                 </li>
@@ -209,7 +231,37 @@
         </div>
       </template>
     </el-dialog>
+    
+    <el-dialog
+      v-model="changeUserNameFlag"
+      title="绑定手机"
+      width="600px"
+    >
+      <el-form :model="userNameForm">
+        <el-form-item
+          label="用户名"
+          label-width="120px"
+        >
+          <el-input
+            v-model="userNameForm.userName"
+            placeholder="请输入用户名"
+            autocomplete="off"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
+            @click="closeChangeUserName"
+          >取消</el-button>
+          <el-button
+            type="primary"
 
+            @click="changeUserName"
+          >更改</el-button>
+        </span>
+      </template>
+    </el-dialog>
     <el-dialog
       v-model="changePhoneFlag"
       title="绑定手机"
@@ -260,7 +312,57 @@
         </span>
       </template>
     </el-dialog>
+    <el-dialog
+      v-model="changeTallyFlag"
+      title="绑定小程序"
+      width="600px"
+    >
+      <el-form :model="tallyForm">
+        <el-form-item
+          label="小程序"
+          label-width="120px"
+        >
+          <el-input
+            v-model="tallyForm.tally"
+            placeholder="请输入小程序openID"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item
+          label="验证码"
+          label-width="120px"
+        >
+          <div class="flex w-full gap-4">
+            <el-input
+              v-model="tallyForm.code"
+              class="flex-1"
+              placeholder="请自行设计邮件服务，此处为模拟随便写"
+              autocomplete="off"
+              style="width:300px"
+            />
+            <el-button
+              type="primary"
+              :disabled="tallyTime>0"
+              @click="getTallyCode"
+            >{{ tallyTime>0?`(${tallyTime}s)后重新获取`:'获取验证码' }}</el-button>
+          </div>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button
 
+            @click="closeChangeTally"
+          >取消</el-button>
+          <el-button
+            type="primary"
+
+            @click="changeTally"
+          >更改</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    
     <el-dialog
       v-model="changeEmailFlag"
       title="绑定邮箱"
@@ -424,6 +526,25 @@ const handleClick = (tab, event) => {
   console.log(tab, event)
 }
 
+const changeUserNameFlag = ref(false)
+const userNameForm = reactive({
+  userName: ''
+})
+
+const closeChangeUserName = () => {
+  changeUserNameFlag.value = false
+  userNameForm.userName = ''
+}
+
+const changeUserName = async() => {
+  const res = await setSelfInfo({ userName: userNameForm.userName })
+  if (res.code === 0) {
+    ElMessage.success('修改成功')
+    userStore.ResetUserInfo({ userName: userNameForm.userName })
+    closeChangeUserName()
+  }
+}
+
 const changePhoneFlag = ref(false)
 const time = ref(0)
 const phoneForm = reactive({
@@ -457,12 +578,49 @@ const changePhone = async() => {
   }
 }
 
+
+
+const changeTallyFlag = ref(false)
+const tallyTime = ref(0)
+const tallyForm = reactive({
+  tally: '',
+  code: ''
+})
+
+const getTallyCode = async() => {
+  tallyTime.value = 60
+  let timer = setInterval(() => {
+    tallyTime.value--
+    if (tallyTime.value <= 0) {
+      clearInterval(timer)
+      timer = null
+    }
+  }, 1000)
+}
+
+const closeChangeTally = () => {
+  changeTallyFlag.value = false
+  tallyForm.tally = ''
+  tallyForm.code = ''
+}
+
+const changeTally = async() => {
+  const res = await setSelfInfo({ openID: tallyForm.tally })
+  if (res.code === 0) {
+    ElMessage.success('修改成功')
+    userStore.ResetUserInfo({ openID: tallyForm.tally })
+    closeChangeTally()
+  }
+}
+
+
 const changeEmailFlag = ref(false)
 const emailTime = ref(0)
 const emailForm = reactive({
   email: '',
   code: ''
 })
+
 
 const getEmailCode = async() => {
   emailTime.value = 60
