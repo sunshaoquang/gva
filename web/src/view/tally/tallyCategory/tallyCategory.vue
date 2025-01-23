@@ -114,7 +114,7 @@
         />
         <el-table-column align="left" label="类目等级" prop="parId" width="120">
           <template #default="scope">
-            {{ ["根", "子"]?.[scope.row.parId] + "类目" }}
+            {{ ["根", "子"]?.[~~!!scope.row.parId] + "类目" }}
           </template>
         </el-table-column>
         <el-table-column align="left" label="是否启用" prop="state" width="120">

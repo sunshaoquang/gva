@@ -234,7 +234,7 @@
     
     <el-dialog
       v-model="changeUserNameFlag"
-      title="绑定手机"
+      title="绑定用户名"
       width="600px"
     >
       <el-form :model="userNameForm">
