@@ -70,13 +70,13 @@
           <template #default="scope">
             <el-tag
               :type="
-                ['primary', 'success', 'danger'][scope.row.deliveryMethodId]
+                ['primary', 'danger', 'success'][scope.row.categoryId]
               "
             >
               {{
                 showDictLabel(
                   categoryListData,
-                  scope.row.deliveryMethodId,
+                  scope.row.categoryId,
                   "id",
                   "name"
                 )
@@ -89,7 +89,7 @@
             {{
               showDictLabel(
                 categoryListData,
-                scope.row.categoryId,
+                scope.row.deliveryMethodId,
                 "id",
                 "name"
               )
@@ -184,9 +184,9 @@
             placeholder="请选择账单时间"
           ></el-date-picker>
         </el-form-item>
-        <el-form-item label="交付方式:" prop="deliveryMethodId">
+        <el-form-item label="交付方式:" prop="categoryId">
           <el-select
-            v-model="formData.deliveryMethodId"
+            v-model="formData.categoryId"
             :clearable="true"
             placeholder="请选择"
             @change="onDeliveryMethodChange"
@@ -201,9 +201,9 @@
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item label="分类类别:" prop="categoryId">
+        <el-form-item label="分类类别:" prop="deliveryMethodId">
           <el-select
-            v-model="formData.categoryId"
+            v-model="formData.deliveryMethodId"
             :clearable="true"
             placeholder="请选择"
           >
@@ -388,6 +388,11 @@ const handleSelectionChange = (val) => {
 
 // onDeliveryMethodChange
 const onDeliveryMethodChange = async (val) => {
+  console.log(formData.value,val);
+  
+  if(formData.value.categoryId !== val){
+    formData.value.deliveryMethodId = void 0;
+  }
   if (val === void 0) {
     categoryListData1.value = [];
     return;
@@ -449,7 +454,7 @@ const updateTallyBillFunc = async (row) => {
   type.value = "update";
   if (res.code === 0) {
     formData.value = res.data;
-    onDeliveryMethodChange(res.data.deliveryMethodId);
+    onDeliveryMethodChange(res.data.categoryId);
     dialogFormVisible.value = true;
   }
 };
