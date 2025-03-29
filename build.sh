@@ -23,7 +23,7 @@ mkdir -p $TEMP_DIR
 echo "正在打包前端代码..."
 cd $FRONTEND_DIR
 pnpm install
-pnpm build
+pnpm build -y
 cd ..
 
 echo "正在打包后端代码..."
