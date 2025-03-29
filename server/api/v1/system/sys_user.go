@@ -8,13 +8,13 @@ import (
 	"github.com/flipped-aurora/gin-vue-admin/server/model/App"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	systemRes "github.com/flipped-aurora/gin-vue-admin/server/model/system/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
-
 	"github.com/gin-gonic/gin"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
@@ -139,15 +139,7 @@ func (b *BaseApi) AppWxLogin(c *gin.Context) {
 
 // TokenNext 登录以后签发jwt
 func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
-	j := &utils.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
-	claims := j.CreateClaims(systemReq.BaseClaims{
-		UUID:        user.UUID,
-		ID:          user.ID,
-		NickName:    user.NickName,
-		Username:    user.Username,
-		AuthorityId: user.AuthorityId,
-	})
-	token, err := j.CreateToken(claims)
+	token, claims, err := utils.LoginToken(&user)
 	if err != nil {
 		global.GVA_LOG.Error("获取token失败!", zap.Error(err))
 		response.FailWithMessage("获取token失败", c)
@@ -185,7 +177,7 @@ func (b *BaseApi) TokenNext(c *gin.Context, user system.SysUser) {
 			response.FailWithMessage("jwt作废失败", c)
 			return
 		}
-		if err := jwtService.SetRedisJWT(token, user.Username); err != nil {
+		if err := jwtService.SetRedisJWT(token, user.GetUsername()); err != nil {
 			response.FailWithMessage("设置登录状态失败", c)
 			return
 		}
@@ -270,11 +262,11 @@ func (b *BaseApi) ChangePassword(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  body      request.PageInfo                                        true  "页码, 每页大小"
+// @Param     data  body      systemReq.GetUserList                                        true  "页码, 每页大小"
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取用户列表,返回包括列表,总数,页码,每页数量"
 // @Router    /user/getUserList [post]
 func (b *BaseApi) GetUserList(c *gin.Context) {
-	var pageInfo request.PageInfo
+	var pageInfo systemReq.GetUserList
 	err := c.ShouldBindJSON(&pageInfo)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
@@ -327,17 +319,17 @@ func (b *BaseApi) SetUserAuthority(c *gin.Context) {
 		return
 	}
 	claims := utils.GetUserInfo(c)
-	j := &utils.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
 	claims.AuthorityId = sua.AuthorityId
-	if token, err := j.CreateToken(*claims); err != nil {
+	token, err := utils.NewJWT().CreateToken(*claims)
+	if err != nil {
 		global.GVA_LOG.Error("修改失败!", zap.Error(err))
 		response.FailWithMessage(err.Error(), c)
-	} else {
-		c.Header("new-token", token)
-		c.Header("new-expires-at", strconv.FormatInt(claims.ExpiresAt.Unix(), 10))
-		utils.SetToken(c, token, int((claims.ExpiresAt.Unix()-time.Now().Unix())/60))
-		response.OkWithMessage("修改成功", c)
+		return
 	}
+	c.Header("new-token", token)
+	c.Header("new-expires-at", strconv.FormatInt(claims.ExpiresAt.Unix(), 10))
+	utils.SetToken(c, token, int((claims.ExpiresAt.Unix()-time.Now().Unix())/60))
+	response.OkWithMessage("修改成功", c)
 }
 
 // SetUserAuthorities
@@ -356,7 +348,8 @@ func (b *BaseApi) SetUserAuthorities(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	err = userService.SetUserAuthorities(sua.ID, sua.AuthorityIds)
+	authorityID := utils.GetUserAuthorityId(c)
+	err = userService.SetUserAuthorities(authorityID, sua.ID, sua.AuthorityIds)
 	if err != nil {
 		global.GVA_LOG.Error("修改失败!", zap.Error(err))
 		response.FailWithMessage("修改失败", c)
@@ -388,7 +381,7 @@ func (b *BaseApi) DeleteUser(c *gin.Context) {
 	}
 	jwtId := utils.GetUserID(c)
 	if jwtId == uint(reqId.ID) {
-		response.FailWithMessage("删除失败, 自杀失败", c)
+		response.FailWithMessage("删除失败, 无法删除自己。", c)
 		return
 	}
 	err = userService.DeleteUser(reqId.ID)
@@ -421,9 +414,9 @@ func (b *BaseApi) SetUserInfo(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-
 	if len(user.AuthorityIds) != 0 {
-		err = userService.SetUserAuthorities(user.ID, user.AuthorityIds)
+		authorityID := utils.GetUserAuthorityId(c)
+		err = userService.SetUserAuthorities(authorityID, user.ID, user.AuthorityIds)
 		if err != nil {
 			global.GVA_LOG.Error("设置失败!", zap.Error(err))
 			response.FailWithMessage("设置失败", c)
@@ -438,7 +431,6 @@ func (b *BaseApi) SetUserInfo(c *gin.Context) {
 		HeaderImg: user.HeaderImg,
 		Phone:     user.Phone,
 		Email:     user.Email,
-		SideMode:  user.SideMode,
 		Enable:    user.Enable,
 	})
 	if err != nil {
@@ -474,9 +466,34 @@ func (b *BaseApi) SetSelfInfo(c *gin.Context) {
 		HeaderImg: user.HeaderImg,
 		Phone:     user.Phone,
 		Email:     user.Email,
-		SideMode:  user.SideMode,
 		Enable:    user.Enable,
 	})
+	if err != nil {
+		global.GVA_LOG.Error("设置失败!", zap.Error(err))
+		response.FailWithMessage("设置失败", c)
+		return
+	}
+	response.OkWithMessage("设置成功", c)
+}
+
+// SetSelfSetting
+// @Tags      SysUser
+// @Summary   设置用户配置
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Param     data  body      map[string]interface{}  true  "用户配置数据"
+// @Success   200   {object}  response.Response{data=map[string]interface{},msg=string}  "设置用户配置"
+// @Router    /user/SetSelfSetting [put]
+func (b *BaseApi) SetSelfSetting(c *gin.Context) {
+	var req common.JSONMap
+	err := c.ShouldBindJSON(&req)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	err = userService.SetSelfSetting(req, utils.GetUserID(c))
 	if err != nil {
 		global.GVA_LOG.Error("设置失败!", zap.Error(err))
 		response.FailWithMessage("设置失败", c)

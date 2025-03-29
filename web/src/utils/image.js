@@ -7,11 +7,19 @@ export default class ImageCompress {
 
   compress() {
     // 压缩
+<<<<<<< HEAD
     const fileType = this.file.type;
     const fileSize = this.file.size / 1024;
     return new Promise((resolve) => {
       const reader = new FileReader();
       reader.readAsDataURL(this.file);
+=======
+    const fileType = this.file.type
+    const fileSize = this.file.size / 1024
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(this.file)
+>>>>>>> main
       reader.onload = () => {
         const canvas = document.createElement("canvas");
         const img = document.createElement("img");
@@ -26,7 +34,11 @@ export default class ImageCompress {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
+<<<<<<< HEAD
           const newImgData = canvas.toDataURL(fileType, 0.9);
+=======
+          const newImgData = canvas.toDataURL(fileType, 0.9)
+>>>>>>> main
 
           // 压缩宽高后的图像大小
           const newImgSize = this.fileSizeKB(newImgData);
@@ -68,9 +80,15 @@ export default class ImageCompress {
   }
 
   fileSizeKB(dataURL) {
+<<<<<<< HEAD
     let sizeKB = 0;
     sizeKB = Math.round((dataURL.split(",")[1].length * 3) / 4 / 1024);
     return sizeKB;
+=======
+    let sizeKB = 0
+    sizeKB = Math.round((dataURL.split(',')[1].length * 3) / 4 / 1024)
+    return sizeKB
+>>>>>>> main
   }
 
   /**
@@ -91,6 +109,7 @@ export default class ImageCompress {
   }
 }
 
+<<<<<<< HEAD
 const path = import.meta.env.VITE_FILE_API + "/";
 export const getUrl = (url) =>
   url && url.slice(0, 4) !== "http" ? path + url : url;
@@ -109,3 +128,38 @@ export const isImageMime = (type) =>
   type == "image/png" ||
   type == "image/webp" ||
   type == "image/svg+xml";
+=======
+const path = import.meta.env.VITE_FILE_API
+export const getUrl = (url) => {
+  if (url && url.slice(0, 4) !== 'http') {
+    if (path === '/') {
+      return url
+    }
+    if (url.slice(0, 1) === '/') {
+      return path + url
+    }
+    return path + '/' + url
+  } else {
+    return url
+  }
+}
+
+const VIDEO_EXTENSIONS = ['.mp4', '.mov', '.webm', '.ogg']
+const VIDEO_MIME_TYPES = ['video/mp4', 'video/webm', 'video/ogg']
+const IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']
+
+export const isVideoExt = (url) => {
+  const urlLower = url?.toLowerCase() || ''
+  return urlLower !== '' && VIDEO_EXTENSIONS.some(ext => urlLower.endsWith(ext))
+}
+
+export const isVideoMime = (type) => {
+  const typeLower = type?.toLowerCase() || ''
+  return typeLower !== '' && VIDEO_MIME_TYPES.includes(typeLower)
+}
+
+export const isImageMime = (type) => {
+  const typeLower = type?.toLowerCase() || ''
+  return typeLower !== '' && IMAGE_MIME_TYPES.includes(typeLower)
+}
+>>>>>>> main

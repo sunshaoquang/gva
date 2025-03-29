@@ -6,6 +6,7 @@ import (
 	adapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/example"
 	sysModel "github.com/flipped-aurora/gin-vue-admin/server/model/system"
+	"github.com/flipped-aurora/gin-vue-admin/server/plugin/announcement/model"
 	"github.com/flipped-aurora/gin-vue-admin/server/service/system"
 	"gorm.io/gorm"
 )
@@ -19,7 +20,7 @@ func init() {
 	system.RegisterInit(initOrderEnsureTables, &ensureTables{})
 }
 
-func (ensureTables) InitializerName() string {
+func (e *ensureTables) InitializerName() string {
 	return "ensure_tables_created"
 }
 func (e *ensureTables) InitializeData(ctx context.Context) (next context.Context, err error) {
@@ -48,8 +49,11 @@ func (e *ensureTables) MigrateTable(ctx context.Context) (context.Context, error
 		sysModel.SysBaseMenuParameter{},
 		sysModel.SysBaseMenuBtn{},
 		sysModel.SysAuthorityBtn{},
-		sysModel.SysAutoCode{},
+		sysModel.SysAutoCodePackage{},
 		sysModel.SysExportTemplate{},
+		sysModel.Condition{},
+		sysModel.JoinTemplate{},
+		sysModel.SysParams{},
 
 		adapter.CasbinRule{},
 
@@ -57,6 +61,9 @@ func (e *ensureTables) MigrateTable(ctx context.Context) (context.Context, error
 		example.ExaCustomer{},
 		example.ExaFileChunk{},
 		example.ExaFileUploadAndDownload{},
+		example.ExaAttachmentCategory{},
+
+		model.Info{},
 	}
 	for _, t := range tables {
 		_ = db.AutoMigrate(&t)
@@ -84,8 +91,10 @@ func (e *ensureTables) TableCreated(ctx context.Context) bool {
 		sysModel.SysBaseMenuParameter{},
 		sysModel.SysBaseMenuBtn{},
 		sysModel.SysAuthorityBtn{},
-		sysModel.SysAutoCode{},
+		sysModel.SysAutoCodePackage{},
 		sysModel.SysExportTemplate{},
+		sysModel.Condition{},
+		sysModel.JoinTemplate{},
 
 		adapter.CasbinRule{},
 
@@ -93,6 +102,9 @@ func (e *ensureTables) TableCreated(ctx context.Context) bool {
 		example.ExaCustomer{},
 		example.ExaFileChunk{},
 		example.ExaFileUploadAndDownload{},
+		example.ExaAttachmentCategory{},
+
+		model.Info{},
 	}
 	yes := true
 	for _, t := range tables {

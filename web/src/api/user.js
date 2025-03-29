@@ -15,11 +15,10 @@ export const login = (data) => {
 // @Produce  application/json
 // @Param data body {username:"string",password:"string"}
 // @Router /base/captcha [post]
-export const captcha = (data) => {
+export const captcha = () => {
   return service({
     url: '/base/captcha',
-    method: 'post',
-    data: data
+    method: 'post'
   })
 }
 
@@ -122,6 +121,22 @@ export const setUserInfo = (data) => {
 export const setSelfInfo = (data) => {
   return service({
     url: '/user/setSelfInfo',
+    method: 'put',
+    data: data
+  })
+}
+
+// @Tags SysUser
+// @Summary 设置自身界面配置
+// @Security ApiKeyAuth
+// @accept application/json
+// @Produce application/json
+// @Param data body model.SysUser true "设置自身界面配置"
+// @Success 200 {string} string "{"success":true,"data":{},"msg":"修改成功"}"
+// @Router /user/setSelfSetting [put]
+export const setSelfSetting = (data) => {
+  return service({
+    url: '/user/setSelfSetting',
     method: 'put',
     data: data
   })

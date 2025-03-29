@@ -14,10 +14,14 @@ type ApiGroup struct {
 	DictionaryApi
 	AuthorityMenuApi
 	OperationRecordApi
-	AutoCodeHistoryApi
 	DictionaryDetailApi
 	AuthorityBtnApi
 	SysExportTemplateApi
+	AutoCodePluginApi
+	AutoCodePackageApi
+	AutoCodeHistoryApi
+	AutoCodeTemplateApi
+	SysParamsApi
 }
 
 var (
@@ -27,13 +31,17 @@ var (
 	userService             = service.ServiceGroupApp.SystemServiceGroup.UserService
 	initDBService           = service.ServiceGroupApp.SystemServiceGroup.InitDBService
 	casbinService           = service.ServiceGroupApp.SystemServiceGroup.CasbinService
-	autoCodeService         = service.ServiceGroupApp.SystemServiceGroup.AutoCodeService
 	baseMenuService         = service.ServiceGroupApp.SystemServiceGroup.BaseMenuService
 	authorityService        = service.ServiceGroupApp.SystemServiceGroup.AuthorityService
 	dictionaryService       = service.ServiceGroupApp.SystemServiceGroup.DictionaryService
-	systemConfigService     = service.ServiceGroupApp.SystemServiceGroup.SystemConfigService
-	operationRecordService  = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
-	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistoryService
-	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DictionaryDetailService
 	authorityBtnService     = service.ServiceGroupApp.SystemServiceGroup.AuthorityBtnService
+	systemConfigService     = service.ServiceGroupApp.SystemServiceGroup.SystemConfigService
+	sysParamsService        = service.ServiceGroupApp.SystemServiceGroup.SysParamsService
+	operationRecordService  = service.ServiceGroupApp.SystemServiceGroup.OperationRecordService
+	dictionaryDetailService = service.ServiceGroupApp.SystemServiceGroup.DictionaryDetailService
+	autoCodeService         = service.ServiceGroupApp.SystemServiceGroup.AutoCodeService
+	autoCodePluginService   = service.ServiceGroupApp.SystemServiceGroup.AutoCodePlugin
+	autoCodePackageService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodePackage
+	autoCodeHistoryService  = service.ServiceGroupApp.SystemServiceGroup.AutoCodeHistory
+	autoCodeTemplateService = service.ServiceGroupApp.SystemServiceGroup.AutoCodeTemplate
 )

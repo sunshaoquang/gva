@@ -3,14 +3,19 @@ package system
 import (
 	"errors"
 	"fmt"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common"
+	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	"time"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
+<<<<<<< HEAD
 	"github.com/flipped-aurora/gin-vue-admin/server/model/App"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
+=======
+>>>>>>> main
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	"github.com/flipped-aurora/gin-vue-admin/server/utils"
-	"github.com/gofrs/uuid/v5"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -23,6 +28,8 @@ import (
 
 type UserService struct{}
 
+var UserServiceApp = new(UserService)
+
 func (userService *UserService) Register(u system.SysUser) (userInter system.SysUser, err error) {
 	var user system.SysUser
 	if !errors.Is(global.GVA_DB.Where("username = ?", u.Username).First(&user).Error, gorm.ErrRecordNotFound) { // 判断用户名是否注册
@@ -30,7 +37,7 @@ func (userService *UserService) Register(u system.SysUser) (userInter system.Sys
 	}
 	// 否则 附加uuid 密码hash加密 注册
 	u.Password = utils.BcryptHash(u.Password)
-	u.UUID = uuid.Must(uuid.NewV4())
+	u.UUID = uuid.New()
 	err = global.GVA_DB.Create(&u).Error
 	return u, err
 }
@@ -111,11 +118,25 @@ func (userService *UserService) ChangePassword(u *system.SysUser, newPassword st
 //@param: info request.PageInfo
 //@return: err error, list interface{}, total int64
 
-func (userService *UserService) GetUserInfoList(info request.PageInfo) (list interface{}, total int64, err error) {
+func (userService *UserService) GetUserInfoList(info systemReq.GetUserList) (list interface{}, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&system.SysUser{})
 	var userList []system.SysUser
+
+	if info.NickName != "" {
+		db = db.Where("nick_name LIKE ?", "%"+info.NickName+"%")
+	}
+	if info.Phone != "" {
+		db = db.Where("phone LIKE ?", "%"+info.Phone+"%")
+	}
+	if info.Username != "" {
+		db = db.Where("username LIKE ?", "%"+info.Username+"%")
+	}
+	if info.Email != "" {
+		db = db.Where("email LIKE ?", "%"+info.Email+"%")
+	}
+
 	err = db.Count(&total).Error
 	if err != nil {
 		return
@@ -131,11 +152,45 @@ func (userService *UserService) GetUserInfoList(info request.PageInfo) (list int
 //@return: err error
 
 func (userService *UserService) SetUserAuthority(id uint, authorityId uint) (err error) {
+
 	assignErr := global.GVA_DB.Where("sys_user_id = ? AND sys_authority_authority_id = ?", id, authorityId).First(&system.SysUserAuthority{}).Error
 	if errors.Is(assignErr, gorm.ErrRecordNotFound) {
 		return errors.New("该用户无此角色")
 	}
-	err = global.GVA_DB.Where("id = ?", id).First(&system.SysUser{}).Update("authority_id", authorityId).Error
+
+	var authority system.SysAuthority
+	err = global.GVA_DB.Where("authority_id = ?", authorityId).First(&authority).Error
+	if err != nil {
+		return err
+	}
+	var authorityMenu []system.SysAuthorityMenu
+	var authorityMenuIDs []string
+	err = global.GVA_DB.Where("sys_authority_authority_id = ?", authorityId).Find(&authorityMenu).Error
+	if err != nil {
+		return err
+	}
+
+	for i := range authorityMenu {
+		authorityMenuIDs = append(authorityMenuIDs, authorityMenu[i].MenuId)
+	}
+
+	var authorityMenus []system.SysBaseMenu
+	err = global.GVA_DB.Preload("Parameters").Where("id in (?)", authorityMenuIDs).Find(&authorityMenus).Error
+	if err != nil {
+		return err
+	}
+	hasMenu := false
+	for i := range authorityMenus {
+		if authorityMenus[i].Name == authority.DefaultRouter {
+			hasMenu = true
+			break
+		}
+	}
+	if !hasMenu {
+		return errors.New("找不到默认路由,无法切换本角色")
+	}
+
+	err = global.GVA_DB.Model(&system.SysUser{}).Where("id = ?", id).Update("authority_id", authorityId).Error
 	return err
 }
 
@@ -145,14 +200,24 @@ func (userService *UserService) SetUserAuthority(id uint, authorityId uint) (err
 //@param: id uint, authorityIds []string
 //@return: err error
 
-func (userService *UserService) SetUserAuthorities(id uint, authorityIds []uint) (err error) {
+func (userService *UserService) SetUserAuthorities(adminAuthorityID, id uint, authorityIds []uint) (err error) {
 	return global.GVA_DB.Transaction(func(tx *gorm.DB) error {
-		TxErr := tx.Delete(&[]system.SysUserAuthority{}, "sys_user_id = ?", id).Error
+		var user system.SysUser
+		TxErr := tx.Where("id = ?", id).First(&user).Error
+		if TxErr != nil {
+			global.GVA_LOG.Debug(TxErr.Error())
+			return errors.New("查询用户数据失败")
+		}
+		TxErr = tx.Delete(&[]system.SysUserAuthority{}, "sys_user_id = ?", id).Error
 		if TxErr != nil {
 			return TxErr
 		}
 		var useAuthority []system.SysUserAuthority
 		for _, v := range authorityIds {
+			e := AuthorityServiceApp.CheckAuthorityIDAuth(adminAuthorityID, v)
+			if e != nil {
+				return e
+			}
 			useAuthority = append(useAuthority, system.SysUserAuthority{
 				SysUserId: id, SysAuthorityAuthorityId: v,
 			})
@@ -161,7 +226,7 @@ func (userService *UserService) SetUserAuthorities(id uint, authorityIds []uint)
 		if TxErr != nil {
 			return TxErr
 		}
-		TxErr = tx.Where("id = ?", id).First(&system.SysUser{}).Update("authority_id", authorityIds[0]).Error
+		TxErr = tx.Model(&user).Update("authority_id", authorityIds[0]).Error
 		if TxErr != nil {
 			return TxErr
 		}
@@ -196,7 +261,7 @@ func (userService *UserService) DeleteUser(id int) (err error) {
 
 func (userService *UserService) SetUserInfo(req system.SysUser) error {
 	return global.GVA_DB.Model(&system.SysUser{}).
-		Select("updated_at", "nick_name", "header_img", "phone", "email", "sideMode", "enable").
+		Select("updated_at", "nick_name", "header_img", "phone", "email", "enable").
 		Where("id=?", req.ID).
 		Updates(map[string]interface{}{
 			"updated_at": time.Now(),
@@ -204,13 +269,12 @@ func (userService *UserService) SetUserInfo(req system.SysUser) error {
 			"header_img": req.HeaderImg,
 			"phone":      req.Phone,
 			"email":      req.Email,
-			"side_mode":  req.SideMode,
 			"enable":     req.Enable,
 		}).Error
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: SetUserInfo
+//@function: SetSelfInfo
 //@description: 设置用户信息
 //@param: reqUser model.SysUser
 //@return: err error, user model.SysUser
@@ -219,6 +283,16 @@ func (userService *UserService) SetSelfInfo(req system.SysUser) error {
 	return global.GVA_DB.Model(&system.SysUser{}).
 		Where("id=?", req.ID).
 		Updates(req).Error
+}
+
+//@author: [piexlmax](https://github.com/piexlmax)
+//@function: SetSelfSetting
+//@description: 设置用户配置
+//@param: req datatypes.JSON, uid uint
+//@return: err error
+
+func (userService *UserService) SetSelfSetting(req common.JSONMap, uid uint) error {
+	return global.GVA_DB.Model(&system.SysUser{}).Where("id = ?", uid).Update("origin_setting", req).Error
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -265,7 +339,7 @@ func (userService *UserService) FindUserByUuid(uuid string) (user *system.SysUse
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: resetPassword
+//@function: ResetPassword
 //@description: 修改用户密码
 //@param: ID uint
 //@return: err error

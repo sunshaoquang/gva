@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="gva-form-box">
     <el-upload
       drag
-      :action="`${path}/autoCode/installPlugin`"
+      :action="`${getBaseUrl()}/autoCode/installPlugin`"
       :show-file-list="false"
       :on-success="handleSuccess"
       :on-error="handleSuccess"
+      :headers="{'x-token': token}"
       name="plug"
     >
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
@@ -18,6 +19,7 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref } from "vue";
 import { useUserStore } from "@/pinia/modules/user";
 import { ElMessage } from "element-plus";
@@ -36,4 +38,26 @@ const handleSuccess = (res) => {
     ElMessage.error(res.msg);
   }
 };
+=======
+  import { ElMessage } from 'element-plus'
+  import { getBaseUrl } from '@/utils/format'
+  import { useUserStore } from "@/pinia";
+
+  const userStore = useUserStore()
+
+  const token = userStore.token
+
+  const handleSuccess = (res) => {
+    if (res.code === 0) {
+      let msg = ``
+      res.data &&
+        res.data.forEach((item, index) => {
+          msg += `${index + 1}.${item.msg}\n`
+        })
+      alert(msg)
+    } else {
+      ElMessage.error(res.msg)
+    }
+  }
+>>>>>>> main
 </script>

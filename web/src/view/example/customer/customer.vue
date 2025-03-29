@@ -5,7 +5,11 @@
     />
     <div class="gva-table-box">
       <div class="gva-btn-list">
+<<<<<<< HEAD
         <el-button type="primary" icon="plus" @click="openDialog"
+=======
+        <el-button type="primary" icon="plus" @click="openDrawer"
+>>>>>>> main
           >新增</el-button
         >
       </div>
@@ -48,6 +52,7 @@
               icon="edit"
               @click="updateCustomer(scope.row)"
               >变更</el-button
+<<<<<<< HEAD
             >
             <el-popover v-model="scope.row.visible" placement="top" width="160">
               <p>确定要删除吗？</p>
@@ -72,6 +77,16 @@
                 >
               </template>
             </el-popover>
+=======
+            >
+            <el-button
+              type="primary"
+              link
+              icon="delete"
+              @click="deleteCustomer(scope.row)"
+              >删除</el-button
+            >
+>>>>>>> main
           </template>
         </el-table-column>
       </el-table>
@@ -87,11 +102,12 @@
         />
       </div>
     </div>
-    <el-dialog
-      v-model="dialogFormVisible"
-      :before-close="closeDialog"
-      title="客户"
+    <el-drawer
+      v-model="drawerFormVisible"
+      :before-close="closeDrawer"
+      :show-close="false"
     >
+<<<<<<< HEAD
       <el-form :inline="true" :model="form" label-width="80px">
         <el-form-item label="客户名">
           <el-input v-model="form.customerName" autocomplete="off" />
@@ -104,13 +120,31 @@
         <div class="dialog-footer">
           <el-button @click="closeDialog">取 消</el-button>
           <el-button type="primary" @click="enterDialog">确 定</el-button>
+=======
+      <template #header>
+        <div class="flex justify-between items-center">
+          <span class="text-lg">客户</span>
+          <div>
+            <el-button @click="closeDrawer">取 消</el-button>
+            <el-button type="primary" @click="enterDrawer">确 定</el-button>
+          </div>
+>>>>>>> main
         </div>
       </template>
-    </el-dialog>
+      <el-form :inline="true" :model="form" label-width="80px">
+        <el-form-item label="客户名">
+          <el-input v-model="form.customerName" autocomplete="off" />
+        </el-form-item>
+        <el-form-item label="客户电话">
+          <el-input v-model="form.customerPhoneData" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </div>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import {
   createExaCustomer,
   updateExaCustomer,
@@ -218,6 +252,120 @@ const openDialog = () => {
   type.value = "create";
   dialogFormVisible.value = true;
 };
+=======
+  import {
+    createExaCustomer,
+    updateExaCustomer,
+    deleteExaCustomer,
+    getExaCustomer,
+    getExaCustomerList
+  } from '@/api/customer'
+  import WarningBar from '@/components/warningBar/warningBar.vue'
+  import { ref } from 'vue'
+  import { ElMessage, ElMessageBox } from 'element-plus'
+  import { formatDate } from '@/utils/format'
+
+  defineOptions({
+    name: 'Customer'
+  })
+
+  const form = ref({
+    customerName: '',
+    customerPhoneData: ''
+  })
+
+  const page = ref(1)
+  const total = ref(0)
+  const pageSize = ref(10)
+  const tableData = ref([])
+
+  // 分页
+  const handleSizeChange = (val) => {
+    pageSize.value = val
+    getTableData()
+  }
+
+  const handleCurrentChange = (val) => {
+    page.value = val
+    getTableData()
+  }
+
+  // 查询
+  const getTableData = async () => {
+    const table = await getExaCustomerList({
+      page: page.value,
+      pageSize: pageSize.value
+    })
+    if (table.code === 0) {
+      tableData.value = table.data.list
+      total.value = table.data.total
+      page.value = table.data.page
+      pageSize.value = table.data.pageSize
+    }
+  }
+
+  getTableData()
+
+  const drawerFormVisible = ref(false)
+  const type = ref('')
+  const updateCustomer = async (row) => {
+    const res = await getExaCustomer({ ID: row.ID })
+    type.value = 'update'
+    if (res.code === 0) {
+      form.value = res.data.customer
+      drawerFormVisible.value = true
+    }
+  }
+  const closeDrawer = () => {
+    drawerFormVisible.value = false
+    form.value = {
+      customerName: '',
+      customerPhoneData: ''
+    }
+  }
+  const deleteCustomer = async (row) => {
+    ElMessageBox.confirm('确定要删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(async () => {
+      const res = await deleteExaCustomer({ ID: row.ID })
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        })
+        if (tableData.value.length === 1 && page.value > 1) {
+          page.value--
+        }
+        getTableData()
+      }
+    })
+  }
+  const enterDrawer = async () => {
+    let res
+    switch (type.value) {
+      case 'create':
+        res = await createExaCustomer(form.value)
+        break
+      case 'update':
+        res = await updateExaCustomer(form.value)
+        break
+      default:
+        res = await createExaCustomer(form.value)
+        break
+    }
+
+    if (res.code === 0) {
+      closeDrawer()
+      getTableData()
+    }
+  }
+  const openDrawer = () => {
+    type.value = 'create'
+    drawerFormVisible.value = true
+  }
+>>>>>>> main
 </script>
 
 <style></style>

@@ -1,19 +1,21 @@
 import legacyPlugin from '@vitejs/plugin-legacy'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import { viteLogo } from './src/core/config'
 import Banner from 'vite-plugin-banner'
 import * as path from 'path'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
 import vuePlugin from '@vitejs/plugin-vue'
-import GvaPosition from './vitePlugin/gvaPosition'
-import GvaPositionServer from './vitePlugin/codeServer'
-import fullImportPlugin from './vitePlugin/fullImport/fullImport.js'
-import { svgBuilder } from './vitePlugin/svgIcon/svgIcon.js'
+import vueDevTools from 'vite-plugin-vue-devtools'
+import VueFilePathPlugin from './vitePlugin/componentName/index.js'
+import { svgBuilder } from 'vite-auto-import-svg'
+import { AddSecret } from './vitePlugin/secret'
 // @see https://cn.vitejs.dev/config/
+<<<<<<< HEAD
 export default ({ command, mode }) => {
+=======
+export default ({ mode }) => {
+  AddSecret('')
+>>>>>>> main
   const NODE_ENV = mode || 'development'
   const envFiles = [`.env.${NODE_ENV}`]
   for (const file of envFiles) {
@@ -38,20 +40,34 @@ export default ({ command, mode }) => {
 
   const rollupOptions = {
     output: {
+<<<<<<< HEAD
       entryFileNames: 'assets/087AC4D233B64EB0[name].js',
       chunkFileNames: 'assets/087AC4D233B64EB0[name].js',
       assetFileNames: 'assets/087AC4D233B64EB0[name].[ext]'
+=======
+      entryFileNames: 'assets/087AC4D233B64EB0[name].[hash].js',
+      chunkFileNames: 'assets/087AC4D233B64EB0[name].[hash].js',
+      assetFileNames: 'assets/087AC4D233B64EB0[name].[hash].[ext]'
+>>>>>>> main
     }
   }
 
   const config = {
-    base: './', // index.html文件所在位置
-    root: './', // js导入的资源路径，src
+    base: '/', // 编译后js导入的资源路径
+    root: './', // index.html文件所在位置
+    publicDir: 'public', // 静态资源文件夹
     resolve: {
       alias
     },
     define: {
       'process.env': {}
+    },
+    css: {
+      preprocessorOptions: {
+        scss: {
+          api: 'modern-compiler' // or "modern"
+        }
+      }
     },
     server: {
       // 如果使用docker-compose开发模式，设置为false
@@ -63,7 +79,11 @@ export default ({ command, mode }) => {
         [process.env.VITE_BASE_API]: {
           // 需要代理的路径   例如 '/api'
           target: `${process.env.VITE_BASE_PATH}:${process.env.VITE_SERVER_PORT}/`, // 代理到 目标路径
+<<<<<<< HEAD
           changeOrigin: false,
+=======
+          changeOrigin: true,
+>>>>>>> main
           rewrite: (path) =>
             path.replace(new RegExp('^' + process.env.VITE_BASE_API), '')
         }
@@ -74,13 +94,23 @@ export default ({ command, mode }) => {
       manifest: false, // 是否产出manifest.json
       sourcemap: false, // 是否产出sourcemap.json
       outDir: 'dist', // 产出目录
+<<<<<<< HEAD
+=======
+      terserOptions: {
+        compress: {
+          //生产环境时移除console
+          drop_console: true,
+          drop_debugger: true
+        }
+      },
+>>>>>>> main
       rollupOptions
     },
     esbuild,
     optimizeDeps,
     plugins: [
-      process.env.VITE_POSITION === 'open' && GvaPositionServer(),
-      process.env.VITE_POSITION === 'open' && GvaPosition(),
+      process.env.VITE_POSITION === 'open' &&
+        vueDevTools({ launchEditor: process.env.VITE_EDITOR }),
       legacyPlugin({
         targets: [
           'Android > 39',
@@ -93,6 +123,7 @@ export default ({ command, mode }) => {
       }),
       vuePlugin(),
       svgBuilder('./src/assets/icons/'),
+<<<<<<< HEAD
       [Banner(`\n Build based on gin-vue-admin \n Time : ${timestamp}`)]
     ],
     css: {
@@ -119,6 +150,12 @@ export default ({ command, mode }) => {
         ]
       })
     )
+=======
+      svgBuilder('./src/plugin/'),
+      [Banner(`\n Build based on gin-vue-admin \n Time : ${timestamp}`)],
+      VueFilePathPlugin('./src/pathInfo.json')
+    ]
+>>>>>>> main
   }
   return config
 }

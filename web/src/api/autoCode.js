@@ -10,12 +10,20 @@ export const preview = (data) => {
 
 export const createTemp = (data) => {
   return service({
+<<<<<<< HEAD
     url: "/autoCode/createTemp",
     method: "post",
     data,
     responseType: "blob",
   });
 };
+=======
+    url: '/autoCode/createTemp',
+    method: 'post',
+    data
+  })
+}
+>>>>>>> main
 
 // @Tags SysApi
 // @Summary 获取当前所有数据库
@@ -117,13 +125,20 @@ export const deletePackageApi = (data) => {
   });
 };
 
-export const createPlugApi = (data) => {
+export const getTemplatesApi = () => {
   return service({
+<<<<<<< HEAD
     url: "/autoCode/createPlug",
     method: "post",
     data,
   });
 };
+=======
+    url: '/autoCode/getTemplates',
+    method: 'get'
+  })
+}
+>>>>>>> main
 
 export const installPlug = (data) => {
   return service({
@@ -135,8 +150,74 @@ export const installPlug = (data) => {
 
 export const pubPlug = (params) => {
   return service({
+<<<<<<< HEAD
     url: "/autoCode/pubPlug",
     method: "post",
     params,
   });
 };
+=======
+    url: '/autoCode/pubPlug',
+    method: 'post',
+    params
+  })
+}
+
+export const llmAuto = (data) => {
+  return service({
+    url: '/autoCode/llmAuto',
+    method: 'post',
+    data: { ...data, mode: 'ai' },
+    timeout: 1000 * 60 * 10,
+    loadingOption: {
+      lock: true,
+      fullscreen: true,
+      text: `小淼正在思考，请稍候...`
+    }
+  })
+}
+
+export const butler = (data) => {
+  return service({
+    url: '/autoCode/llmAuto',
+    method: 'post',
+    data: { ...data, mode: 'butler' },
+    timeout: 1000 * 60 * 10
+  })
+}
+
+
+export const eye = (data) => {
+  return service({
+    url: '/autoCode/llmAuto',
+    method: 'post',
+    data: { ...data, mode: 'eye' },
+    timeout: 1000 * 60 * 10
+  })
+}
+
+
+export const addFunc = (data) => {
+  return service({
+    url: '/autoCode/addFunc',
+    method: 'post',
+    data
+  })
+}
+
+export const initMenu = (data) => {
+  return service({
+    url: '/autoCode/initMenu',
+    method: 'post',
+    data
+  })
+}
+
+export const initAPI = (data) => {
+  return service({
+    url: '/autoCode/initAPI',
+    method: 'post',
+    data
+  })
+}
+>>>>>>> main

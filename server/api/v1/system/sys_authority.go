@@ -2,7 +2,6 @@ package system
 
 import (
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
 	systemRes "github.com/flipped-aurora/gin-vue-admin/server/model/system/response"
@@ -36,6 +35,10 @@ func (a *AuthorityApi) CreateAuthority(c *gin.Context) {
 	if err = utils.Verify(authority, utils.AuthorityVerify); err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
+	}
+
+	if *authority.ParentId == 0 && global.GVA_CONFIG.System.UseStrictAuth {
+		authority.ParentId = utils.Pointer(utils.GetUserAuthorityId(c))
 	}
 
 	if authBack, err = authorityService.CreateAuthority(authority); err != nil {
@@ -78,7 +81,8 @@ func (a *AuthorityApi) CopyAuthority(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	authBack, err := authorityService.CopyAuthority(copyInfo)
+	adminAuthorityID := utils.GetUserAuthorityId(c)
+	authBack, err := authorityService.CopyAuthority(adminAuthorityID, copyInfo)
 	if err != nil {
 		global.GVA_LOG.Error("拷贝失败!", zap.Error(err))
 		response.FailWithMessage("拷贝失败"+err.Error(), c)
@@ -125,7 +129,7 @@ func (a *AuthorityApi) DeleteAuthority(c *gin.Context) {
 // @Produce   application/json
 // @Param     data  body      system.SysAuthority                                                true  "权限id, 权限名, 父角色id"
 // @Success   200   {object}  response.Response{data=systemRes.SysAuthorityResponse,msg=string}  "更新角色信息,返回包括系统角色详情"
-// @Router    /authority/updateAuthority [post]
+// @Router    /authority/updateAuthority [put]
 func (a *AuthorityApi) UpdateAuthority(c *gin.Context) {
 	var auth system.SysAuthority
 	err := c.ShouldBindJSON(&auth)
@@ -157,29 +161,14 @@ func (a *AuthorityApi) UpdateAuthority(c *gin.Context) {
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取角色列表,返回包括列表,总数,页码,每页数量"
 // @Router    /authority/getAuthorityList [post]
 func (a *AuthorityApi) GetAuthorityList(c *gin.Context) {
-	var pageInfo request.PageInfo
-	err := c.ShouldBindJSON(&pageInfo)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	err = utils.Verify(pageInfo, utils.PageInfoVerify)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	list, total, err := authorityService.GetAuthorityInfoList(pageInfo)
+	authorityID := utils.GetUserAuthorityId(c)
+	list, err := authorityService.GetAuthorityInfoList(authorityID)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)
 		return
 	}
-	response.OkWithDetailed(response.PageResult{
-		List:     list,
-		Total:    total,
-		Page:     pageInfo.Page,
-		PageSize: pageInfo.PageSize,
-	}, "获取成功", c)
+	response.OkWithDetailed(list, "获取成功", c)
 }
 
 // SetDataAuthority
@@ -203,7 +192,8 @@ func (a *AuthorityApi) SetDataAuthority(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	err = authorityService.SetDataAuthority(auth)
+	adminAuthorityID := utils.GetUserAuthorityId(c)
+	err = authorityService.SetDataAuthority(adminAuthorityID, auth)
 	if err != nil {
 		global.GVA_LOG.Error("设置失败!", zap.Error(err))
 		response.FailWithMessage("设置失败"+err.Error(), c)

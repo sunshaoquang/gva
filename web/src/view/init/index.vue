@@ -1,5 +1,6 @@
 <template>
   <div
+<<<<<<< HEAD
     class="rounded-lg flex items-center justify-evenly w-full h-full relative bg-white md:w-screen md:h-screen md:bg-[#194bfb] overflow-hidden"
   >
     <div
@@ -7,12 +8,22 @@
     >
       <div
         class="oblique h-[130%] w-3/5 bg-white transform -rotate-12 absolute -ml-80"
+=======
+    class="rounded-lg flex items-center justify-evenly w-full h-full relative md:w-screen md:h-screen md:bg-[#194bfb] overflow-hidden"
+  >
+    <div
+      class="rounded-md w-full h-full flex items-center justify-center overflow-hidden"
+    >
+      <div
+        class="oblique h-[130%] w-3/5 bg-white dark:bg-slate-900 transform -rotate-12 absolute -ml-80"
+>>>>>>> main
       />
       <div
         v-if="!page.showForm"
         :class="[page.showReadme ? 'slide-out-right' : 'slide-in-fwd-top']"
       >
         <div class="text-lg">
+<<<<<<< HEAD
           <div class="mb-4 font-sans text-4xl font-bold text-center">
             GIN-VUE-ADMIN
           </div>
@@ -21,17 +32,36 @@
           <p class="mb-2 text-gray-600">
             2.请您确认是否已经阅读过<a
               class="font-bold text-blue-600"
+=======
+          <div
+            class="font-sans text-4xl font-bold text-center mb-4 dark:text-white"
+          >
+            GIN-VUE-ADMIN
+          </div>
+          <p class="text-gray-600 dark:text-gray-300 mb-2">初始化须知</p>
+          <p class="text-gray-600 dark:text-gray-300 mb-2">
+            1.您需有用一定的VUE和GOLANG基础
+          </p>
+          <p class="text-gray-600 dark:text-gray-300 mb-2">
+            2.请您确认是否已经阅读过<a
+              class="text-blue-600 font-bold"
+>>>>>>> main
               href="https://www.gin-vue-admin.com"
               target="_blank"
               >官方文档</a
             >
             <a
+<<<<<<< HEAD
               class="font-bold text-blue-600"
+=======
+              class="text-blue-600 font-bold"
+>>>>>>> main
               href="https://www.bilibili.com/video/BV1kv4y1g7nT?p=2"
               target="_blank"
               >初始化视频</a
             >
           </p>
+<<<<<<< HEAD
           <p class="mb-2 text-gray-600">3.请您确认是否了解后续的配置流程</p>
           <p class="mb-2 text-gray-600">
             4.如果您使用mysql数据库，请确认数据库引擎为<span
@@ -40,6 +70,18 @@
             >
           </p>
           <p class="mb-2 text-gray-600">
+=======
+          <p class="text-gray-600 dark:text-gray-300 mb-2">
+            3.请您确认是否了解后续的配置流程
+          </p>
+          <p class="text-gray-600 dark:text-gray-300 mb-2">
+            4.如果您使用mysql数据库，请确认数据库引擎为<span
+              class="text-red-600 font-bold text-3xl ml-2"
+              >innoDB</span
+            >
+          </p>
+          <p class="text-gray-600 dark:text-gray-300 mb-2">
+>>>>>>> main
             注：开发组不为文档中书写过的内容提供无偿服务
           </p>
           <p class="flex items-center justify-between mt-8">
@@ -58,6 +100,15 @@
         class="w-96"
       >
         <el-form ref="formRef" :model="form" label-width="100px" size="large">
+<<<<<<< HEAD
+=======
+          <el-form-item label="管理员密码">
+            <el-input
+              v-model="form.adminPassword"
+              placeholder="admin账号的默认密码"
+            ></el-input>
+          </el-form-item>
+>>>>>>> main
           <el-form-item label="数据库类型">
             <el-select
               v-model="form.dbType"
@@ -99,6 +150,12 @@
               placeholder="请输入sqlite数据库文件存放路径"
             />
           </el-form-item>
+          <el-form-item v-if="form.dbType === 'pgsql'" label="template">
+            <el-input
+              v-model="form.template"
+              placeholder="请输入postgresql指定template"
+            />
+          </el-form-item>
           <el-form-item>
             <div style="text-align: right">
               <el-button type="primary" @click="onSubmit">立即初始化</el-button>
@@ -115,6 +172,7 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 // @ts-ignore
 import { initDB } from "@/api/initdb";
 import { reactive, ref } from "vue";
@@ -268,66 +326,238 @@ const onSubmit = async () => {
   0% {
     transform: translateZ(-1400px) translateY(-800px);
     opacity: 0;
+=======
+  // @ts-ignore
+  import { initDB } from '@/api/initdb'
+  import { reactive, ref } from 'vue'
+  import { ElLoading, ElMessage } from 'element-plus'
+  import { useRouter } from 'vue-router'
+
+  defineOptions({
+    name: 'Init'
+  })
+
+  const router = useRouter()
+
+  const page = reactive({
+    showReadme: false,
+    showForm: false
+  })
+
+  const showNext = () => {
+    page.showReadme = false
+    setTimeout(() => {
+      page.showForm = true
+    }, 20)
   }
-  100% {
-    transform: translateZ(0) translateY(0);
-    opacity: 1;
+
+  const goDoc = () => {
+    window.open('https://www.gin-vue-admin.com/guide/start-quickly/env.html')
   }
-}
-@keyframes slide-in-fwd-top {
-  0% {
-    transform: translateZ(-1400px) translateY(-800px);
-    opacity: 0;
+
+  const out = ref(false)
+
+  const form = reactive({
+    adminPassword: '123456',
+    dbType: 'mysql',
+    host: '127.0.0.1',
+    port: '3306',
+    userName: 'root',
+    password: '',
+    dbName: 'gva',
+    dbPath: ''
+  })
+
+  const changeDB = (val) => {
+    switch (val) {
+      case 'mysql':
+        Object.assign(form, {
+          adminPassword: '123456',
+          reAdminPassword: '',
+          dbType: 'mysql',
+          host: '127.0.0.1',
+          port: '3306',
+          userName: 'root',
+          password: '',
+          dbName: 'gva',
+          dbPath: ''
+        })
+        break
+      case 'pgsql':
+        Object.assign(form, {
+          adminPassword: '123456',
+          dbType: 'pgsql',
+          host: '127.0.0.1',
+          port: '5432',
+          userName: 'postgres',
+          password: '',
+          dbName: 'gva',
+          dbPath: '',
+          template: 'template0'
+        })
+        break
+      case 'oracle':
+        Object.assign(form, {
+          adminPassword: '123456',
+          dbType: 'oracle',
+          host: '127.0.0.1',
+          port: '1521',
+          userName: 'oracle',
+          password: '',
+          dbName: 'gva',
+          dbPath: ''
+        })
+        break
+      case 'mssql':
+        Object.assign(form, {
+          adminPassword: '123456',
+          dbType: 'mssql',
+          host: '127.0.0.1',
+          port: '1433',
+          userName: 'mssql',
+          password: '',
+          dbName: 'gva',
+          dbPath: ''
+        })
+        break
+      case 'sqlite':
+        Object.assign(form, {
+          adminPassword: '123456',
+          dbType: 'sqlite',
+          host: '',
+          port: '',
+          userName: '',
+          password: '',
+          dbName: 'gva',
+          dbPath: ''
+        })
+        break
+      default:
+        Object.assign(form, {
+          adminPassword: '123456',
+          dbType: 'mysql',
+          host: '127.0.0.1',
+          port: '3306',
+          userName: 'root',
+          password: '',
+          dbName: 'gva',
+          dbPath: ''
+        })
+    }
   }
-  100% {
-    transform: translateZ(0) translateY(0);
-    opacity: 1;
+  const onSubmit = async () => {
+    if (form.adminPassword.length < 6) {
+      ElMessage({
+        type: 'error',
+        message: '密码长度不能小于6位'
+      })
+      return
+    }
+
+    const loading = ElLoading.service({
+      lock: true,
+      text: '正在初始化数据库，请稍候',
+      spinner: 'loading',
+      background: 'rgba(0, 0, 0, 0.7)'
+    })
+    try {
+      const res = await initDB(form)
+      if (res.code === 0) {
+        out.value = true
+        ElMessage({
+          type: 'success',
+          message: res.msg
+        })
+        router.push({ name: 'Login' })
+      }
+      loading.close()
+    } catch (_) {
+      loading.close()
+    }
   }
-}
-@-webkit-keyframes slide-out-right {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
+</script>
+
+<style lang="scss" scoped>
+  .slide-in-fwd-top {
+    -webkit-animation: slide-in-fwd-top 0.4s
+      cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+    animation: slide-in-fwd-top 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+>>>>>>> main
   }
-  100% {
-    transform: translateX(1000px);
-    opacity: 0;
+  .slide-out-right {
+    -webkit-animation: slide-out-right 0.5s
+      cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
+    animation: slide-out-right 0.5s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
   }
-}
-@keyframes slide-out-right {
-  0% {
-    transform: translateX(0);
-    opacity: 1;
+  .slide-in-left {
+    -webkit-animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      both;
+    animation: slide-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   }
-  100% {
-    transform: translateX(1000px);
-    opacity: 0;
+  @-webkit-keyframes slide-in-fwd-top {
+    0% {
+      transform: translateZ(-1400px) translateY(-800px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateZ(0) translateY(0);
+      opacity: 1;
+    }
   }
-}
-@-webkit-keyframes slide-in-left {
-  0% {
-    transform: translateX(-1000px);
-    opacity: 0;
+  @keyframes slide-in-fwd-top {
+    0% {
+      transform: translateZ(-1400px) translateY(-800px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateZ(0) translateY(0);
+      opacity: 1;
+    }
   }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
+  @-webkit-keyframes slide-out-right {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(1000px);
+      opacity: 0;
+    }
   }
-}
-@keyframes slide-in-left {
-  0% {
-    transform: translateX(-1000px);
-    opacity: 0;
+  @keyframes slide-out-right {
+    0% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(1000px);
+      opacity: 0;
+    }
   }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
+  @-webkit-keyframes slide-in-left {
+    0% {
+      transform: translateX(-1000px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
-}
-@media (max-width: 750px) {
-  .form {
-    width: 94vw !important;
-    padding: 0;
+  @keyframes slide-in-left {
+    0% {
+      transform: translateX(-1000px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
   }
-}
+  @media (max-width: 750px) {
+    .form {
+      width: 94vw !important;
+      padding: 0;
+    }
+  }
 </style>

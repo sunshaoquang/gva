@@ -11,10 +11,19 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { useRouterStore } from "@/pinia/modules/router";
 const routerStore = useRouterStore();
 
 defineOptions({
   name: "SuperAdmin",
 });
+=======
+  import { useRouterStore } from '@/pinia/modules/router'
+  const routerStore = useRouterStore()
+
+  defineOptions({
+    name: 'SuperAdmin'
+  })
+>>>>>>> main
 </script>

@@ -26,7 +26,33 @@ type CasbinService struct{}
 
 var CasbinServiceApp = new(CasbinService)
 
-func (casbinService *CasbinService) UpdateCasbin(AuthorityID uint, casbinInfos []request.CasbinInfo) error {
+func (casbinService *CasbinService) UpdateCasbin(adminAuthorityID, AuthorityID uint, casbinInfos []request.CasbinInfo) error {
+
+	err := AuthorityServiceApp.CheckAuthorityIDAuth(adminAuthorityID, AuthorityID)
+	if err != nil {
+		return err
+	}
+
+	if global.GVA_CONFIG.System.UseStrictAuth {
+		apis, e := ApiServiceApp.GetAllApis(adminAuthorityID)
+		if e != nil {
+			return e
+		}
+
+		for i := range casbinInfos {
+			hasApi := false
+			for j := range apis {
+				if apis[j].Path == casbinInfos[i].Path && apis[j].Method == casbinInfos[i].Method {
+					hasApi = true
+					break
+				}
+			}
+			if !hasApi {
+				return errors.New("存在api不在权限列表中")
+			}
+		}
+	}
+
 	authorityId := strconv.Itoa(int(AuthorityID))
 	casbinService.ClearCasbin(0, authorityId)
 	rules := [][]string{}
@@ -39,6 +65,9 @@ func (casbinService *CasbinService) UpdateCasbin(AuthorityID uint, casbinInfos [
 			rules = append(rules, []string{authorityId, v.Path, v.Method})
 		}
 	}
+	if len(rules) == 0 {
+		return nil
+	} // 设置空权限无需调用 AddPolicies 方法
 	e := casbinService.Casbin()
 	success, _ := e.AddPolicies(rules)
 	if !success {
@@ -58,12 +87,12 @@ func (casbinService *CasbinService) UpdateCasbinApi(oldPath string, newPath stri
 		"v1": newPath,
 		"v2": newMethod,
 	}).Error
-	e := casbinService.Casbin()
-	err = e.LoadPolicy()
 	if err != nil {
 		return err
 	}
-	return err
+
+	e := casbinService.Casbin()
+	return e.LoadPolicy()
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
@@ -75,7 +104,7 @@ func (casbinService *CasbinService) UpdateCasbinApi(oldPath string, newPath stri
 func (casbinService *CasbinService) GetPolicyPathByAuthorityId(AuthorityID uint) (pathMaps []request.CasbinInfo) {
 	e := casbinService.Casbin()
 	authorityId := strconv.Itoa(int(AuthorityID))
-	list := e.GetFilteredPolicy(0, authorityId)
+	list, _ := e.GetFilteredPolicy(0, authorityId)
 	for _, v := range list {
 		pathMaps = append(pathMaps, request.CasbinInfo{
 			Path:   v[1],
@@ -108,7 +137,7 @@ func (casbinService *CasbinService) RemoveFilteredPolicy(db *gorm.DB, authorityI
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: RemoveFilteredPolicy
+//@function: SyncPolicy
 //@description: 同步目前数据库的policy 此方法需要调用FreshCasbin方法才可以在系统中即刻生效
 //@param: db *gorm.DB, authorityId string, rules [][]string
 //@return: error
@@ -122,8 +151,8 @@ func (casbinService *CasbinService) SyncPolicy(db *gorm.DB, authorityId string, 
 }
 
 //@author: [piexlmax](https://github.com/piexlmax)
-//@function: ClearCasbin
-//@description: 清除匹配的权限
+//@function: AddPolicies
+//@description: 添加匹配的权限
 //@param: v int, p ...string
 //@return: bool
 
@@ -140,8 +169,8 @@ func (casbinService *CasbinService) AddPolicies(db *gorm.DB, rules [][]string) e
 	return db.Create(&casbinRules).Error
 }
 
-func (CasbinService *CasbinService) FreshCasbin() (err error) {
-	e := CasbinService.Casbin()
+func (casbinService *CasbinService) FreshCasbin() (err error) {
+	e := casbinService.Casbin()
 	err = e.LoadPolicy()
 	return err
 }

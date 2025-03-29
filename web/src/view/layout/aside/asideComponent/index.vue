@@ -2,23 +2,20 @@
   <component
     :is="menuComponent"
     v-if="!routerInfo.hidden"
-    :is-collapse="isCollapse"
-    :theme="theme"
     :router-info="routerInfo"
   >
     <template v-if="routerInfo.children && routerInfo.children.length">
       <AsideComponent
         v-for="item in routerInfo.children"
         :key="item.name"
-        :is-collapse="false"
         :router-info="item"
-        :theme="theme"
       />
     </template>
   </component>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import MenuItem from "./menuItem.vue";
 import AsyncSubmenu from "./asyncSubmenu.vue";
 import { computed } from "vue";
@@ -56,4 +53,35 @@ const menuComponent = computed(() => {
     return MenuItem;
   }
 });
+=======
+  import MenuItem from './menuItem.vue'
+  import AsyncSubmenu from './asyncSubmenu.vue'
+  import { computed } from 'vue'
+
+  defineOptions({
+    name: 'AsideComponent'
+  })
+
+  const props = defineProps({
+    routerInfo: {
+      type: Object,
+      default: () => null
+    },
+    mode: {
+      type: String,
+      default: 'vertical'
+    }
+  })
+
+  const menuComponent = computed(() => {
+    if (
+      props.routerInfo.children &&
+      props.routerInfo.children.filter((item) => !item.hidden).length
+    ) {
+      return AsyncSubmenu
+    } else {
+      return MenuItem
+    }
+  })
+>>>>>>> main
 </script>

@@ -1,11 +1,19 @@
 <template>
   <div>
     <div class="gva-table-box">
+<<<<<<< HEAD
       <div class="justify-between gva-btn-list">
         <span class="font-bold text">字典详细内容</span>
         <el-button type="primary" icon="plus" @click="openDialog"
           >新增字典项</el-button
         >
+=======
+      <div class="gva-btn-list justify-between">
+        <span class="text font-bold">字典详细内容</span>
+        <el-button type="primary" icon="plus" @click="openDrawer">
+          新增字典项
+        </el-button>
+>>>>>>> main
       </div>
       <el-table
         ref="multipleTable"
@@ -16,9 +24,15 @@
       >
         <el-table-column type="selection" width="55" />
         <el-table-column align="left" label="日期" width="180">
+<<<<<<< HEAD
           <template #default="scope">{{
             formatDate(scope.row.CreatedAt)
           }}</template>
+=======
+          <template #default="scope">
+            {{ formatDate(scope.row.CreatedAt) }}
+          </template>
+>>>>>>> main
         </el-table-column>
 
         <el-table-column align="left" label="展示值" prop="label" />
@@ -33,9 +47,15 @@
           prop="status"
           width="120"
         >
+<<<<<<< HEAD
           <template #default="scope">{{
             formatBoolean(scope.row.status)
           }}</template>
+=======
+          <template #default="scope">
+            {{ formatBoolean(scope.row.status) }}
+          </template>
+>>>>>>> main
         </el-table-column>
 
         <el-table-column
@@ -45,13 +65,18 @@
           width="120"
         />
 
+<<<<<<< HEAD
         <el-table-column align="left" label="操作" width="180">
+=======
+        <el-table-column align="left" label="操作" :min-width="appStore.operateMinWith">
+>>>>>>> main
           <template #default="scope">
             <el-button
               type="primary"
               link
               icon="edit"
               @click="updateSysDictionaryDetailFunc(scope.row)"
+<<<<<<< HEAD
               >变更</el-button
             >
             <el-popover
@@ -83,6 +108,19 @@
                 >
               </template>
             </el-popover>
+=======
+            >
+              变更
+            </el-button>
+            <el-button
+              type="primary"
+              link
+              icon="delete"
+              @click="deleteSysDictionaryDetailFunc(scope.row)"
+            >
+              删除
+            </el-button>
+>>>>>>> main
           </template>
         </el-table-column>
       </el-table>
@@ -100,13 +138,32 @@
       </div>
     </div>
 
+<<<<<<< HEAD
     <el-dialog
       v-model="dialogFormVisible"
       :before-close="closeDialog"
       :title="type === 'create' ? '添加字典项' : '修改字典项'"
+=======
+    <el-drawer
+      v-model="drawerFormVisible"
+      :size="appStore.drawerSize"
+      :show-close="false"
+      :before-close="closeDrawer"
+>>>>>>> main
     >
+      <template #header>
+        <div class="flex justify-between items-center">
+          <span class="text-lg">{{
+            type === 'create' ? '添加字典项' : '修改字典项'
+          }}</span>
+          <div>
+            <el-button @click="closeDrawer"> 取 消 </el-button>
+            <el-button type="primary" @click="enterDrawer"> 确 定 </el-button>
+          </div>
+        </div>
+      </template>
       <el-form
-        ref="dialogForm"
+        ref="drawerForm"
         :model="formData"
         :rules="rules"
         label-width="110px"
@@ -120,6 +177,7 @@
           />
         </el-form-item>
         <el-form-item label="字典值" prop="value">
+<<<<<<< HEAD
           <el-input-number
             v-model.number="formData.value"
             step-strictly
@@ -129,6 +187,13 @@
             :style="{ width: '100%' }"
             min="-2147483648"
             max="2147483647"
+=======
+          <el-input
+            v-model="formData.value"
+            placeholder="请输入字典值"
+            clearable
+            :style="{ width: '100%' }"
+>>>>>>> main
           />
         </el-form-item>
         <el-form-item label="扩展值" prop="extend">
@@ -153,6 +218,7 @@
           />
         </el-form-item>
       </el-form>
+<<<<<<< HEAD
       <template #footer>
         <div class="dialog-footer">
           <el-button @click="closeDialog">取 消</el-button>
@@ -160,10 +226,14 @@
         </div>
       </template>
     </el-dialog>
+=======
+    </el-drawer>
+>>>>>>> main
   </div>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import {
   createSysDictionaryDetail,
   deleteSysDictionaryDetail,
@@ -301,8 +371,105 @@ const enterDialog = async () => {
       default:
         res = await createSysDictionaryDetail(formData.value);
         break;
+=======
+  import {
+    createSysDictionaryDetail,
+    deleteSysDictionaryDetail,
+    updateSysDictionaryDetail,
+    findSysDictionaryDetail,
+    getSysDictionaryDetailList
+  } from '@/api/sysDictionaryDetail' // 此处请自行替换地址
+  import { ref, watch } from 'vue'
+  import { ElMessage, ElMessageBox } from 'element-plus'
+  import { formatBoolean, formatDate } from '@/utils/format'
+  import { useAppStore } from "@/pinia";
+
+  defineOptions({
+    name: 'SysDictionaryDetail'
+  })
+
+  const appStore = useAppStore()
+
+  const props = defineProps({
+    sysDictionaryID: {
+      type: Number,
+      default: 0
     }
+  })
+
+  const formData = ref({
+    label: null,
+    value: null,
+    status: true,
+    sort: null
+  })
+  const rules = ref({
+    label: [
+      {
+        required: true,
+        message: '请输入展示值',
+        trigger: 'blur'
+      }
+    ],
+    value: [
+      {
+        required: true,
+        message: '请输入字典值',
+        trigger: 'blur'
+      }
+    ],
+    sort: [
+      {
+        required: true,
+        message: '排序标记',
+        trigger: 'blur'
+      }
+    ]
+  })
+
+  const page = ref(1)
+  const total = ref(0)
+  const pageSize = ref(10)
+  const tableData = ref([])
+
+  // 分页
+  const handleSizeChange = (val) => {
+    pageSize.value = val
+    getTableData()
+  }
+
+  const handleCurrentChange = (val) => {
+    page.value = val
+    getTableData()
+  }
+
+  // 查询
+  const getTableData = async () => {
+    if (!props.sysDictionaryID) return
+    const table = await getSysDictionaryDetailList({
+      page: page.value,
+      pageSize: pageSize.value,
+      sysDictionaryID: props.sysDictionaryID
+    })
+    if (table.code === 0) {
+      tableData.value = table.data.list
+      total.value = table.data.total
+      page.value = table.data.page
+      pageSize.value = table.data.pageSize
+>>>>>>> main
+    }
+  }
+
+  getTableData()
+
+  const type = ref('')
+  const drawerFormVisible = ref(false)
+  const updateSysDictionaryDetailFunc = async (row) => {
+    drawerForm.value && drawerForm.value.clearValidate()
+    const res = await findSysDictionaryDetail({ ID: row.ID })
+    type.value = 'update'
     if (res.code === 0) {
+<<<<<<< HEAD
       ElMessage({
         type: "success",
         message: "创建/更改成功",
@@ -323,6 +490,82 @@ watch(
     getTableData();
   }
 );
+=======
+      formData.value = res.data.reSysDictionaryDetail
+      drawerFormVisible.value = true
+    }
+  }
+
+  const closeDrawer = () => {
+    drawerFormVisible.value = false
+    formData.value = {
+      label: null,
+      value: null,
+      status: true,
+      sort: null,
+      sysDictionaryID: props.sysDictionaryID
+    }
+  }
+  const deleteSysDictionaryDetailFunc = async (row) => {
+    ElMessageBox.confirm('确定要删除吗?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(async () => {
+      const res = await deleteSysDictionaryDetail({ ID: row.ID })
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '删除成功'
+        })
+        if (tableData.value.length === 1 && page.value > 1) {
+          page.value--
+        }
+        getTableData()
+      }
+    })
+  }
+
+  const drawerForm = ref(null)
+  const enterDrawer = async () => {
+    drawerForm.value.validate(async (valid) => {
+      formData.value.sysDictionaryID = props.sysDictionaryID
+      if (!valid) return
+      let res
+      switch (type.value) {
+        case 'create':
+          res = await createSysDictionaryDetail(formData.value)
+          break
+        case 'update':
+          res = await updateSysDictionaryDetail(formData.value)
+          break
+        default:
+          res = await createSysDictionaryDetail(formData.value)
+          break
+      }
+      if (res.code === 0) {
+        ElMessage({
+          type: 'success',
+          message: '创建/更改成功'
+        })
+        closeDrawer()
+        getTableData()
+      }
+    })
+  }
+  const openDrawer = () => {
+    type.value = 'create'
+    drawerForm.value && drawerForm.value.clearValidate()
+    drawerFormVisible.value = true
+  }
+
+  watch(
+    () => props.sysDictionaryID,
+    () => {
+      getTableData()
+    }
+  )
+>>>>>>> main
 </script>
 
 <style></style>

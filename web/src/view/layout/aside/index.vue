@@ -1,44 +1,26 @@
 <template>
-  <div :style="{ background: userStore.sideMode }">
-    <el-scrollbar style="height: calc(100vh - 60px)">
-      <transition
-        :duration="{ enter: 800, leave: 100 }"
-        mode="out-in"
-        name="el-fade-in-linear"
-      >
-        <el-menu
-          :collapse="isCollapse"
-          :collapse-transition="false"
-          :default-active="active"
-          :background-color="theme.background"
-          :active-text-color="theme.active"
-          class="el-menu-vertical"
-          unique-opened
-          @select="selectMenuItem"
-        >
-          <template v-for="item in routerStore.asyncRouters[0].children">
-            <aside-component
-              v-if="!item.hidden"
-              :key="item.name"
-              :is-collapse="isCollapse"
-              :router-info="item"
-              :theme="theme"
-            />
-          </template>
-        </el-menu>
-      </transition>
-    </el-scrollbar>
+  <div>
+    <normal-mode
+      v-if="
+        config.side_mode === 'normal' ||
+        (device === 'mobile' && config.side_mode == 'head') ||
+        (device === 'mobile' && config.side_mode == 'combination')
+      "
+    />
+    <head-mode v-if="config.side_mode === 'head' && device !== 'mobile'" />
+    <combination-mode
+      v-if="config.side_mode === 'combination' && device !== 'mobile'"
+      :mode="mode"
+    />
   </div>
 </template>
 
 <script setup>
-import AsideComponent from '@/view/layout/aside/asideComponent/index.vue'
-import { emitter } from '@/utils/bus.js'
-import { ref, watch, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useUserStore } from '@/pinia/modules/user'
-import { useRouterStore } from '@/pinia/modules/router'
+  import NormalMode from './normalMode.vue'
+  import HeadMode from './headMode.vue'
+  import CombinationMode from './combinationMode.vue'
 
+<<<<<<< HEAD
 defineOptions({
   name: 'Aside'
 })
@@ -104,34 +86,21 @@ const initPage = () => {
 
   emitter.on('collapse', (item) => {
     isCollapse.value = item
+=======
+  defineProps({
+    mode: {
+      type: String,
+      default: 'normal'
+    }
+>>>>>>> main
   })
-}
 
-initPage()
-
-onUnmounted(() => {
-  emitter.off('collapse')
-})
-
-const selectMenuItem = (index, _, ele, aaa) => {
-  const query = {}
-  const params = {}
-  routerStore.routeMap[index]?.parameters &&
-    routerStore.routeMap[index]?.parameters.forEach((item) => {
-      if (item.type === 'query') {
-        query[item.key] = item.value
-      } else {
-        params[item.key] = item.value
-      }
-    })
-  if (index === route.name) return
-  if (index.indexOf('http://') > -1 || index.indexOf('https://') > -1) {
-    window.open(index)
-  } else {
-    router.push({ name: index, query, params })
-  }
-}
+  import { storeToRefs } from 'pinia'
+  import { useAppStore } from '@/pinia'
+  const appStore = useAppStore()
+  const { config, device } = storeToRefs(appStore)
 </script>
+<<<<<<< HEAD
 
 <style lang="scss">
 .el-sub-menu__title:hover,
@@ -153,3 +122,5 @@ const selectMenuItem = (index, _, ele, aaa) => {
   }
 }
 </style>
+=======
+>>>>>>> main

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import axios from "axios"; // 引入axios
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useUserStore } from "@/pinia/modules/user";
@@ -12,28 +13,67 @@ let acitveAxios = 0;
 let timer;
 const showLoading = () => {
   acitveAxios++;
+=======
+import axios from 'axios' // 引入axios
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { useUserStore } from '@/pinia/modules/user'
+import router from '@/router/index'
+import { ElLoading } from 'element-plus'
+
+const service = axios.create({
+  baseURL: import.meta.env.VITE_BASE_API,
+  timeout: 99999
+})
+let activeAxios = 0
+let timer
+let loadingInstance
+const showLoading = (
+  option = {
+    target: null
+  }
+) => {
+  const loadDom = document.getElementById('gva-base-load-dom')
+  activeAxios++
+>>>>>>> main
   if (timer) {
     clearTimeout(timer);
   }
   timer = setTimeout(() => {
+<<<<<<< HEAD
     if (acitveAxios > 0) {
       emitter.emit("showLoading");
+=======
+    if (activeAxios > 0) {
+      if (!option.target) option.target = loadDom
+      loadingInstance = ElLoading.service(option)
+>>>>>>> main
     }
   }, 400);
 };
 
 const closeLoading = () => {
+<<<<<<< HEAD
   acitveAxios--;
   if (acitveAxios <= 0) {
     clearTimeout(timer);
     emitter.emit("closeLoading");
+=======
+  activeAxios--
+  if (activeAxios <= 0) {
+    clearTimeout(timer)
+    loadingInstance && loadingInstance.close()
+>>>>>>> main
   }
 };
 // http request 拦截器
 service.interceptors.request.use(
   (config) => {
     if (!config.donNotShowLoading) {
+<<<<<<< HEAD
       showLoading();
+=======
+      showLoading(config.loadingOption)
+>>>>>>> main
     }
     const userStore = useUserStore();
     config.headers = {
@@ -60,7 +100,11 @@ service.interceptors.request.use(
 // http response 拦截器
 service.interceptors.response.use(
   (response) => {
+<<<<<<< HEAD
     const userStore = useUserStore();
+=======
+    const userStore = useUserStore()
+>>>>>>> main
     if (!response.config.donNotShowLoading) {
       closeLoading();
     }
@@ -76,6 +120,7 @@ service.interceptors.response.use(
       ElMessage({
         showClose: true,
         message: response.data.msg || decodeURI(response.headers.msg),
+<<<<<<< HEAD
         type: "error",
       });
       if (response.data.data && response.data.data.reload) {
@@ -84,6 +129,11 @@ service.interceptors.response.use(
         router.push({ name: "Login", replace: true });
       }
       return response.data.msg ? response.data : response;
+=======
+        type: 'error'
+      })
+      return response.data.msg ? response.data : response
+>>>>>>> main
     }
   },
   (error) => {
@@ -97,6 +147,7 @@ service.interceptors.response.use(
         <p>检测到请求错误</p>
         <p>${error}</p>
         `,
+<<<<<<< HEAD
         "请求报错",
         {
           dangerouslyUseHTMLString: true,
@@ -106,6 +157,17 @@ service.interceptors.response.use(
         }
       );
       return;
+=======
+        '请求报错',
+        {
+          dangerouslyUseHTMLString: true,
+          distinguishCancelAndClose: true,
+          confirmButtonText: '稍后重试',
+          cancelButtonText: '取消'
+        }
+      )
+      return
+>>>>>>> main
     }
 
     switch (error.response.status) {
@@ -115,6 +177,7 @@ service.interceptors.response.use(
         <p>检测到接口错误${error}</p>
         <p>错误码<span style="color:red"> 500 </span>：此类错误内容常见于后台panic，请先查看后台日志，如果影响您正常使用可强制登出清理缓存</p>
         `,
+<<<<<<< HEAD
           "接口报错",
           {
             dangerouslyUseHTMLString: true,
@@ -128,12 +191,28 @@ service.interceptors.response.use(
           router.push({ name: "Login", replace: true });
         });
         break;
+=======
+          '接口报错',
+          {
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '清理缓存',
+            cancelButtonText: '取消'
+          }
+        ).then(() => {
+          const userStore = useUserStore()
+          userStore.ClearStorage()
+          router.push({ name: 'Login', replace: true })
+        })
+        break
+>>>>>>> main
       case 404:
         ElMessageBox.confirm(
           `
           <p>检测到接口错误${error}</p>
           <p>错误码<span style="color:red"> 404 </span>：此类错误多为接口未注册（或未重启）或者请求路径（方法）与api路径（方法）不符--如果为自动化代码请检查是否存在空格</p>
           `,
+<<<<<<< HEAD
           "接口报错",
           {
             dangerouslyUseHTMLString: true,
@@ -143,6 +222,36 @@ service.interceptors.response.use(
           }
         );
         break;
+=======
+          '接口报错',
+          {
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '我知道了',
+            cancelButtonText: '取消'
+          }
+        )
+        break
+      case 401:
+        ElMessageBox.confirm(
+          `
+          <p>无效的令牌</p>
+          <p>错误码:<span style="color:red"> 401 </span>错误信息:${error}</p>
+          `,
+          '身份信息',
+          {
+            dangerouslyUseHTMLString: true,
+            distinguishCancelAndClose: true,
+            confirmButtonText: '重新登录',
+            cancelButtonText: '取消'
+          }
+        ).then(() => {
+          const userStore = useUserStore()
+          userStore.ClearStorage()
+          router.push({ name: 'Login', replace: true })
+        })
+        break
+>>>>>>> main
     }
 
     return error;

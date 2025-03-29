@@ -3,34 +3,46 @@ package internal
 import (
 	"os"
 	"path/filepath"
-	"regexp"
-	"strings"
 	"sync"
 	"time"
 )
 
+// Cutter 实现 io.Writer 接口
+// 用于日志切割, strings.Join([]string{director,layout, formats..., level+".log"}, os.PathSeparator)
 type Cutter struct {
-	level    string        // 日志级别(debug, info, warn, error, dpanic, panic, fatal)
-	format   string        // 时间格式(2006-01-02)
-	Director string        // 日志文件夹
-	file     *os.File      // 文件句柄
-	mutex    *sync.RWMutex // 读写锁
+	level        string        // 日志级别(debug, info, warn, error, dpanic, panic, fatal)
+	layout       string        // 时间格式 2006-01-02 15:04:05
+	formats      []string      // 自定义参数([]string{Director,"2006-01-02", "business"(此参数可不写), level+".log"}
+	director     string        // 日志文件夹
+	retentionDay int           //日志保留天数
+	file         *os.File      // 文件句柄
+	mutex        *sync.RWMutex // 读写锁
 }
 
 type CutterOption func(*Cutter)
 
-// WithCutterFormat 设置时间格式
-func WithCutterFormat(format string) CutterOption {
+// CutterWithLayout 时间格式
+func CutterWithLayout(layout string) CutterOption {
 	return func(c *Cutter) {
-		c.format = format
+		c.layout = layout
 	}
 }
 
-func NewCutter(director string, level string, options ...CutterOption) *Cutter {
+// CutterWithFormats 格式化参数
+func CutterWithFormats(format ...string) CutterOption {
+	return func(c *Cutter) {
+		if len(format) > 0 {
+			c.formats = format
+		}
+	}
+}
+
+func NewCutter(director string, level string, retentionDay int, options ...CutterOption) *Cutter {
 	rotate := &Cutter{
-		level:    level,
-		Director: director,
-		mutex:    new(sync.RWMutex),
+		level:        level,
+		director:     director,
+		retentionDay: retentionDay,
+		mutex:        new(sync.RWMutex),
 	}
 	for i := 0; i < len(options); i++ {
 		options[i](rotate)
@@ -51,41 +63,23 @@ func (c *Cutter) Write(bytes []byte) (n int, err error) {
 		}
 		c.mutex.Unlock()
 	}()
-	var business string
-	if strings.Contains(string(bytes), "business") {
-		var compile *regexp.Regexp
-		compile, err = regexp.Compile(`{"business": "([^,]+)"}`)
-		if err != nil {
-			return 0, err
-		}
-		if compile.Match(bytes) {
-			finds := compile.FindSubmatch(bytes)
-			business = string(finds[len(finds)-1])
-			bytes = compile.ReplaceAll(bytes, []byte(""))
-		}
-		compile, err = regexp.Compile(`"business": "([^,]+)"`)
-		if err != nil {
-			return 0, err
-		}
-		if compile.Match(bytes) {
-			finds := compile.FindSubmatch(bytes)
-			business = string(finds[len(finds)-1])
-			bytes = compile.ReplaceAll(bytes, []byte(""))
-		}
+	length := len(c.formats)
+	values := make([]string, 0, 3+length)
+	values = append(values, c.director)
+	if c.layout != "" {
+		values = append(values, time.Now().Format(c.layout))
 	}
-	format := time.Now().Format(c.format)
-	formats := make([]string, 0, 4)
-	formats = append(formats, c.Director)
-	if format != "" {
-		formats = append(formats, format)
+	for i := 0; i < length; i++ {
+		values = append(values, c.formats[i])
 	}
-	if business != "" {
-		formats = append(formats, business)
+	values = append(values, c.level+".log")
+	filename := filepath.Join(values...)
+	director := filepath.Dir(filename)
+	err = os.MkdirAll(director, os.ModePerm)
+	if err != nil {
+		return 0, err
 	}
-	formats = append(formats, c.level+".log")
-	filename := filepath.Join(formats...)
-	dirname := filepath.Dir(filename)
-	err = os.MkdirAll(dirname, 0755)
+	err = removeNDaysFolders(c.director, c.retentionDay)
 	if err != nil {
 		return 0, err
 	}
@@ -94,4 +88,34 @@ func (c *Cutter) Write(bytes []byte) (n int, err error) {
 		return 0, err
 	}
 	return c.file.Write(bytes)
+}
+
+func (c *Cutter) Sync() error {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+
+	if c.file != nil {
+		return c.file.Sync()
+	}
+	return nil
+}
+
+// 增加日志目录文件清理 小于等于零的值默认忽略不再处理
+func removeNDaysFolders(dir string, days int) error {
+	if days <= 0 {
+		return nil
+	}
+	cutoff := time.Now().AddDate(0, 0, -days)
+	return filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() && info.ModTime().Before(cutoff) && path != dir {
+			err = os.RemoveAll(path)
+			if err != nil {
+				return err
+			}
+		}
+		return nil
+	})
 }

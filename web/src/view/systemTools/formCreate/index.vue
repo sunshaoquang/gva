@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div style="height: 80vh">
     <iframe
       width="100%"
@@ -16,4 +17,22 @@ const basePort = ref(import.meta.env.VITE_SERVER_PORT);
 defineOptions({
   name: "FormGenerator",
 });
+=======
+  <fc-designer ref="designer" :config="config" height="calc(100vh - 160px)" />
+</template>
+
+<script setup>
+  import { ref } from 'vue'
+  import FcDesigner from '@form-create/designer'
+
+  defineOptions({
+    name: 'FormGenerator'
+  })
+
+  const designer = ref(null)
+
+  const config = {
+    fieldReadonly: false
+  }
+>>>>>>> main
 </script>

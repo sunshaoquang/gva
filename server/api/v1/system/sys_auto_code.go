@@ -1,97 +1,20 @@
 package system
 
 import (
-	"errors"
 	"fmt"
-	"net/url"
-	"os"
+	"github.com/flipped-aurora/gin-vue-admin/server/model/common"
+	"github.com/goccy/go-json"
+	"io"
 	"strings"
 
 	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
-
+	"github.com/flipped-aurora/gin-vue-admin/server/utils/request"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 )
 
 type AutoCodeApi struct{}
-
-// PreviewTemp
-// @Tags      AutoCode
-// @Summary   预览创建后的代码
-// @Security  ApiKeyAuth
-// @accept    application/json
-// @Produce   application/json
-// @Param     data  body      system.AutoCodeStruct                                      true  "预览创建代码"
-// @Success   200   {object}  response.Response{data=map[string]interface{},msg=string}  "预览创建后的代码"
-// @Router    /autoCode/preview [post]
-func (autoApi *AutoCodeApi) PreviewTemp(c *gin.Context) {
-	var a system.AutoCodeStruct
-	_ = c.ShouldBindJSON(&a)
-	if err := utils.Verify(a, utils.AutoCodeVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	a.Pretreatment() // 处理go关键字
-	a.PackageT = utils.FirstUpper(a.Package)
-	autoCode, err := autoCodeService.PreviewTemp(a)
-	if err != nil {
-		global.GVA_LOG.Error("预览失败!", zap.Error(err))
-		response.FailWithMessage("预览失败", c)
-	} else {
-		response.OkWithDetailed(gin.H{"autoCode": autoCode}, "预览成功", c)
-	}
-}
-
-// CreateTemp
-// @Tags      AutoCode
-// @Summary   自动代码模板
-// @Security  ApiKeyAuth
-// @accept    application/json
-// @Produce   application/json
-// @Param     data  body      system.AutoCodeStruct  true  "创建自动代码"
-// @Success   200   {string}  string                 "{"success":true,"data":{},"msg":"创建成功"}"
-// @Router    /autoCode/createTemp [post]
-func (autoApi *AutoCodeApi) CreateTemp(c *gin.Context) {
-	var a system.AutoCodeStruct
-	_ = c.ShouldBindJSON(&a)
-	if err := utils.Verify(a, utils.AutoCodeVerify); err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	a.Pretreatment()
-	var apiIds []uint
-	if a.AutoCreateApiToSql {
-		if ids, err := autoCodeService.AutoCreateApi(&a); err != nil {
-			global.GVA_LOG.Error("自动化创建失败!请自行清空垃圾数据!", zap.Error(err))
-			c.Writer.Header().Add("success", "false")
-			c.Writer.Header().Add("msg", url.QueryEscape("自动化创建失败!请自行清空垃圾数据!"))
-			return
-		} else {
-			apiIds = ids
-		}
-	}
-	a.PackageT = utils.FirstUpper(a.Package)
-	err := autoCodeService.CreateTemp(a, apiIds...)
-	if err != nil {
-		if errors.Is(err, system.ErrAutoMove) {
-			c.Writer.Header().Add("success", "true")
-			c.Writer.Header().Add("msg", url.QueryEscape(err.Error()))
-		} else {
-			c.Writer.Header().Add("success", "false")
-			c.Writer.Header().Add("msg", url.QueryEscape(err.Error()))
-			_ = os.Remove("./ginvueadmin.zip")
-		}
-	} else {
-		c.Writer.Header().Add("Content-Disposition", fmt.Sprintf("attachment; filename=%s", "ginvueadmin.zip")) // fmt.Sprintf("attachment; filename=%s", filename)对下载的文件重命名
-		c.Writer.Header().Add("Content-Type", "application/json")
-		c.Writer.Header().Add("success", "true")
-		c.File("./ginvueadmin.zip")
-		_ = os.Remove("./ginvueadmin.zip")
-	}
-}
 
 // GetDB
 // @Tags      AutoCode
@@ -100,7 +23,7 @@ func (autoApi *AutoCodeApi) CreateTemp(c *gin.Context) {
 // @accept    application/json
 // @Produce   application/json
 // @Success   200  {object}  response.Response{data=map[string]interface{},msg=string}  "获取当前所有数据库"
-// @Router    /autoCode/getDatabase [get]
+// @Router    /autoCode/getDB [get]
 func (autoApi *AutoCodeApi) GetDB(c *gin.Context) {
 	businessDB := c.Query("businessDB")
 	dbs, err := autoCodeService.Database(businessDB).GetDB(businessDB)
@@ -130,8 +53,19 @@ func (autoApi *AutoCodeApi) GetDB(c *gin.Context) {
 // @Success   200  {object}  response.Response{data=map[string]interface{},msg=string}  "获取当前数据库所有表"
 // @Router    /autoCode/getTables [get]
 func (autoApi *AutoCodeApi) GetTables(c *gin.Context) {
-	dbName := c.DefaultQuery("dbName", global.GVA_CONFIG.Mysql.Dbname)
+	dbName := c.Query("dbName")
 	businessDB := c.Query("businessDB")
+	if dbName == "" {
+		dbName = *global.GVA_ACTIVE_DBNAME
+		if businessDB != "" {
+			for _, db := range global.GVA_CONFIG.DBList {
+				if db.AliasName == businessDB {
+					dbName = db.Dbname
+				}
+			}
+		}
+	}
+
 	tables, err := autoCodeService.Database(businessDB).GetTables(businessDB, dbName)
 	if err != nil {
 		global.GVA_LOG.Error("查询table失败!", zap.Error(err))
@@ -151,7 +85,17 @@ func (autoApi *AutoCodeApi) GetTables(c *gin.Context) {
 // @Router    /autoCode/getColumn [get]
 func (autoApi *AutoCodeApi) GetColumn(c *gin.Context) {
 	businessDB := c.Query("businessDB")
-	dbName := c.DefaultQuery("dbName", global.GVA_CONFIG.Mysql.Dbname)
+	dbName := c.Query("dbName")
+	if dbName == "" {
+		dbName = *global.GVA_ACTIVE_DBNAME
+		if businessDB != "" {
+			for _, db := range global.GVA_CONFIG.DBList {
+				if db.AliasName == businessDB {
+					dbName = db.Dbname
+				}
+			}
+		}
+	}
 	tableName := c.Query("tableName")
 	columns, err := autoCodeService.Database(businessDB).GetColumn(businessDB, tableName, dbName)
 	if err != nil {
@@ -162,6 +106,7 @@ func (autoApi *AutoCodeApi) GetColumn(c *gin.Context) {
 	}
 }
 
+<<<<<<< HEAD
 // CreatePackage
 // @Tags      AutoCode
 // @Summary   创建package
@@ -238,76 +183,52 @@ func (autoApi *AutoCodeApi) DelPackage(c *gin.Context) {
 func (autoApi *AutoCodeApi) AutoPlug(c *gin.Context) {
 	var a system.AutoPlugReq
 	err := c.ShouldBindJSON(&a)
+=======
+func (autoApi *AutoCodeApi) LLMAuto(c *gin.Context) {
+	var llm common.JSONMap
+	err := c.ShouldBindJSON(&llm)
+>>>>>>> main
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	a.Snake = strings.ToLower(a.PlugName)
-	a.NeedModel = a.HasRequest || a.HasResponse
-	err = autoCodeService.CreatePlug(a)
-	if err != nil {
-		global.GVA_LOG.Error("预览失败!", zap.Error(err))
-		response.FailWithMessage("预览失败", c)
+	if global.GVA_CONFIG.AutoCode.AiPath == "" {
+		response.FailWithMessage("请先前往插件市场个人中心获取AiPath并填入config.yaml中", c)
 		return
 	}
-	response.Ok(c)
-}
 
-// InstallPlugin
-// @Tags      AutoCode
-// @Summary   安装插件
-// @Security  ApiKeyAuth
-// @accept    multipart/form-data
-// @Produce   application/json
-// @Param     plug  formData  file                                              true  "this is a test file"
-// @Success   200   {object}  response.Response{data=[]interface{},msg=string}  "安装插件成功"
-// @Router    /autoCode/installPlugin [post]
-func (autoApi *AutoCodeApi) InstallPlugin(c *gin.Context) {
-	header, err := c.FormFile("plug")
+	path := strings.ReplaceAll(global.GVA_CONFIG.AutoCode.AiPath, "{FUNC}", fmt.Sprintf("api/chat/%s", llm["mode"]))
+	res, err := request.HttpRequest(
+		path,
+		"POST",
+		nil,
+		nil,
+		llm,
+	)
 	if err != nil {
-		response.FailWithMessage(err.Error(), c)
+		global.GVA_LOG.Error("大模型生成失败!", zap.Error(err))
+		response.FailWithMessage("大模型生成失败"+err.Error(), c)
 		return
 	}
-	web, server, err := autoCodeService.InstallPlugin(header)
-	webStr := "web插件安装成功"
-	serverStr := "server插件安装成功"
-	if web == -1 {
-		webStr = "web端插件未成功安装，请按照文档自行解压安装，如果为纯后端插件请忽略此条提示"
-	}
-	if server == -1 {
-		serverStr = "server端插件未成功安装，请按照文档自行解压安装，如果为纯前端插件请忽略此条提示"
-	}
+	var resStruct response.Response
+	b, err := io.ReadAll(res.Body)
+	defer res.Body.Close()
 	if err != nil {
-		response.FailWithMessage(err.Error(), c)
+		global.GVA_LOG.Error("大模型生成失败!", zap.Error(err))
+		response.FailWithMessage("大模型生成失败"+err.Error(), c)
 		return
 	}
-	response.OkWithData([]interface{}{
-		gin.H{
-			"code": web,
-			"msg":  webStr,
-		},
-		gin.H{
-			"code": server,
-			"msg":  serverStr,
-		}}, c)
-}
+	err = json.Unmarshal(b, &resStruct)
+	if err != nil {
+		global.GVA_LOG.Error("大模型生成失败!", zap.Error(err))
+		response.FailWithMessage("大模型生成失败"+err.Error(), c)
+		return
+	}
 
-// PubPlug
-// @Tags      AutoCode
-// @Summary   打包插件
-// @Security  ApiKeyAuth
-// @accept    application/json
-// @Produce   application/json
-// @Param     data  body      system.SysAutoCode                                         true  "打包插件"
-// @Success   200   {object}  response.Response{data=map[string]interface{},msg=string}  "打包插件成功"
-// @Router    /autoCode/pubPlug [get]
-func (autoApi *AutoCodeApi) PubPlug(c *gin.Context) {
-	plugName := c.Query("plugName")
-	zipPath, err := autoCodeService.PubPlug(plugName)
-	if err != nil {
-		global.GVA_LOG.Error("打包失败!", zap.Error(err))
-		response.FailWithMessage("打包失败"+err.Error(), c)
+	if resStruct.Code == 7 {
+		global.GVA_LOG.Error("大模型生成失败!"+resStruct.Msg, zap.Error(err))
+		response.FailWithMessage("大模型生成失败"+resStruct.Msg, c)
 		return
 	}
-	response.OkWithMessage(fmt.Sprintf("打包成功,文件路径为:%s", zipPath), c)
+	response.OkWithData(resStruct.Data, c)
 }

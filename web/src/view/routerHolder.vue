@@ -14,9 +14,17 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 defineOptions({
   name: "RouterHolder",
 });
 import { useRouterStore } from "@/pinia/modules/router";
 const routerStore = useRouterStore();
+=======
+  defineOptions({
+    name: 'RouterHolder'
+  })
+  import { useRouterStore } from '@/pinia/modules/router'
+  const routerStore = useRouterStore()
+>>>>>>> main
 </script>

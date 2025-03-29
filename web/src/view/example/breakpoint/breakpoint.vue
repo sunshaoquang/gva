@@ -3,6 +3,7 @@
     <div class="gva-table-box">
       <el-divider content-position="left">大文件上传</el-divider>
       <form id="fromCont" method="post">
+<<<<<<< HEAD
         <div class="fileUpload" @click="inputChange">
           选择文件
           <input
@@ -22,6 +23,29 @@
         @click="getFile"
         >上传文件</el-button
       >
+=======
+        <!-- 新增按钮容器，使用 Flexbox 对齐按钮 -->
+        <div class="button-container">
+          <div class="fileUpload" @click="inputChange">
+            <span class="takeFile">选择文件</span>
+            <input
+              v-show="false"
+              id="file"
+              ref="FileInput"
+              multiple="multiple"
+              type="file"
+              @change="choseFile"
+            />
+          </div>
+          <el-button
+            :disabled="limitFileSize"
+            type="primary"
+            class="uploadBtn"
+            @click="getFile"
+          >上传文件</el-button>
+        </div>
+      </form>
+>>>>>>> main
       <div class="el-upload__tip">请上传不超过5MB的文件</div>
       <div class="list">
         <transition name="list" tag="p">
@@ -73,6 +97,7 @@ const percentageFlage = ref(true);
 
 // 选中文件的函数
 const choseFile = async (e) => {
+<<<<<<< HEAD
   const fileR = new FileReader(); // 创建一个reader用来读取文件流
   const fileInput = e.target.files[0]; // 获取当前文件
   const maxSize = 5 * 1024 * 1024;
@@ -80,6 +105,19 @@ const choseFile = async (e) => {
   percentage.value = 0;
   if (file.value.size < maxSize) {
     fileR.readAsArrayBuffer(file.value); // 把文件读成ArrayBuffer  主要为了保持跟后端的流一致
+=======
+  // 点击选择文件后取消 直接return
+  if (!e.target.files.length) {
+    return
+  }
+  const fileR = new FileReader() // 创建一个reader用来读取文件流
+  const fileInput = e.target.files[0] // 获取当前文件
+  const maxSize = 5 * 1024 * 1024
+  file.value = fileInput // file 丢全局方便后面用 可以改进为func传参形式
+  percentage.value = 0
+  if (file.value.size < maxSize) {
+    fileR.readAsArrayBuffer(file.value) // 把文件读成ArrayBuffer  主要为了保持跟后端的流一致
+>>>>>>> main
     fileR.onload = async (e) => {
       // 读成arrayBuffer的回调 e 为方法自带参数 相当于 dom的e 流存在e.target.result 中
       const blob = e.target.result;
@@ -119,27 +157,47 @@ const choseFile = async (e) => {
           return !(
             finishList &&
             finishList.some((fi) => fi.FileChunkNumber === all.key)
+<<<<<<< HEAD
           ); // 找出需要上传的切片
         });
       } else {
         waitUpLoad.value = []; // 秒传则没有需要上传的切片
         ElMessage.success("文件已秒传");
+=======
+          ) // 找出需要上传的切片
+        })
+      } else {
+        waitUpLoad.value = [] // 秒传则没有需要上传的切片
+        ElMessage.success('文件已秒传!')
+>>>>>>> main
       }
       waitNum.value = waitUpLoad.value.length; // 记录长度用于百分比展示
     };
   } else {
+<<<<<<< HEAD
     limitFileSize.value = true;
     ElMessage("请上传小于5M文件");
+=======
+    limitFileSize.value = true
+    ElMessage('请上传小于5M文件!')
+>>>>>>> main
   }
 };
 
 const getFile = () => {
   // 确定按钮
   if (file.value === null) {
+<<<<<<< HEAD
     ElMessage("请先上传文件");
     return;
+=======
+    ElMessage('请先上传文件!')
+    return
+>>>>>>> main
   }
+  // 检查文件上传进度
   if (percentage.value === 100) {
+<<<<<<< HEAD
     percentageFlage.value = false;
   }
   sliceFile(); // 上传切片
@@ -161,6 +219,32 @@ const sliceFile = () => {
       };
     });
 };
+=======
+    ElMessage.success('上传已完成!')  // 添加提示消息
+    percentageFlage.value = false
+    return // 如果进度已完成，阻止继续执行后续代码
+  }
+  // 如果文件未上传完成，继续上传切片
+  sliceFile() // 上传切片
+}
+
+const sliceFile = () => {
+  waitUpLoad.value &&
+  waitUpLoad.value.forEach((item) => {
+    // 需要上传的切片
+    item.formData.append('chunkTotal', formDataList.value.length) // 切片总数携带给后台 总有用的
+    const fileR = new FileReader() // 功能同上
+    const fileF = item.formData.get('file')
+    fileR.readAsArrayBuffer(fileF)
+    fileR.onload = (e) => {
+      const spark = new SparkMD5.ArrayBuffer()
+      spark.append(e.target.result)
+      item.formData.append('chunkMd5', spark.end()) // 获取当前切片md5 后端用于验证切片完整性
+      upLoadFileSlice(item)
+    }
+  })
+}
+>>>>>>> main
 
 watch(
   () => waitNum.value,
@@ -168,8 +252,21 @@ watch(
     percentage.value = Math.floor(
       ((formDataList.value.length - waitNum.value) /
         formDataList.value.length) *
+<<<<<<< HEAD
         100
     );
+=======
+      100
+    )
+  }
+)
+
+const upLoadFileSlice = async (item) => {
+  // 切片上传
+  const fileRe = await breakpointContinue(item.formData)
+  if (fileRe.code !== 0) {
+    return
+>>>>>>> main
   }
 );
 
@@ -192,10 +289,17 @@ const upLoadFileSlice = async (item) => {
       const params = {
         fileName: file.value.name,
         fileMd5: fileMd5.value,
+<<<<<<< HEAD
         filePath: res.data.filePath,
       };
       ElMessage.success("上传成功");
       await removeChunk(params);
+=======
+        filePath: res.data.filePath
+      }
+      ElMessage.success('上传成功')
+      await removeChunk(params)
+>>>>>>> main
     }
   }
 };
@@ -224,6 +328,7 @@ a {
 #fromCont {
   display: inline-block;
 }
+<<<<<<< HEAD
 .fileUpload {
   padding: 3px 10px;
   font-size: 12px;
@@ -265,6 +370,88 @@ a {
   margin: 0 0 30px 0;
 }
 
+=======
+
+.gva-table-box {
+  display: block;
+}
+
+.button-container {
+  display: flex;
+  align-items: center;
+}
+
+.fileUpload,
+.uploadBtn {
+  width: 90px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 14px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.fileUpload {
+  padding: 0 15px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  margin-right: 5px;
+}
+
+.uploadBtn {
+  background-color: #007bff;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.fileUpload:hover {
+  background-color: #0056b3;
+}
+
+.uploadBtn:hover {
+  background-color: #0056b3;
+}
+
+
+.fileUpload:active,
+.uploadBtn:active {
+  transform: translateY(2px);
+}
+
+.fileUpload input {
+  position: relative;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+
+
+.fileName {
+  display: inline-block;
+  vertical-align: top;
+  margin: 6px 15px 0 15px;
+}
+.tips {
+  margin-top: 30px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #606266;
+}
+.el-divider {
+  margin: 0 0 30px 0;
+}
+
+>>>>>>> main
 .list {
   margin-top: 15px;
 }
@@ -284,7 +471,7 @@ a {
   transition: all 1s;
 }
 .list-enter, .list-leave-to
-/* .list-leave-active for below version 2.1.8 */ {
+  /* .list-leave-active for below version 2.1.8 */ {
   opacity: 0;
   transform: translateY(-30px);
 }
